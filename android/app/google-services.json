@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "214665888837",
+    "project_id": "planz-6ed47",
+    "storage_bucket": "planz-6ed47.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:214665888837:android:53d020bd5c151383fd4f2c",
+        "android_client_info": {
+          "package_name": "com.example.planZ"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt2GO_ZyvFySNUltcB5mFQk9cA9fCZJbM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
