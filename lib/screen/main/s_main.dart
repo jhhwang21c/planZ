@@ -13,8 +13,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
-  TabItem _currentTab = TabItem.home;
-  final tabs = [TabItem.home, TabItem.favorite];
+  TabItem _currentTab = TabItem.feed;
+  final tabs = [TabItem.feed, TabItem.browse, TabItem.plan, TabItem.mypage, TabItem.settings];
   final List<GlobalKey<NavigatorState>> navigatorKeys = [];
 
   int get _currentIndex => tabs.indexOf(_currentTab);
@@ -37,8 +37,9 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
       canPop: isRootPage,
       onPopInvoked: _handleBackPressed,
       child: Scaffold(
+        appBar: AppBar(title: const Center(child: Text('PlanZ')),),
+        // drawer: const MenuDrawer(),
         extendBody: extendBody, //bottomNavigationBar 아래 영역 까지 그림
-        drawer: const MenuDrawer(),
         body: Container(
           color: context.appColors.seedColor.getMaterialColorValues[200],
           padding: EdgeInsets.only(bottom: extendBody ? 60 - bottomNavigationBarBorderRadius : 0),
@@ -53,7 +54,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   }
 
   bool get isRootPage =>
-      _currentTab == TabItem.home && _currentTabNavigationKey.currentState?.canPop() == false;
+      _currentTab == TabItem.feed && _currentTabNavigationKey.currentState?.canPop() == false;
 
   IndexedStack get pages => IndexedStack(
       index: _currentIndex,
@@ -74,8 +75,8 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
         return;
       }
 
-      if (_currentTab != TabItem.home) {
-        _changeTab(tabs.indexOf(TabItem.home));
+      if (_currentTab != TabItem.feed) {
+        _changeTab(tabs.indexOf(TabItem.feed));
       }
     }
   }
