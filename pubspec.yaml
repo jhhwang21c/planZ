@@ -75,6 +75,9 @@ dependencies:
   json_annotation: ^4.8.0
   firebase_core: ^2.24.2
 
+#  #toggle
+#  flutter_toggle_tab: "^latestVersion"
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -23,7 +23,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
   bool get extendBody => true;
 
-  static double get bottomNavigationBarBorderRadius => 30.0;
+  static double get bottomNavigationBarBorderRadius => 0.0;
 
   @override
   void initState() {
@@ -37,15 +37,16 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
       canPop: isRootPage,
       onPopInvoked: _handleBackPressed,
       child: Scaffold(
-        appBar: AppBar(title: const Center(child: Text('PlanZ')),),
+        // appBar: AppBar(title: const Center(child: Text('PlanZ')),),
         // drawer: const MenuDrawer(),
         extendBody: extendBody, //bottomNavigationBar 아래 영역 까지 그림
-        body: Container(
-          color: context.appColors.seedColor.getMaterialColorValues[200],
-          padding: EdgeInsets.only(bottom: extendBody ? 60 - bottomNavigationBarBorderRadius : 0),
-          child: SafeArea(
-            bottom: !extendBody,
-            child: pages,
+        body: SafeArea(
+          child: Container(
+            color: Colors.white,
+            child: SafeArea(
+              bottom: !extendBody,
+              child: pages,
+            ),
           ),
         ),
         bottomNavigationBar: _buildBottomNavigationBar(context),
@@ -85,7 +86,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     return Container(
       decoration: const BoxDecoration(
         boxShadow: [
-          BoxShadow(color: Colors.black26, spreadRadius: 0, blurRadius: 10),
+          BoxShadow(color: Colors.black26, spreadRadius: 0, blurRadius: 1),
         ],
       ),
       child: ClipRRect(
