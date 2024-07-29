@@ -26,9 +26,9 @@ class _BrowseFragmentState extends State<BrowseFragment> {
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide(width: 0.8),
+                  borderSide: const BorderSide(width: 0.8),
                 ),
-                prefixIcon: Icon(
+                prefixIcon: const Icon(
                   Icons.search,
                   size: 20.0,
                 ),
@@ -62,7 +62,7 @@ class _BrowseFragmentState extends State<BrowseFragment> {
                     },
                   ),
                   //Map Tab
-                  MapView(),
+                  const MapView(),
                 ],
               ),
               Padding(
@@ -88,9 +88,9 @@ class _BrowseFragmentState extends State<BrowseFragment> {
                     indicatorSize: TabBarIndicatorSize.tab,
                     labelColor: Colors.white,
                     unselectedLabelColor: Colors.black,
-                    labelStyle: TextStyle(fontWeight: FontWeight.normal),
+                    labelStyle: const TextStyle(fontWeight: FontWeight.normal),
                     unselectedLabelStyle:
-                        TextStyle(fontWeight: FontWeight.normal),
+                        const TextStyle(fontWeight: FontWeight.normal),
                   ),
                 ),
               ),

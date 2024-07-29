@@ -24,7 +24,7 @@ class CardList extends StatelessWidget {
               // ),
               child: Column(
                 children: [
-                  Row(
+                  const Row(
                     children:
                     <Widget>[
                       Text('Title',
@@ -33,7 +33,7 @@ class CardList extends StatelessWidget {
                       ),),
                     ],
                   ),
-                  Row(
+                  const Row(
                     children: <Widget>[
                       Text('#Hashtag'),
                     ],
