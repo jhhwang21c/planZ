@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 List places = [
   {'id': 0, 'name': 'Place 1', 'price': 0.0},
@@ -9,24 +10,32 @@ List places = [
 ];
 
 class MapView extends StatelessWidget {
-  const MapView({super.key});
+  static const googlePlex = LatLng(37.4223, -122.0848);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Center(
-          child: Text('MapView'),
+        GoogleMap(
+            initialCameraPosition:
+                CameraPosition(target: googlePlex, zoom: 13),
+        markers: {
+              const Marker(
+                markerId: MarkerId('sourceLocation'),
+                icon: BitmapDescriptor.defaultMarker,
+                position: googlePlex
+              )
+        },
         ),
         DraggableScrollableSheet(
-          initialChildSize: 0.3,
+            initialChildSize: 0.3,
             minChildSize: 0.3,
             maxChildSize: 0.8,
             builder: (BuildContext context, ScrollController scrollController) {
-          return Container(
-            color: Colors.blue,
-          );
-        })
+              return Container(
+                color: Colors.blue,
+              );
+            })
       ],
     );
   }

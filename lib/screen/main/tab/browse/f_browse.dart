@@ -42,7 +42,7 @@ class _BrowseFragmentState extends State<BrowseFragment> {
                   //Browse Tab
                   GridView.builder(
                     itemCount: _vids.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 9 / 16,
                     ),

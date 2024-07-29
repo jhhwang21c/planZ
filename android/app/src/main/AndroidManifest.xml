@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.planZ">
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
@@ -30,5 +31,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAZgZF8_6yczKtBX4fEBx6L_t0aXRD3YT8"/>
     </application>
 </manifest>
