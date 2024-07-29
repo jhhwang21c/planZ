@@ -19,55 +19,59 @@ class _BrowseFragmentState extends State<BrowseFragment> {
       length: labels.length,
       child: Column(
         children: [
-          Container(
-            padding: new EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-            height: 64.0,
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: const BorderSide(width: 0.8),
-                ),
-                prefixIcon: const Icon(
-                  Icons.search,
-                  size: 20.0,
-                ),
-              ),
-            ),
-          ),
+          // Container(
+          //   padding: new EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          //   height: 64.0,
+          //   child: TextField(
+          //     decoration: InputDecoration(
+          //       border: OutlineInputBorder(
+          //         borderRadius: BorderRadius.circular(20.0),
+          //         borderSide: const BorderSide(width: 0.8),
+          //       ),
+          //       prefixIcon: const Icon(
+          //         Icons.search,
+          //         size: 20.0,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Expanded(
             child: Stack(children: [
               TabBarView(
                 children: [
                   //Browse Tab
-                  GridView.builder(
-                    itemCount: _vids.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 9 / 16,
-                    ),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 3.0, vertical: 3.0),
-                        child: AspectRatio(
-                          aspectRatio: 9 / 16,
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            color: Colors.blue,
+                  Padding(
+                    padding: new EdgeInsets.only(top: 64.0),
+                    child: GridView.builder(
+                      itemCount: _vids.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 9 / 16,
+                      ),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 3.0, vertical: 3.0),
+                          child: AspectRatio(
+                            aspectRatio: 9 / 16,
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              color: Colors.blue,
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                   //Map Tab
-                  const MapView(),
+                  MapView(),
                 ],
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 67.0, vertical: 10.0),
+                    horizontal: 67.0, vertical: 74.0),
                 child: Container(
                   height: 28.0,
                   decoration: BoxDecoration(
@@ -94,6 +98,25 @@ class _BrowseFragmentState extends State<BrowseFragment> {
                   ),
                 ),
               ),
+              Positioned(
+                  child: Container(
+                    padding: new EdgeInsets.symmetric(
+                        horizontal: 24.0, vertical: 12.0),
+                    height: 64.0,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          borderSide: const BorderSide(width: 0.8),
+                        ),
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          size: 20.0,
+                        ),
+                      ),
+                    ),
+                  ),
+              )
             ]),
           ),
         ],
