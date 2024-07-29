@@ -15,7 +15,7 @@ class MapView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Center(
+        const Center(
           child: Text('MapView'),
         ),
         DraggableScrollableSheet(
