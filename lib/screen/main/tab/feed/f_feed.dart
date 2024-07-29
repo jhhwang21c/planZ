@@ -28,10 +28,10 @@ class _FeedFragmentState extends State<FeedFragment> {
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide(width: 0.8),
+                    borderSide: const BorderSide(width: 0.8),
                   ),
                   // hintText: 'Search for a Journey',
-                  prefixIcon: Icon(
+                  prefixIcon: const Icon(
                     Icons.search,
                     size: 20.0,
                   ),
@@ -42,7 +42,7 @@ class _FeedFragmentState extends State<FeedFragment> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 16.0,
             ),
             Container(
@@ -61,8 +61,8 @@ class _FeedFragmentState extends State<FeedFragment> {
                 indicatorSize: TabBarIndicatorSize.tab,
                 labelColor: Colors.black,
                 unselectedLabelColor: Colors.black,
-                labelStyle: TextStyle(fontWeight: FontWeight.bold),
-                unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
+                labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
               ),
             ),
             Expanded(

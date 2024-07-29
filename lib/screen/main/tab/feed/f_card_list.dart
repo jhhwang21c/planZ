@@ -24,12 +24,16 @@ class CardList extends StatelessWidget {
               // ),
               child: Column(
                 children: [
-                  Row(
-                    children: <Widget>[
-                      Text('Title'),
+                  const Row(
+                    children:
+                    <Widget>[
+                      Text('Title',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),),
                     ],
                   ),
-                  Row(
+                  const Row(
                     children: <Widget>[
                       Text('#Hashtag'),
                     ],
