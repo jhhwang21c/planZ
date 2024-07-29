@@ -43,7 +43,7 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,
-          title: 'Image Finder',
+          title: 'PlanZ', //"image finder?"
           theme: context.themeType.themeData,
           home: const MainScreen(),
         );
@@ -64,7 +64,7 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
         break;
       case AppLifecycleState.detached:
         break;
-      case AppLifecycleState.hidden: //Flutter 3.13 이하 버전을 쓰신다면 해당 라인을 삭제해주세요.
+      case AppLifecycleState.hidden:
         break;
     }
     super.didChangeAppLifecycleState(state);
