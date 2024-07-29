@@ -25,8 +25,12 @@ class CardList extends StatelessWidget {
               child: Column(
                 children: [
                   Row(
-                    children: <Widget>[
-                      Text('Title'),
+                    children:
+                    <Widget>[
+                      Text('Title',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),),
                     ],
                   ),
                   Row(
