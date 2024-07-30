@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class FullVideo extends StatefulWidget {
   final Map<String, dynamic> video;
@@ -24,7 +25,8 @@ class _FullVideoState extends State<FullVideo> {
   }
 
   Future<void> _fetchUserData(String userId) async {
-    DocumentSnapshot userSnapshot = await FirebaseFirestore.instance.collection('user').doc(userId).get();
+    DocumentSnapshot userSnapshot =
+        await FirebaseFirestore.instance.collection('user').doc(userId).get();
     setState(() {
       var _user = userSnapshot.data() as Map<String, dynamic>?;
     });
@@ -35,7 +37,9 @@ class _FullVideoState extends State<FullVideo> {
     super.initState();
     _controller = VideoPlayerController.network(widget.video['video_link'])
       ..initialize().then((_) {
-        setState(() {_fetchUserData(widget.video['user_id']);});
+        setState(() {
+          _fetchUserData(widget.video['user_id']);
+        });
         _controller.play();
       });
   }
@@ -105,17 +109,24 @@ class _FullVideoState extends State<FullVideo> {
 
           //Info
           const Padding(
-            padding: EdgeInsets.only(top: 500.0, left: 24.0, right: 233.0),
+            padding: EdgeInsets.only(top: 500.0, left: 24.0, right: 56.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '@username',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0, // Adjust font size as needed
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/image/icon/Ellipse.svg',
+                    ),
+                    Text(
+                      '@username',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0, // Adjust font size as needed
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
                 Row(
                   children: [
@@ -144,6 +155,28 @@ class _FullVideoState extends State<FullVideo> {
                       ),
                     ),
                   ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      '#Hashtag',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12.0,
+                      ),
+                    ),
+                    Text(
+                      '#Hashtag',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12.0,
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  'We all have both light and dark inside us, but what matters is what we choose to act on. ',
+                  style: TextStyle(color: Colors.white, fontSize: 10.0),
                 )
               ],
             ),
