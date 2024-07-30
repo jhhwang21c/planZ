@@ -8,7 +8,7 @@ class CardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20.0),
+      padding: const EdgeInsets.only(top: 60.0),
       child: Container(
         // color: Colors.white,
         child: Column(
