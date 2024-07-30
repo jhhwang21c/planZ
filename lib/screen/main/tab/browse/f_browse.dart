@@ -101,7 +101,7 @@ class _BrowseFragmentState extends State<BrowseFragment> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => FullVideo(video: video),
+                                      builder: (context) => FullVideo(videos: videos, initialIndex:  index),
                                     ),
                                   );
                                 },
