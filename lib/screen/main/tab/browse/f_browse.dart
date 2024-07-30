@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:planZ/common/common.dart';
+import 'package:planZ/screen/main/tab/browse/f_fullvideo.dart';
 import 'package:planZ/screen/main/tab/browse/f_map_view.dart';
-import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -20,8 +20,7 @@ class _BrowseFragmentState extends State<BrowseFragment> {
 
   Future<List<Map<String, dynamic>>> _fetchVideos() async {
     QuerySnapshot querySnapshot = await _firestore.collection('video').get();
-    var temp = querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-    return temp;
+    return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
   }
 
   Future<String> _generateThumbnail(String videoUrl) async {
@@ -102,7 +101,7 @@ class _BrowseFragmentState extends State<BrowseFragment> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => FullScreenVideoPage(video: video),
+                                      builder: (context) => FullVideo(video: video),
                                     ),
                                   );
                                 },
@@ -131,9 +130,11 @@ class _BrowseFragmentState extends State<BrowseFragment> {
                     },
                   ),
                   // Map Tab
-                  const MapView(),
+                  MapView(),
                 ],
               ),
+
+              //Tab Bar
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 67.0, vertical: 10.0),
                 child: Container(
@@ -164,50 +165,6 @@ class _BrowseFragmentState extends State<BrowseFragment> {
             ]),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class FullScreenVideoPage extends StatefulWidget {
-  final Map<String, dynamic> video;
-
-  const FullScreenVideoPage({super.key, required this.video});
-
-  @override
-  _FullScreenVideoPageState createState() => _FullScreenVideoPageState();
-}
-
-class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
-  late VideoPlayerController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.network(widget.video['video_link'])
-      ..initialize().then((_) {
-        setState(() {});
-        _controller.play();
-      });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Center(
-        child: _controller.value.isInitialized
-            ? AspectRatio(
-          aspectRatio: _controller.value.aspectRatio,
-          child: VideoPlayer(_controller),
-        )
-            : const CircularProgressIndicator(),
       ),
     );
   }

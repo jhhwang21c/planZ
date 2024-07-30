@@ -5,7 +5,6 @@ import 'app.dart';
 import 'common/data/preference/app_preferences.dart';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:planZ/screen/main/tab/browse/f_browse_view.dart';
 import 'firebase_options.dart';
 
 
