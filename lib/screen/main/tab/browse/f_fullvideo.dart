@@ -113,7 +113,7 @@ class _FullVideoState extends State<FullVideo> {
                   '@username',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18.0, // Adjust font size as needed
+                    fontSize: 16.0, // Adjust font size as needed
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -123,7 +123,7 @@ class _FullVideoState extends State<FullVideo> {
                       '@Location',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18.0, // Adjust font size as needed
+                        fontSize: 10.0, // Adjust font size as needed
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -131,7 +131,7 @@ class _FullVideoState extends State<FullVideo> {
                       '@Spot Name',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18.0, // Adjust font size as needed
+                        fontSize: 10.0, // Adjust font size as needed
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -139,7 +139,7 @@ class _FullVideoState extends State<FullVideo> {
                       '@View Journey',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18.0, // Adjust font size as needed
+                        fontSize: 10.0, // Adjust font size as needed
                         fontWeight: FontWeight.bold,
                       ),
                     ),
