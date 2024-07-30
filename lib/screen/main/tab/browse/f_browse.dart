@@ -1,6 +1,11 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:planZ/common/common.dart';
 import 'package:planZ/screen/main/tab/browse/f_map_view.dart';
+import 'package:video_player/video_player.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:path_provider/path_provider.dart';
 
 class BrowseFragment extends StatefulWidget {
   const BrowseFragment({super.key});
@@ -11,7 +16,31 @@ class BrowseFragment extends StatefulWidget {
 
 class _BrowseFragmentState extends State<BrowseFragment> {
   List<String> labels = ['Browse', 'Map'];
-  final List _vids = ['vid1', 'vid2', 'vid3', 'vid4', 'vid5', 'vid6'];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<List<Map<String, dynamic>>> _fetchVideos() async {
+    QuerySnapshot querySnapshot = await _firestore.collection('video').get();
+    var temp = querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    return temp;
+  }
+
+  Future<String> _generateThumbnail(String videoUrl) async {
+    try {
+      final Directory tempDir = await getTemporaryDirectory();
+      final String tempPath = tempDir.path;
+      final thumbnailPath = await VideoThumbnail.thumbnailFile(
+        video: videoUrl,
+        thumbnailPath: tempPath,
+        imageFormat: ImageFormat.PNG,
+        maxWidth: 128,
+        quality: 25,
+      );
+      return thumbnailPath!;
+    } catch (e) {
+      // Handle error
+      return '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +49,7 @@ class _BrowseFragmentState extends State<BrowseFragment> {
       child: Column(
         children: [
           Container(
-            padding: new EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
             height: 64.0,
             child: TextField(
               decoration: InputDecoration(
@@ -39,35 +68,74 @@ class _BrowseFragmentState extends State<BrowseFragment> {
             child: Stack(children: [
               TabBarView(
                 children: [
-                  //Browse Tab
-                  GridView.builder(
-                    itemCount: _vids.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 9 / 16,
-                    ),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 3.0, vertical: 3.0),
-                        child: AspectRatio(
-                          aspectRatio: 9 / 16,
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            color: Colors.blue,
-                          ),
+                  // Browse Tab
+                  FutureBuilder<List<Map<String, dynamic>>>(
+                    future: _fetchVideos(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(child: Text('No videos found'));
+                      }
+                      var videos = snapshot.data!;
+                      return GridView.builder(
+                        itemCount: videos.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 9 / 16,
                         ),
+                        itemBuilder: (context, index) {
+                          var video = videos[index];
+                          return FutureBuilder<String>(
+                            future: _generateThumbnail(video['video_link']),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const Center(child: CircularProgressIndicator());
+                              }
+                              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                return const Center(child: Text('Error generating thumbnail'));
+                              }
+                              var thumbnailPath = snapshot.data!;
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => FullScreenVideoPage(video: video),
+                                    ),
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 3.0),
+                                  child: AspectRatio(
+                                    aspectRatio: 9 / 16,
+                                    child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      color: Colors.blue,
+                                      child: thumbnailPath.isEmpty
+                                          ? const Center(child: Text('No Thumbnail'))
+                                          : Image.file(
+                                        File(thumbnailPath),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
                       );
                     },
                   ),
-                  //Map Tab
+                  // Map Tab
                   const MapView(),
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 67.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(horizontal: 67.0, vertical: 10.0),
                 child: Container(
                   height: 28.0,
                   decoration: BoxDecoration(
@@ -76,7 +144,7 @@ class _BrowseFragmentState extends State<BrowseFragment> {
                   ),
                   child: TabBar(
                     tabs: labels.map((label) {
-                      return Container(
+                      return SizedBox(
                         width: 160.0,
                         child: Tab(text: label),
                       );
@@ -89,14 +157,57 @@ class _BrowseFragmentState extends State<BrowseFragment> {
                     labelColor: Colors.white,
                     unselectedLabelColor: Colors.black,
                     labelStyle: const TextStyle(fontWeight: FontWeight.normal),
-                    unselectedLabelStyle:
-                        const TextStyle(fontWeight: FontWeight.normal),
+                    unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
                   ),
                 ),
               ),
             ]),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class FullScreenVideoPage extends StatefulWidget {
+  final Map<String, dynamic> video;
+
+  const FullScreenVideoPage({super.key, required this.video});
+
+  @override
+  _FullScreenVideoPageState createState() => _FullScreenVideoPageState();
+}
+
+class _FullScreenVideoPageState extends State<FullScreenVideoPage> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.video['video_link'])
+      ..initialize().then((_) {
+        setState(() {});
+        _controller.play();
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: _controller.value.isInitialized
+            ? AspectRatio(
+          aspectRatio: _controller.value.aspectRatio,
+          child: VideoPlayer(_controller),
+        )
+            : const CircularProgressIndicator(),
       ),
     );
   }
