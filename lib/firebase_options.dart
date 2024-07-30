@@ -70,6 +70,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '214665888837',
     projectId: 'planz-6ed47',
     storageBucket: 'planz-6ed47.appspot.com',
+    iosClientId: '214665888837-e1ihtj5ddijs3btb0eu3gokldn3agqmj.apps.googleusercontent.com',
     iosBundleId: 'com.example.planZ',
   );
+
 }

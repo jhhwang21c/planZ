@@ -12,7 +12,12 @@
           "package_name": "com.example.planZ"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "214665888837-md2kdvofmlsdfjsq17pnclbb48ldslq2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBt2GO_ZyvFySNUltcB5mFQk9cA9fCZJbM"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "214665888837-md2kdvofmlsdfjsq17pnclbb48ldslq2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "214665888837-e1ihtj5ddijs3btb0eu3gokldn3agqmj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.planZ"
+              }
+            }
+          ]
         }
       }
     }
