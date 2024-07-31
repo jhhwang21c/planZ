@@ -14,9 +14,18 @@ class BrowseFragment extends StatefulWidget {
   State<BrowseFragment> createState() => _BrowseFragmentState();
 }
 
-class _BrowseFragmentState extends State<BrowseFragment> {
+class _BrowseFragmentState extends State<BrowseFragment> with SingleTickerProviderStateMixin {
   List<String> labels = ['Browse', 'Map'];
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late TabController _tabController;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: labels.length, vsync: this);
+    _pageController = PageController();
+  }
 
   Future<List<Map<String, dynamic>>> _fetchVideos() async {
     QuerySnapshot querySnapshot = await _firestore.collection('video').get();
@@ -42,6 +51,17 @@ class _BrowseFragmentState extends State<BrowseFragment> {
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _onTabTapped(int index) {
+    _pageController.jumpToPage(index);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: labels.length,
@@ -64,105 +84,113 @@ class _BrowseFragmentState extends State<BrowseFragment> {
             ),
           ),
           Expanded(
-            child: Stack(children: [
-              TabBarView(
-                children: [
-                  // Browse Tab
-                  FutureBuilder<List<Map<String, dynamic>>>(
-                    future: _fetchVideos(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Center(child: Text('No videos found'));
-                      }
-                      var videos = snapshot.data!;
-                      return GridView.builder(
-                        itemCount: videos.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 9 / 16,
-                        ),
-                        itemBuilder: (context, index) {
-                          var video = videos[index];
-                          return FutureBuilder<String>(
-                            future: _generateThumbnail(video['video_link']),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const Center(child: CircularProgressIndicator());
-                              }
-                              if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                                return const Center(child: Text('Error generating thumbnail'));
-                              }
-                              var thumbnailPath = snapshot.data!;
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => FullVideo(videos: videos, initialIndex:  index),
-                                    ),
-                                  );
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 3.0),
-                                  child: AspectRatio(
-                                    aspectRatio: 9 / 16,
-                                    child: Container(
-                                      height: 50,
-                                      width: 50,
-                                      color: Colors.blue,
-                                      child: thumbnailPath.isEmpty
-                                          ? const Center(child: Text('No Thumbnail'))
-                                          : Image.file(
-                                        File(thumbnailPath),
-                                        fit: BoxFit.cover,
+            child: Stack(
+              children: [
+                PageView(
+                  controller: _pageController,
+                  physics: NeverScrollableScrollPhysics(),
+                  onPageChanged: (index) {
+                    _tabController.animateTo(index);
+                  },
+                  children: [
+                    // Browse Tab
+                    FutureBuilder<List<Map<String, dynamic>>>(
+                      future: _fetchVideos(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Center(child: Text('No videos found'));
+                        }
+                        var videos = snapshot.data!;
+                        return GridView.builder(
+                          itemCount: videos.length,
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 9 / 16,
+                          ),
+                          itemBuilder: (context, index) {
+                            var video = videos[index];
+                            return FutureBuilder<String>(
+                              future: _generateThumbnail(video['video_link']),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return const Center(child: CircularProgressIndicator());
+                                }
+                                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                  return const Center(child: Text('Error generating thumbnail'));
+                                }
+                                var thumbnailPath = snapshot.data!;
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => FullVideo(videos: videos, initialIndex: index),
+                                      ),
+                                    );
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 3.0),
+                                    child: AspectRatio(
+                                      aspectRatio: 9 / 16,
+                                      child: Container(
+                                        height: 50,
+                                        width: 50,
+                                        color: Colors.blue,
+                                        child: thumbnailPath.isEmpty
+                                            ? const Center(child: Text('No Thumbnail'))
+                                            : Image.file(
+                                          File(thumbnailPath),
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  // Map Tab
-                  MapView(),
-                ],
-              ),
-
-              //Tab Bar
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 67.0, vertical: 10.0),
-                child: Container(
-                  height: 28.0,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[350],
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: TabBar(
-                    tabs: labels.map((label) {
-                      return SizedBox(
-                        width: 160.0,
-                        child: Tab(text: label),
-                      );
-                    }).toList(),
-                    indicator: BoxDecoration(
-                      color: Colors.grey[700],
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    // Map Tab
+                    MapView(),
+                  ],
+                ),
+                // Tab Bar
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 67.0, vertical: 10.0),
+                  child: Container(
+                    height: 28.0,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[350],
                       borderRadius: BorderRadius.circular(12.0),
                     ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.black,
-                    labelStyle: const TextStyle(fontWeight: FontWeight.normal),
-                    unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
+                    child: TabBar(
+                      controller: _tabController,
+                      onTap: _onTabTapped,
+                      tabs: labels.map((label) {
+                        return SizedBox(
+                          width: 160.0,
+                          child: Tab(text: label),
+                        );
+                      }).toList(),
+                      indicator: BoxDecoration(
+                        color: Colors.grey[700],
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colors.black,
+                      labelStyle: const TextStyle(fontWeight: FontWeight.normal),
+                      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
+                    ),
                   ),
                 ),
-              ),
-            ]),
+              ],
+            ),
           ),
         ],
       ),
