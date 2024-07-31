@@ -2,6 +2,7 @@ import 'package:planZ/common/common.dart';
 import 'package:planZ/common/theme/custom_theme_app.dart';
 import 'package:planZ/screen/main/s_main.dart';
 import 'package:flutter/material.dart';
+import 'package:planZ/splash_screen.dart';
 
 import 'common/theme/custom_theme.dart';
 
@@ -45,7 +46,7 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
           locale: context.locale,
           title: 'PlanZ', //"image finder?"
           theme: context.themeType.themeData,
-          home: const MainScreen(),
+          home: const SplashScreen(),
         );
       }),
     );
