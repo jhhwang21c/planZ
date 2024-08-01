@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:planZ/common/common.dart';
 import 'package:planZ/screen/main/tab/browse/f_map_view.dart';
 import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
+import 'package:planZ/screen/main/tab/mypage/f_userinfo.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -176,28 +178,41 @@ class _FullVideoState extends State<FullVideo>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    children: [
-                                      if (_user != null &&
-                                          _user!['profile_img_link'] != null)
-                                        CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                              _user!['profile_img_link']),
-                                          radius: 20.0,
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => UserInfo(
+                                          profileImageUrl: _user!['profile_img_link'],
+                                          username: _user!['username'],
+                                          followersCount: _user!['follower']?.length ?? "no followers",
+                                            followingCount: _user!['following']?.length ?? "no following"
+                                        ))
+                                      );
+                                    },
+                                    child: Row(
+                                      children: [
+                                        if (_user != null &&
+                                            _user!['profile_img_link'] != null)
+                                          CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                                _user!['profile_img_link']),
+                                            radius: 20.0,
+                                          ),
+                                        const SizedBox(width: 10.0),
+                                        Text(
+                                          _user != null
+                                              ? _user!['username'] ??
+                                                  'Unknown User'
+                                              : 'Loading',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      const SizedBox(width: 10.0),
-                                      Text(
-                                        _user != null
-                                            ? _user!['username'] ??
-                                                'Unknown User'
-                                            : 'Loading',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 8.0),
