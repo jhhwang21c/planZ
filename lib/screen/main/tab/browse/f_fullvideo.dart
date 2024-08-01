@@ -186,7 +186,8 @@ class _FullVideoState extends State<FullVideo>
                                           profileImageUrl: _user!['profile_img_link'],
                                           username: _user!['username'],
                                           followersCount: _user!['follower']?.length ?? "no followers",
-                                            followingCount: _user!['following']?.length ?? "no following"
+                                            followingCount: _user!['following']?.length ?? "no following",
+                                          userId: video['user_id'],
                                         ))
                                       );
                                     },

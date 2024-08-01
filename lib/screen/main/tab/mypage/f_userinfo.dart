@@ -1,16 +1,26 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:planZ/common/common.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+
+import '../browse/f_fullvideo.dart';
 
 class UserInfo extends StatefulWidget {
   final String? profileImageUrl;
   final String? username;
   final int followersCount;
   final int followingCount;
+  final String userId;
 
   UserInfo({
     required this.profileImageUrl,
     required this.username,
     required this.followersCount,
     required this.followingCount,
+    required this.userId,
   });
 
   @override
@@ -40,6 +50,32 @@ class _UserInfoState extends State<UserInfo>
 
   void _onTabTapped(int index) {
     _pageController.jumpToPage(index);
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchUserVideos() async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('video')
+        .where('user_id', isEqualTo: widget.userId)
+        .get();
+    return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+  }
+
+  Future<String> _generateThumbnail(String videoUrl) async {
+    try {
+      final Directory tempDir = await getTemporaryDirectory();
+      final String tempPath = tempDir.path;
+      final thumbnailPath = await VideoThumbnail.thumbnailFile(
+        video: videoUrl,
+        thumbnailPath: tempPath,
+        imageFormat: ImageFormat.PNG,
+        maxWidth: 128,
+        quality: 25,
+      );
+      return thumbnailPath!;
+    } catch (e) {
+      // Handle error
+      return '';
+    }
   }
 
   @override
@@ -133,15 +169,73 @@ class _UserInfoState extends State<UserInfo>
             controller: _tabController,
             children: [
               //Journeys Tab
-              GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-                  itemBuilder: (context, index) {
-                    return Container(
-                      color: Colors.grey,
-                    );
-                  }),
+              FutureBuilder<List<Map<String, dynamic>>>(
+                  future: _fetchUserVideos(),
+                  builder: (context, snapshot)
+              {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('No Videos Found'));
+                } else {
+                  var videos = snapshot.data!;
+
+
+                  return GridView.builder(
+                    itemCount: videos.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 9 / 16,
+                    ),
+                    itemBuilder: (context, index) {
+                      var video = videos[index];
+                      return FutureBuilder<String>(
+                        future: _generateThumbnail(video['video_link']),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return const Center(child: Text('Error generating thumbnail'));
+                          }
+                          var thumbnailPath = snapshot.data!;
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FullVideo(videos: videos, initialIndex: index),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 3.0),
+                              child: AspectRatio(
+                                aspectRatio: 9 / 16,
+                                child: Container(
+                                  height: 50,
+                                  width: 50,
+                                  color: Colors.blue,
+                                  child: thumbnailPath.isEmpty
+                                      ? const Center(child: Text('No Thumbnail'))
+                                      : Image.file(
+                                    File(thumbnailPath),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  );
+                }
+
+              }
+              ),
 
               //Zips Tab
               Center(
