@@ -82,9 +82,9 @@ class _MapViewState extends State<MapView> {
           },
         ),
         DraggableScrollableSheet(
-          initialChildSize: 0.3,
-          minChildSize: 0.3,
-          maxChildSize: 0.8,
+          initialChildSize: 0.1,
+          minChildSize: 0.1,
+          maxChildSize: 1,
           builder: (BuildContext context, ScrollController scrollController) {
             return Container(
               color: Colors.blue,

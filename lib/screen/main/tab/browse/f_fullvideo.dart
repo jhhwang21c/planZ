@@ -230,6 +230,7 @@ class _FullVideoState extends State<FullVideo>
                                                   contact: _spot != null ? _spot!['contact'] ?? "No Contact" : 'Loading',
                                                   hours: _spot != null ? _spot!['hours'] ?? "Hours Unavailable" : 'Loading',
                                                   parking: _spot != null ? _spot!['parking'] ?? false : false,
+                                                  hashtags: _hashtags,
                                                 ),
                                               ),
                                             );
@@ -255,7 +256,7 @@ class _FullVideoState extends State<FullVideo>
                                                     const SizedBox(width: 8.0),
                                                     Text(
                                                       _spot != null
-                                                          ? _spot!['name'] ??
+                                                          ? _spot!['translated_name']['en'] ??
                                                               'Unknown Name'
                                                           : 'Loading',
                                                       style: TextStyle(
@@ -299,7 +300,7 @@ class _FullVideoState extends State<FullVideo>
                                   ),
                                   Text(
                                     _spot != null
-                                        ? _spot!['short_description'] ??
+                                        ? _spot!['translated_short_description']['en'] ??
                                             'Unknown Description'
                                         : 'Loading',
                                     style: TextStyle(

@@ -7,6 +7,7 @@ class SpotDetail extends StatefulWidget {
   final String contact;
   final String hours;
   final bool parking;
+  List<dynamic>? hashtags;
 
   SpotDetail({
     required this.spotName,
@@ -14,6 +15,7 @@ class SpotDetail extends StatefulWidget {
     required this.contact,
     required this.hours,
     required this.parking,
+    required this.hashtags,
   });
 
   @override
@@ -45,8 +47,25 @@ class _SpotDetailState extends State<SpotDetail> {
             Container(
               padding: EdgeInsets.only(top: 12.0),
               child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("#hashtags")),
+                alignment: Alignment.centerLeft,
+                child: widget.hashtags != null
+                    ? Wrap(
+                  spacing: 8.0,
+                  children: widget.hashtags!.map((hashtag) {
+                    return Text(
+                      '# $hashtag',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.black, // You can change the color if needed
+                      ),
+                    );
+                  }).toList(),
+                )
+                    : const Text(
+                  'Loading hashtags...',
+                  style: TextStyle(fontSize: 12.0),
+                ),
+              ),
             ),
 
             Row(
@@ -199,7 +218,7 @@ class _SpotDetailState extends State<SpotDetail> {
                           SizedBox(
                             width: 8.0,
                           ),
-                          Text(widget.address),
+                          Expanded(child: Text(widget.address)),
                         ],
                       ),
                     ),
@@ -223,7 +242,9 @@ class _SpotDetailState extends State<SpotDetail> {
                             width: 14.0,
                             height: 14.0,
                           ),
-                          const SizedBox(width: 8.0,),
+                          const SizedBox(
+                            width: 8.0,
+                          ),
                           Text(widget.parking
                               ? "Parking available"
                               : "No Parking"),
@@ -250,8 +271,10 @@ class _SpotDetailState extends State<SpotDetail> {
                             width: 14.0,
                             height: 14.0,
                           ),
-                          const SizedBox(width: 8.0,),
-                          Text("Contact: ${widget.contact}" ),
+                          const SizedBox(
+                            width: 8.0,
+                          ),
+                          Text("Contact: ${widget.contact}"),
                         ],
                       ),
                     ),

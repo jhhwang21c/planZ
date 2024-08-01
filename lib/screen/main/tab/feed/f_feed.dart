@@ -95,17 +95,18 @@ class _FeedFragmentState extends State<FeedFragment>
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => SpotDetail(
-                                            spotName: spot['name'] ?? 'No Title',
-                                          address: spot['address'] ?? "No Address",
+                                            spotName: spot['translated_name']['en'] ?? 'No Title',
+                                          address: spot['translated_address']['en']?? "No Address",
                                           contact: spot['contact'] ?? "No Contact",
                                           hours: spot['hours'] ?? "Hours Unavailable",
-                                            parking: spot['parking'] ?? "No Parking Info"
+                                            parking: spot['parking'] ?? "No Parking Info",
+                                            hashtags: spot['hashtags'] ?? "No Hashtag",
                                         ),
                                       ),
                                     );
                                   },
                                   child: CardList(
-                                      spotTitle: spot['name'] ?? 'No Title',),
+                                      spotTitle: spot['translated_name']['en'] ?? 'No Title',),
                                 );
                               },
                             );
