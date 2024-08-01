@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:planZ/screen/main/tab/browse/f_map_view.dart';
+import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -119,8 +120,192 @@ class _FullVideoState extends State<FullVideo>
       length: labels.length,
       child: Scaffold(
         body: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
+              TabBarView(
+                controller: _tabController,
+                children: [
+                  PageView.builder(
+                    controller: _pageController,
+                    scrollDirection: Axis.vertical,
+                    onPageChanged: (index) async {
+                      setState(() {
+                        _currentIndex = index;
+                      });
+                      await _initializeAndPlayVideo(index);
+                    },
+                    itemCount: widget.videos.length,
+                    itemBuilder: (context, index) {
+                      var video = widget.videos[index];
+                      var controller = _controllers[index];
+                      return VisibilityDetector(
+                        key: Key('video-$index'),
+                        onVisibilityChanged: (visibilityInfo) {
+                          if (_isDisposing) return;
+                          if (visibilityInfo.visibleFraction == 0 &&
+                              controller != null &&
+                              controller.value.isPlaying) {
+                            controller.pause();
+                          } else if (visibilityInfo.visibleFraction > 0 &&
+                              controller != null &&
+                              !controller.value.isPlaying) {
+                            controller.play();
+                          }
+                        },
+                        child: Stack(
+                          children: [
+                            Center(
+                              child: controller != null
+                                  ? Container(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      child: FittedBox(
+                                        fit: BoxFit.cover,
+                                        child: SizedBox(
+                                          width: controller.value.size.width,
+                                          height: controller.value.size.height,
+                                          child: VideoPlayer(controller),
+                                        ),
+                                      ),
+                                    )
+                                  : CircularProgressIndicator(),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: 500.0, left: 24.0, right: 56.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      if (_user != null &&
+                                          _user!['profile_img_link'] != null)
+                                        CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              _user!['profile_img_link']),
+                                          radius: 20.0,
+                                        ),
+                                      const SizedBox(width: 10.0),
+                                      Text(
+                                        _user != null
+                                            ? _user!['username'] ??
+                                                'Unknown User'
+                                            : 'Loading',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                    child: Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => SpotDetail(
+                                                  spotName: _spot != null ? _spot!['name'] ?? "Unknown Name" : 'Loading',
+                                                  address: _spot != null ? _spot!['address'] ?? "No Address" : 'Loading',
+                                                  contact: _spot != null ? _spot!['contact'] ?? "No Contact" : 'Loading',
+                                                  hours: _spot != null ? _spot!['hours'] ?? "Hours Unavailable" : 'Loading',
+                                                  parking: _spot != null ? _spot!['parking'] ?? false : false,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 22.0,
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue,
+                                              borderRadius:
+                                                  BorderRadius.circular(14.0),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 8.0, vertical: 4.0),
+                                              child: Center(
+                                                child: Row(
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      'assets/image/icon/Location.svg',
+                                                      width: 8.0,
+                                                      height: 10.0,
+                                                    ),
+                                                    const SizedBox(width: 8.0),
+                                                    Text(
+                                                      _spot != null
+                                                          ? _spot!['name'] ??
+                                                              'Unknown Name'
+                                                          : 'Loading',
+                                                      style: TextStyle(
+                                                        fontSize: 10.0,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      _hashtags != null
+                                          ? Wrap(
+                                              spacing: 8.0,
+                                              children:
+                                                  _hashtags!.map((hashtag) {
+                                                return Text(
+                                                  '# $hashtag',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12.0,
+                                                  ),
+                                                );
+                                              }).toList(),
+                                            )
+                                          : const Text(
+                                              'Loading hashtags...',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12.0),
+                                            ),
+                                      const SizedBox(width: 6.0),
+                                    ],
+                                  ),
+                                  Text(
+                                    _spot != null
+                                        ? _spot!['short_description'] ??
+                                            'Unknown Description'
+                                        : 'Loading',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 10.0),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  Center(
+                    child: _spotLocation != null
+                        ? MapView(spotLocation: _spotLocation)
+                        : CircularProgressIndicator(),
+                  ),
+                ],
+              ),
+
+              //Tabbar
               Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 67.0, vertical: 10.0),
@@ -149,179 +334,9 @@ class _FullVideoState extends State<FullVideo>
                     labelStyle: const TextStyle(fontWeight: FontWeight.normal),
                     unselectedLabelStyle:
                         const TextStyle(fontWeight: FontWeight.normal),
+                    indicatorColor: Colors.transparent,
+                    indicatorWeight: 0,
                   ),
-                ),
-              ),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    PageView.builder(
-                      controller: _pageController,
-                      scrollDirection: Axis.vertical,
-                      onPageChanged: (index) async {
-                        setState(() {
-                          _currentIndex = index;
-                        });
-                        await _initializeAndPlayVideo(index);
-                      },
-                      itemCount: widget.videos.length,
-                      itemBuilder: (context, index) {
-                        var video = widget.videos[index];
-                        var controller = _controllers[index];
-                        return VisibilityDetector(
-                          key: Key('video-$index'),
-                          onVisibilityChanged: (visibilityInfo) {
-                            if (_isDisposing) return;
-                            if (visibilityInfo.visibleFraction == 0 &&
-                                controller != null &&
-                                controller.value.isPlaying) {
-                              controller.pause();
-                            } else if (visibilityInfo.visibleFraction > 0 &&
-                                controller != null &&
-                                !controller.value.isPlaying) {
-                              controller.play();
-                            }
-                          },
-                          child: Stack(
-                            children: [
-                              Center(
-                                child: controller != null
-                                    ? Container(
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        child: FittedBox(
-                                          fit: BoxFit.cover,
-                                          child: SizedBox(
-                                            width: controller.value.size.width,
-                                            height:
-                                                controller.value.size.height,
-                                            child: VideoPlayer(controller),
-                                          ),
-                                        ),
-                                      )
-                                    : CircularProgressIndicator(),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: 500.0, left: 24.0, right: 56.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        if (_user != null &&
-                                            _user!['profile_img_link'] != null)
-                                          CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                                _user!['profile_img_link']),
-                                            radius: 20.0,
-                                          ),
-                                        const SizedBox(width: 10.0),
-                                        Text(
-                                          _user != null
-                                              ? _user!['username'] ??
-                                                  'Unknown User'
-                                              : 'Loading',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            height: 22.0,
-                                            decoration: BoxDecoration(
-                                              color: Colors.blue,
-                                              borderRadius:
-                                                  BorderRadius.circular(14.0),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 8.0,
-                                                      vertical: 4.0),
-                                              child: Center(
-                                                child: Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      'assets/image/icon/Location.svg',
-                                                      width: 8.0,
-                                                      height: 10.0,
-                                                    ),
-                                                    const SizedBox(width: 8.0),
-                                                    Text(
-                                                      _spot != null
-                                                          ? _spot!['name'] ??
-                                                              'Unknown Name'
-                                                          : 'Loading',
-                                                      style: TextStyle(
-                                                        fontSize: 10.0,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        _hashtags != null
-                                            ? Wrap(
-                                                spacing: 8.0,
-                                                children:
-                                                    _hashtags!.map((hashtag) {
-                                                  return Text(
-                                                    '# $hashtag',
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 12.0,
-                                                    ),
-                                                  );
-                                                }).toList(),
-                                              )
-                                            : const Text(
-                                                'Loading hashtags...',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12.0),
-                                              ),
-                                        const SizedBox(width: 6.0),
-                                      ],
-                                    ),
-                                    Text(
-                                      _spot != null
-                                          ? _spot!['short_description'] ??
-                                              'Unknown Description'
-                                          : 'Loading',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 10.0),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                    Center(
-                      child: _spotLocation != null
-                          ? MapView(spotLocation: _spotLocation)
-                          : CircularProgressIndicator(),
-                    ),
-                  ],
                 ),
               ),
             ],

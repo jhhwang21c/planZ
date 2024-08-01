@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:planZ/screen/main/tab/feed/f_card_list.dart';
-import 'package:planZ/screen/main/tab/feed/f_card_list_detail.dart';
+import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FeedFragment extends StatefulWidget {
@@ -94,7 +94,7 @@ class _FeedFragmentState extends State<FeedFragment>
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => CardListDetail(
+                                        builder: (context) => SpotDetail(
                                             spotName: spot['name'] ?? 'No Title',
                                           address: spot['address'] ?? "No Address",
                                           contact: spot['contact'] ?? "No Contact",

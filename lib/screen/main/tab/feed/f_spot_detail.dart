@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class CardListDetail extends StatefulWidget {
+class SpotDetail extends StatefulWidget {
   final String spotName;
   final String address;
   final String contact;
   final String hours;
   final bool parking;
 
-  CardListDetail({
+  SpotDetail({
     required this.spotName,
     required this.address,
     required this.contact,
@@ -17,10 +17,10 @@ class CardListDetail extends StatefulWidget {
   });
 
   @override
-  State<CardListDetail> createState() => _CardListDetailState();
+  State<SpotDetail> createState() => _SpotDetailState();
 }
 
-class _CardListDetailState extends State<CardListDetail> {
+class _SpotDetailState extends State<SpotDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
