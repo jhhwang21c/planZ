@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CardList extends StatelessWidget {
-  final String postTitle;
+  final String spotTitle;
 
-  CardList({required this.postTitle});
+  CardList({required this.spotTitle,});
 
   @override
   Widget build(BuildContext context) {
@@ -24,21 +24,20 @@ class CardList extends StatelessWidget {
               // ),
               child: Column(
                 children: [
-                  const Row(
+                   Row(
                     children:
                     <Widget>[
-                      Text('Title',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                      ),),
+                      Text(spotTitle,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),),
                     ],
                   ),
-                  const Row(
+                   Row(
                     children: <Widget>[
-                      Text('#Hashtag'),
+                      Text("hashtag"),
                     ],
                   ),
-                  Text(postTitle)
                 ],
               ),
             ),
@@ -48,3 +47,4 @@ class CardList extends StatelessWidget {
     );
   }
 }
+
