@@ -1,36 +1,35 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ToggleBarWidget extends StatefulWidget {
   List<String> labels;
+  TabController tabController;
+  PageController pageController;
 
   ToggleBarWidget({
-    required this.labels});
+    required this.labels, required this.tabController, required this.pageController });
 
   @override
   State<ToggleBarWidget> createState() => _ToggleBarWidgetState();
 }
 
 class _ToggleBarWidgetState extends State<ToggleBarWidget> with SingleTickerProviderStateMixin{
-  late PageController _pageController;
-  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController();
-    _tabController = TabController(length: widget.labels.length, vsync: this);
+    widget.pageController = PageController();
+    widget.tabController = TabController(length: widget.labels.length, vsync: this);
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
-    _tabController.dispose();
+    widget.pageController.dispose();
+    widget.tabController.dispose();
     super.dispose();
   }
 
   void _onTabTapped(int index) {
-    _pageController.jumpToPage(index);
+    widget.pageController.jumpToPage(index);
   }
 
   @override
@@ -47,7 +46,7 @@ class _ToggleBarWidgetState extends State<ToggleBarWidget> with SingleTickerProv
           ),
           child: TabBar(
             dividerColor: Colors.transparent,
-            controller: _tabController,
+            controller: widget.tabController,
             onTap: _onTabTapped,
             tabs: widget.labels.map((label) {
               return SizedBox(// Adjust the width as needed

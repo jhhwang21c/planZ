@@ -16,7 +16,8 @@ class BrowseFragment extends StatefulWidget {
   State<BrowseFragment> createState() => _BrowseFragmentState();
 }
 
-class _BrowseFragmentState extends State<BrowseFragment> with SingleTickerProviderStateMixin {
+class _BrowseFragmentState extends State<BrowseFragment>
+    with SingleTickerProviderStateMixin {
   List<String> labels = ['Browse', 'Map'];
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late TabController _tabController;
@@ -31,7 +32,9 @@ class _BrowseFragmentState extends State<BrowseFragment> with SingleTickerProvid
 
   Future<List<Map<String, dynamic>>> _fetchVideos() async {
     QuerySnapshot querySnapshot = await _firestore.collection('video').get();
-    return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    return querySnapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
   }
 
   Future<String> _generateThumbnail(String videoUrl) async {
@@ -70,7 +73,9 @@ class _BrowseFragmentState extends State<BrowseFragment> with SingleTickerProvid
       child: Column(
         children: [
           SearchBarWidget(),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Expanded(
             child: Stack(
               children: [
@@ -87,8 +92,10 @@ class _BrowseFragmentState extends State<BrowseFragment> with SingleTickerProvid
                       FutureBuilder<List<Map<String, dynamic>>>(
                         future: _fetchVideos(),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator());
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
                           }
                           if (!snapshot.hasData || snapshot.data!.isEmpty) {
                             return const Center(child: Text('No videos found'));
@@ -96,7 +103,8 @@ class _BrowseFragmentState extends State<BrowseFragment> with SingleTickerProvid
                           var videos = snapshot.data!;
                           return GridView.builder(
                             itemCount: videos.length,
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
                               childAspectRatio: 9 / 16,
                             ),
@@ -105,11 +113,16 @@ class _BrowseFragmentState extends State<BrowseFragment> with SingleTickerProvid
                               return FutureBuilder<String>(
                                 future: _generateThumbnail(video['video_link']),
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return const Center(child: CircularProgressIndicator());
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
                                   }
-                                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                                    return const Center(child: Text('Error generating thumbnail'));
+                                  if (!snapshot.hasData ||
+                                      snapshot.data!.isEmpty) {
+                                    return const Center(
+                                        child:
+                                            Text('Error generating thumbnail'));
                                   }
                                   var thumbnailPath = snapshot.data!;
                                   return GestureDetector(
@@ -117,7 +130,9 @@ class _BrowseFragmentState extends State<BrowseFragment> with SingleTickerProvid
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => FullVideo(videos: videos, initialIndex: index),
+                                          builder: (context) => FullVideo(
+                                              videos: videos,
+                                              initialIndex: index),
                                         ),
                                       );
                                     },
@@ -130,11 +145,12 @@ class _BrowseFragmentState extends State<BrowseFragment> with SingleTickerProvid
                                           width: 50,
                                           color: Colors.blue,
                                           child: thumbnailPath.isEmpty
-                                              ? const Center(child: Text('No Thumbnail'))
+                                              ? const Center(
+                                                  child: Text('No Thumbnail'))
                                               : Image.file(
-                                            File(thumbnailPath),
-                                            fit: BoxFit.cover,
-                                          ),
+                                                  File(thumbnailPath),
+                                                  fit: BoxFit.cover,
+                                                ),
                                         ),
                                       ),
                                     ),
@@ -153,7 +169,11 @@ class _BrowseFragmentState extends State<BrowseFragment> with SingleTickerProvid
                 // Tab Bar
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: ToggleBarWidget(labels: labels),
+                  child: ToggleBarWidget(
+                    labels: labels,
+                    pageController: _pageController,
+                    tabController: _tabController,
+                  ),
                 ),
               ],
             ),

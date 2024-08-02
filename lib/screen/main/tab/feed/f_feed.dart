@@ -51,7 +51,9 @@ class _FeedFragmentState extends State<FeedFragment>
         SearchBarWidget(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 66, vertical: 30),
-          child: ToggleBarWidget(labels: labels,),
+          child: ToggleBarWidget(labels: labels,
+            pageController: _pageController,
+            tabController: _tabController,),
         ),
         Expanded(
             child: PageView(

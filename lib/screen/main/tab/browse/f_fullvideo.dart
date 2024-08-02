@@ -177,6 +177,7 @@ class _FullVideoState extends State<FullVideo>
                             //User
                             Positioned(
                               left: 24.0,
+                              right: 24.0,
                               bottom:20.0,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -303,7 +304,9 @@ class _FullVideoState extends State<FullVideo>
               //Tabbar
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
-                child: ToggleBarWidget(labels: labels),
+                child: ToggleBarWidget(labels: labels,
+                  pageController: _pageController,
+                  tabController: _tabController,),
               )
             ],
           ),
