@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:planZ/common/common.dart';
 
 class SearchBarWidget extends StatelessWidget {
-  const SearchBarWidget({super.key});
+  final AbstractThemeColors themeColors;
+  const SearchBarWidget({super.key, required this.themeColors});
 
   @override
   Widget build(BuildContext context) {

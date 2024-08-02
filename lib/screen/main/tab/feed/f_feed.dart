@@ -5,8 +5,12 @@ import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:planZ/common/widget/w_searchbar.dart';
 
+import '../../../../common/theme/color/abs_theme_colors.dart';
+
 class FeedFragment extends StatefulWidget {
-  const FeedFragment({super.key});
+  final AbstractThemeColors themeColors;
+
+  const FeedFragment({Key? key, required this.themeColors}) : super(key: key);
 
   @override
   State<FeedFragment> createState() => _FeedFragmentState();
@@ -15,7 +19,6 @@ class FeedFragment extends StatefulWidget {
 class _FeedFragmentState extends State<FeedFragment>
     with SingleTickerProviderStateMixin {
   List<String> labels = ['Discover', 'Following'];
-  final List _posts = ['post1', 'post2', 'post3', 'post4', 'post5'];
 
   late PageController _pageController;
   late TabController _tabController;
@@ -48,7 +51,7 @@ class _FeedFragmentState extends State<FeedFragment>
     return Column(
       children: [
         //Search Bar
-        SearchBarWidget(),
+        SearchBarWidget(themeColors: widget.themeColors),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 66, vertical: 30),
           child: ToggleBarWidget(labels: labels,
@@ -98,6 +101,7 @@ class _FeedFragmentState extends State<FeedFragment>
                               shortDescription: spot['translated_short_description']['en'] ?? 'No description',
                               area: spot['area'] ?? 'No Title',
                               hashtags: spot['hashtags'] ?? "No Hashtag",
+                              themeColors: widget.themeColors,
                             ),
                           );
                         },

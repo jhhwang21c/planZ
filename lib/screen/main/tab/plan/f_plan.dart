@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:planZ/common/common.dart';
 
 class PlanFragment extends StatefulWidget {
-  const PlanFragment({super.key});
+  final AbstractThemeColors themeColors;
+  const PlanFragment({super.key, required this.themeColors});
 
   @override
   State<PlanFragment> createState() => _PlanFragmentState();

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:planZ/common/common.dart';
 
 class MypageFragment extends StatefulWidget {
-  const MypageFragment({super.key});
+  final AbstractThemeColors themeColors;
+  const MypageFragment({super.key, required this.themeColors});
 
   @override
   State<MypageFragment> createState() => _MypageFragmentState();

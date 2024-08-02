@@ -196,6 +196,10 @@ class _UserInfoState extends State<UserInfo>
               child: TabBarView(
             controller: _tabController,
             children: [
+              //Zips Tab
+              Center(
+                child: Text("Journeys Content"),
+              ),
               //Journeys Tab
               FutureBuilder<List<Map<String, dynamic>>>(
                   future: _fetchUserVideos(),
@@ -265,10 +269,6 @@ class _UserInfoState extends State<UserInfo>
               }
               ),
 
-              //Zips Tab
-              Center(
-                child: Text("Zips Content"),
-              ),
             ],
           ))
         ],

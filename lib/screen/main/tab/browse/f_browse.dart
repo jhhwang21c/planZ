@@ -10,7 +10,8 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
 
 class BrowseFragment extends StatefulWidget {
-  const BrowseFragment({super.key});
+  final AbstractThemeColors themeColors;
+  const BrowseFragment({super.key, required this.themeColors});
 
   @override
   State<BrowseFragment> createState() => _BrowseFragmentState();
@@ -100,7 +101,7 @@ class _BrowseFragmentState extends State<BrowseFragment>
       length: labels.length,
       child: Column(
         children: [
-          SearchBarWidget(),
+          SearchBarWidget(themeColors: widget.themeColors,),
           SizedBox(
             height: 10,
           ),

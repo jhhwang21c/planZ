@@ -9,7 +9,9 @@ import '../../common/common.dart';
 // import 'w_menu_drawer.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final AbstractThemeColors themeColors;
+
+  const MainScreen({Key? key, required this.themeColors}) : super(key: key);
 
   @override
   State<MainScreen> createState() => MainScreenState();
@@ -76,6 +78,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
                 child: TabNavigator(
                   navigatorKey: navigatorKeys[index],
                   tabItem: tab,
+                  themeColors: widget.themeColors,
                 ),
               ))
           .toList());

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class CardList extends StatelessWidget {
+import '../../../../common/theme/color/abs_theme_colors.dart';
+
+class CardList extends StatefulWidget {
   final String spotTitle;
   final String shortDescription;
   final String area;
+  final AbstractThemeColors themeColors;
   List<dynamic>? hashtags;
 
   CardList(
@@ -12,8 +15,14 @@ class CardList extends StatelessWidget {
       required this.shortDescription,
       required this.area,
       required this.hashtags,
+        required this.themeColors,
       });
 
+  @override
+  State<CardList> createState() => _CardListState();
+}
+
+class _CardListState extends State<CardList> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,14 +41,6 @@ class CardList extends StatelessWidget {
                     topLeft: Radius.circular(15.0),
                     topRight: Radius.circular(15.0),
                   ),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Colors.black.withOpacity(0.25),
-                  //     spreadRadius: 2,
-                  //     blurRadius: 5,
-                  //     offset: Offset(0, 4),
-                  //   ),
-                  // ],
                 ),
               ),
               Padding(
@@ -48,7 +49,7 @@ class CardList extends StatelessWidget {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.3),
+                        color: widget.themeColors.blackFillHalfOp,
                         borderRadius: BorderRadius.circular(100),
                       ),
                       child: Padding(
@@ -64,7 +65,7 @@ class CardList extends StatelessWidget {
                               width: 4,
                             ),
                             Text(
-                              area,
+                              widget.area,
                               style: TextStyle(
                                 color: Colors.white,
                               ),
@@ -76,14 +77,14 @@ class CardList extends StatelessWidget {
                     Container(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: hashtags != null
+                            child: widget.hashtags != null
                                 ? Wrap(
                                     spacing: 8.0,
-                                    children: hashtags!.map((hashtag) {
+                                    children: widget.hashtags!.map((hashtag) {
                                       return Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                         decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(0.3),
+                                          color:widget.themeColors.blackFillHalfOp,
                                           borderRadius: BorderRadius.circular(100),
                                         ),
                                         child: Text(
@@ -100,7 +101,6 @@ class CardList extends StatelessWidget {
                                     'Loading hashtags...',
                                     style: TextStyle(fontSize: 12.0,color: Colors.white),
                                   ),
-
                       ),
                     ),
                   ],
@@ -115,8 +115,8 @@ class CardList extends StatelessWidget {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    spreadRadius: 2,
+                    color: Color(0x64959DA5),
+                    spreadRadius: 0,
                     blurRadius: 16,
                     offset: Offset(0, 4),
                   ),
@@ -129,7 +129,7 @@ class CardList extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          spotTitle,
+                          widget.spotTitle,
                           style: TextStyle(
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
@@ -142,7 +142,7 @@ class CardList extends StatelessWidget {
                       children: [
                         Expanded(
                             child: Text(
-                          shortDescription,
+                          widget.shortDescription,
                           style: TextStyle(
                             fontSize: 12,
                           ),
