@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:planZ/common/common.dart';
+import 'package:planZ/common/widget/w_searchbar.dart';
 import 'package:planZ/screen/main/tab/browse/f_fullvideo.dart';
 import 'package:planZ/screen/main/tab/browse/f_map_view.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
@@ -67,22 +68,7 @@ class _BrowseFragmentState extends State<BrowseFragment> with SingleTickerProvid
       length: labels.length,
       child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-            height: 64.0,
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: const BorderSide(width: 0.8),
-                ),
-                prefixIcon: const Icon(
-                  Icons.search,
-                  size: 20.0,
-                ),
-              ),
-            ),
-          ),
+          SearchBarWidget(),
           Expanded(
             child: Stack(
               children: [
