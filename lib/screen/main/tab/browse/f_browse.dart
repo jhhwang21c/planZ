@@ -48,9 +48,21 @@ class _BrowseFragmentState extends State<BrowseFragment>
         maxWidth: 128,
         quality: 25,
       );
-      return thumbnailPath!;
+
+      if (thumbnailPath != null) {
+        final decodedPath = Uri.decodeFull(thumbnailPath);
+        if (File(decodedPath).existsSync()) {
+          print('Thumbnail file exists at: $decodedPath');
+          return decodedPath;
+        } else {
+          print('Thumbnail file does not exist at: $decodedPath');
+          return '';
+        }
+      } else {
+        return '';
+      }
     } catch (e) {
-      // Handle error
+      print('Error generating thumbnail: $e');
       return '';
     }
   }
