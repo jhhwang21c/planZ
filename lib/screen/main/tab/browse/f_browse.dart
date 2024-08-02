@@ -41,26 +41,42 @@ class _BrowseFragmentState extends State<BrowseFragment>
     try {
       final Directory tempDir = await getTemporaryDirectory();
       final String tempPath = tempDir.path;
-      final thumbnailPath = await VideoThumbnail.thumbnailFile(
-        video: videoUrl,
-        thumbnailPath: tempPath,
-        imageFormat: ImageFormat.PNG,
-        maxWidth: 128,
-        quality: 25,
-      );
+      String? thumbnailPath;
 
-      if (thumbnailPath != null) {
-        final decodedPath = Uri.decodeFull(thumbnailPath);
-        if (File(decodedPath).existsSync()) {
-          print('Thumbnail file exists at: $decodedPath');
-          return decodedPath;
+      if (Platform.isAndroid) {
+        // Original code for Android
+        thumbnailPath = await VideoThumbnail.thumbnailFile(
+          video: videoUrl,
+          thumbnailPath: tempPath, // Save to temp directory
+          imageFormat: ImageFormat.PNG,
+          maxWidth: 128,
+          quality: 25,
+        );
+      } else if (Platform.isIOS) {
+        // New code for iOS
+        thumbnailPath = await VideoThumbnail.thumbnailFile(
+          video: videoUrl,
+          thumbnailPath: tempPath, // Save to temp directory
+          imageFormat: ImageFormat.PNG,
+          maxWidth: 128,
+          quality: 25,
+        );
+
+        if (thumbnailPath != null) {
+          final decodedPath = Uri.decodeFull(thumbnailPath);
+          if (File(decodedPath).existsSync()) {
+            print('Thumbnail file exists at: $decodedPath');
+            return decodedPath;
+          } else {
+            print('Thumbnail file does not exist at: $decodedPath');
+            return '';
+          }
         } else {
-          print('Thumbnail file does not exist at: $decodedPath');
           return '';
         }
-      } else {
-        return '';
       }
+
+      return thumbnailPath ?? '';
     } catch (e) {
       print('Error generating thumbnail: $e');
       return '';
