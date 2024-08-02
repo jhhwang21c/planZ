@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planZ/common/widget/w_togglebar.dart';
 import 'package:planZ/screen/main/tab/feed/f_card_list.dart';
 import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -49,36 +50,8 @@ class _FeedFragmentState extends State<FeedFragment>
         //Search Bar
         SearchBarWidget(),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 66.0, vertical: 30.0),
-          child: Container(
-            height: 40.0,
-            width: 242.0,// Adjust the height as needed
-            decoration: BoxDecoration(
-              color: Colors.grey[350],
-              borderRadius: BorderRadius.circular(100),
-            ),
-            child: TabBar(
-              dividerColor: Colors.transparent,
-              controller: _tabController,
-              onTap: _onTabTapped,
-              tabs: labels.map((label) {
-                return SizedBox(// Adjust the width as needed
-                  child: Tab(text: label),
-                );
-              }).toList(),
-
-              indicator: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(100),
-              ),
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 3), // Adjust padding for the indicator
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.black,
-              labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-              unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
-            ),
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 66, vertical: 30),
+          child: ToggleBarWidget(labels: labels,),
         ),
         Expanded(
             child: PageView(
@@ -122,6 +95,7 @@ class _FeedFragmentState extends State<FeedFragment>
                                 spotTitle: spot['translated_name']['en'] ?? 'No Title',
                               shortDescription: spot['translated_short_description']['en'] ?? 'No description',
                               area: spot['area'] ?? 'No Title',
+                              hashtags: spot['hashtags'] ?? "No Hashtag",
                             ),
                           );
                         },

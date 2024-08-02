@@ -26,16 +26,29 @@ class _SpotDetailState extends State<SpotDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Navigate back to the previous page
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           children: <Widget>[
             Container(
-                padding: EdgeInsets.only(top: 24.0),
+                padding: EdgeInsets.only(top: 12.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(widget.spotName),
+                    Text(widget.spotName,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),),
                     SvgPicture.asset(
                       'assets/image/icon/Save.svg',
                       width: 24.0,
@@ -45,7 +58,6 @@ class _SpotDetailState extends State<SpotDetail> {
                 )),
 
             Container(
-              padding: EdgeInsets.only(top: 12.0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: widget.hashtags != null
@@ -72,19 +84,19 @@ class _SpotDetailState extends State<SpotDetail> {
               children: [
                 SvgPicture.asset(
                   'assets/image/icon/Car.svg',
-                  width: 10.0,
-                  height: 10.0,
+                  width: 12.0,
+                  height: 12.0,
                 ),
                 SizedBox(
                   width: 4.0,
                 ),
-                Text("4 min"),
+                Text("4 min", style: TextStyle(fontSize: 13),),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: SvgPicture.asset(
                     'assets/image/icon/Transit.svg',
-                    width: 10.0,
-                    height: 10.0,
+                    width: 14.0,
+                    height: 14.0,
                   ),
                 ),
                 SizedBox(
@@ -96,8 +108,8 @@ class _SpotDetailState extends State<SpotDetail> {
                 ),
                 SvgPicture.asset(
                   'assets/image/icon/Walk.svg',
-                  width: 10.0,
-                  height: 10.0,
+                  width: 14.0,
+                  height: 14.0,
                 ),
                 SizedBox(
                   width: 4.0,
@@ -106,56 +118,89 @@ class _SpotDetailState extends State<SpotDetail> {
               ],
             ),
 
-            Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(120, 50), // width and height
-                      padding: EdgeInsets.symmetric(horizontal: 24.0),
+            //buttons
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black, backgroundColor: Colors.grey, // Text color
+                          minimumSize: Size(0, 40), // Width and height
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100), // Rounded corners
+                          ), // Shadow elevation
+                        ),
+                        child: Text(
+                          "Reserve",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ),
                     ),
-                    child: Text("Reserve"),
-                  ),
-                  const SizedBox(width: 24.0), // Space between the buttons
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(120, 50), // width and height
-                      padding: EdgeInsets.symmetric(horizontal: 24.0),
+                    const SizedBox(width: 24,),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.black, backgroundColor: Colors.grey, // Text color
+                          minimumSize: Size(0, 40), // Width and height
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100), // Rounded corners
+                          ), // Shadow elevation
+                        ),
+                        child: Text(
+                          "Add to Plan",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ),
                     ),
-                    child: Text("Start here"),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
 
             // pictures & videos
             Padding(
-              padding: const EdgeInsets.only(top: 36.0, bottom: 20.0),
+              padding: const EdgeInsets.only(bottom: 20.0),
               child: SizedBox(
                 height: 270.0,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
                     Container(
-                      color: Colors.grey,
                       width: 167.0,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(4)
+                      ),
                     ),
                     SizedBox(
                       width: 24.0,
                     ),
                     Container(
-                      color: Colors.grey,
                       width: 167.0,
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(4)
+                      ),
                     ),
                     SizedBox(
                       width: 24.0,
                     ),
                     Container(
-                      color: Colors.grey,
                       width: 167.0,
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(4)
+                      ),
                     ),
                     SizedBox(
                       width: 24.0,
@@ -181,18 +226,21 @@ class _SpotDetailState extends State<SpotDetail> {
                           ),
                         ),
                       ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/image/icon/Clock.svg',
-                            width: 14.0,
-                            height: 14.0,
-                          ),
-                          SizedBox(
-                            width: 8.0,
-                          ),
-                          Text(widget.hours),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/image/icon/Clock.svg',
+                              width: 14.0,
+                              height: 14.0,
+                            ),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            Text(widget.hours),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -274,7 +322,7 @@ class _SpotDetailState extends State<SpotDetail> {
                           const SizedBox(
                             width: 8.0,
                           ),
-                          Text("Contact: ${widget.contact}"),
+                          Text("Contact: (+82) ${widget.contact}"),
                         ],
                       ),
                     ),

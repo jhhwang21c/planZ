@@ -5,11 +5,14 @@ class CardList extends StatelessWidget {
   final String spotTitle;
   final String shortDescription;
   final String area;
+  List<dynamic>? hashtags;
 
-  CardList({
-    required this.spotTitle,
-    required this.shortDescription,
-    required this.area});
+  CardList(
+      {required this.spotTitle,
+      required this.shortDescription,
+      required this.area,
+      required this.hashtags,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,7 @@ class CardList extends StatelessWidget {
             Stack(children: [
               Container(
                 height: 150.0,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.blue,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15.0),
@@ -47,19 +50,59 @@ class CardList extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(100),
-
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Row(
                           children: [
-                            SvgPicture.asset('assets/image/icon/Location.svg', width: 8, height: 10,),
-                            const SizedBox(width: 4,),
-                            Text(area, style: TextStyle(color: Colors.white,),)
+                            SvgPicture.asset(
+                              'assets/image/icon/Location.svg',
+                              width: 8,
+                              height: 10,
+                            ),
+                            const SizedBox(
+                              width: 4,
+                            ),
+                            Text(
+                              area,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            )
                           ],
                         ),
                       ),
-                    )
+                    ),
+                    Container(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: hashtags != null
+                                ? Wrap(
+                                    spacing: 8.0,
+                                    children: hashtags!.map((hashtag) {
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.3),
+                                          borderRadius: BorderRadius.circular(100),
+                                        ),
+                                        child: Text(
+                                          '# $hashtag',
+                                          style: const TextStyle(
+                                            fontSize: 14.0,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  )
+                                : const Text(
+                                    'Loading hashtags...',
+                                    style: TextStyle(fontSize: 12.0,color: Colors.white),
+                                  ),
+
+                      ),
+                    ),
                   ],
                 ),
               )
