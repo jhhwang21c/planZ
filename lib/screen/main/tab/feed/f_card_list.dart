@@ -10,13 +10,13 @@ class CardList extends StatefulWidget {
   final AbstractThemeColors themeColors;
   List<dynamic>? hashtags;
 
-  CardList(
-      {required this.spotTitle,
-      required this.shortDescription,
-      required this.area,
-      required this.hashtags,
-        required this.themeColors,
-      });
+  CardList({
+    required this.spotTitle,
+    required this.shortDescription,
+    required this.area,
+    required this.hashtags,
+    required this.themeColors,
+  });
 
   @override
   State<CardList> createState() => _CardListState();
@@ -28,18 +28,23 @@ class _CardListState extends State<CardList> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Container(
-        // color: Colors.white,
         child: Column(
           children: [
             //upper card
             Stack(children: [
               Container(
                 height: 150.0,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Colors.blue,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(15.0),
                     topRight: Radius.circular(15.0),
+                  ),
+                  gradient: LinearGradient(
+                    colors: [widget.themeColors.mainBlack, Colors.blue],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    stops: [0, 0.4],
                   ),
                 ),
               ),
@@ -48,6 +53,7 @@ class _CardListState extends State<CardList> {
                 child: Row(
                   children: [
                     Container(
+                      height: 20,
                       decoration: BoxDecoration(
                         color: widget.themeColors.blackFillHalfOp,
                         borderRadius: BorderRadius.circular(100),
@@ -77,30 +83,32 @@ class _CardListState extends State<CardList> {
                     Container(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: widget.hashtags != null
-                                ? Wrap(
-                                    spacing: 8.0,
-                                    children: widget.hashtags!.map((hashtag) {
-                                      return Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                        decoration: BoxDecoration(
-                                          color:widget.themeColors.blackFillHalfOp,
-                                          borderRadius: BorderRadius.circular(100),
-                                        ),
-                                        child: Text(
-                                          '# $hashtag',
-                                          style: const TextStyle(
-                                            fontSize: 14.0,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  )
-                                : const Text(
-                                    'Loading hashtags...',
-                                    style: TextStyle(fontSize: 12.0,color: Colors.white),
-                                  ),
+                        child: widget.hashtags != null
+                            ? Wrap(
+                                spacing: 8.0,
+                                children: widget.hashtags!.map((hashtag) {
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    decoration: BoxDecoration(
+                                      color: widget.themeColors.blackFillHalfOp,
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Text(
+                                      '# $hashtag',
+                                      style: const TextStyle(
+                                        fontSize: 14.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                            : const Text(
+                                'Loading hashtags...',
+                                style: TextStyle(
+                                    fontSize: 12.0, color: Colors.white),
+                              ),
                       ),
                     ),
                   ],
@@ -110,10 +118,9 @@ class _CardListState extends State<CardList> {
 
             //bottom card
             Container(
-              height: 88.0,
               decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
+                color: widget.themeColors.mainWhite,
+                boxShadow: const [
                   BoxShadow(
                     color: Color(0x64959DA5),
                     spreadRadius: 0,
@@ -123,7 +130,7 @@ class _CardListState extends State<CardList> {
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15, top: 18),
+                padding: const EdgeInsets.only(left: 15, right: 15, top: 19.5,bottom: 15),
                 child: Column(
                   children: [
                     Row(
@@ -131,12 +138,14 @@ class _CardListState extends State<CardList> {
                         Text(
                           widget.spotTitle,
                           style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold
+                            ,
                           ),
                         ),
                       ],
                     ),
+                    const SizedBox(height:12 ,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -145,6 +154,7 @@ class _CardListState extends State<CardList> {
                           widget.shortDescription,
                           style: TextStyle(
                             fontSize: 12,
+                            fontWeight: FontWeight.w400
                           ),
                         )),
                         SvgPicture.asset('assets/image/icon/Save.svg')

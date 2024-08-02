@@ -103,13 +103,13 @@ class _BrowseFragmentState extends State<BrowseFragment>
         children: [
           SearchBarWidget(themeColors: widget.themeColors,),
           SizedBox(
-            height: 10,
+            height: 12,
           ),
           Expanded(
             child: Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 5,),
                   child: PageView(
                     controller: _pageController,
                     physics: NeverScrollableScrollPhysics(),
