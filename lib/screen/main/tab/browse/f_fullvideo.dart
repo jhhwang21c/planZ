@@ -12,9 +12,14 @@ import 'package:visibility_detector/visibility_detector.dart';
 class FullVideo extends StatefulWidget {
   final List<Map<String, dynamic>> videos;
   final int initialIndex;
+  final AbstractThemeColors themeColors;
 
   const FullVideo(
-      {super.key, required this.videos, required this.initialIndex});
+      {super.key,
+        required this.videos,
+        required this.initialIndex,
+        required this.themeColors,
+      });
 
   @override
   _FullVideoState createState() => _FullVideoState();
@@ -192,6 +197,7 @@ class _FullVideoState extends State<FullVideo>
                                           followersCount: _user!['follower']?.length ?? "no followers",
                                             followingCount: _user!['following']?.length ?? "no following",
                                           userId: video['user_id'],
+                                          themeColors: widget.themeColors,
                                         ))
                                       );
                                     },
@@ -306,7 +312,9 @@ class _FullVideoState extends State<FullVideo>
                 padding: const EdgeInsets.only(top: 10.0),
                 child: ToggleBarWidget(labels: labels,
                   pageController: _pageController,
-                  tabController: _tabController,),
+                  tabController: _tabController,
+                  themeColors: widget.themeColors,
+                ),
               )
             ],
           ),

@@ -86,12 +86,12 @@ class MyThemeColors extends AbstractThemeColors {
   Color get logoBright=> const Color(0xFFFDDC3A);
   Color get logoPale => const Color(0xFFFFE877);
   Color get iconBackground => const Color(0xFFFFFBF0);
-  Color get mainText => const Color(0xFF2A2A2A);
+  Color get mainBlack => const Color(0xFF2A2A2A);
   Color get blackFillHalfOp => const Color(0x802A2A2A);
   Color get mainGray => const Color(0xFF5F6368);
   Color get placeholder => const Color(0xFF6F6F6F);
   Color get grayFillHalfOp => const Color(0x80ACACAC);
-  Color get grayFillQuartOop => const Color(0x64ACACAC);
+  Color get grayFillQuartOp => const Color(0x64ACACAC);
   Color get baseGray => const Color(0xFFE6E6E6);
   Color get baseGrayPale => const Color(0x99E6E6E6);
   Color get mainWhite => const Color(0xFFFAFAFA);

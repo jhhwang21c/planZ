@@ -56,7 +56,9 @@ class _FeedFragmentState extends State<FeedFragment>
           padding: const EdgeInsets.symmetric(horizontal: 66, vertical: 30),
           child: ToggleBarWidget(labels: labels,
             pageController: _pageController,
-            tabController: _tabController,),
+            tabController: _tabController,
+            themeColors: widget.themeColors,
+          ),
         ),
         Expanded(
             child: PageView(

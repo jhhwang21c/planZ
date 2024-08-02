@@ -14,13 +14,23 @@ class SearchBarWidget extends StatelessWidget {
         height: 60.0,
         child: TextField(
           decoration: InputDecoration(
-            border: OutlineInputBorder(
+            enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(100.0),
-              borderSide: const BorderSide(width: 0.8),
+              borderSide: BorderSide(
+                color: themeColors.baseGray,
+                // width: 0.8,
+              ),
             ),
-            prefixIcon: const Icon(
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(100.0),
+              borderSide: BorderSide(
+                color: themeColors.mainGray,
+              ),
+            ),
+            prefixIcon: Icon(
               Icons.search,
               size: 24.0,
+              color: themeColors.mainGray,
             ),
           ),
         ),

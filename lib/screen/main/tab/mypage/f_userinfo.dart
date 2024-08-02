@@ -14,6 +14,7 @@ class UserInfo extends StatefulWidget {
   final int followersCount;
   final int followingCount;
   final String userId;
+  final AbstractThemeColors themeColors;
 
   UserInfo({
     required this.profileImageUrl,
@@ -21,6 +22,7 @@ class UserInfo extends StatefulWidget {
     required this.followersCount,
     required this.followingCount,
     required this.userId,
+    required this.themeColors,
   });
 
   @override
@@ -238,7 +240,11 @@ class _UserInfoState extends State<UserInfo>
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => FullVideo(videos: videos, initialIndex: index),
+                                  builder: (context) => FullVideo(
+                                      videos: videos,
+                                      initialIndex: index,
+                                    themeColors: widget.themeColors,
+                                  ),
                                 ),
                               );
                             },

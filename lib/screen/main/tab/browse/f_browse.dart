@@ -161,7 +161,9 @@ class _BrowseFragmentState extends State<BrowseFragment>
                                         MaterialPageRoute(
                                           builder: (context) => FullVideo(
                                               videos: videos,
-                                              initialIndex: index),
+                                              initialIndex: index,
+                                            themeColors: widget.themeColors,
+                                          ),
                                         ),
                                       );
                                     },
@@ -202,6 +204,7 @@ class _BrowseFragmentState extends State<BrowseFragment>
                     labels: labels,
                     pageController: _pageController,
                     tabController: _tabController,
+                    themeColors: widget.themeColors,
                   ),
                 ),
               ],
