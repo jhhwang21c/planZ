@@ -6,8 +6,8 @@ import 'package:planZ/screen/main/tab/browse/f_map_view.dart';
 import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
 import 'package:planZ/screen/main/tab/mypage/f_userinfo.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 
 class FullVideo extends StatefulWidget {
   final List<Map<String, dynamic>> videos;
