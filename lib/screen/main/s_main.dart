@@ -1,6 +1,7 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:planZ/common/dart/extension/num_duration_extension.dart';
+import 'package:planZ/screen/main/s_login.dart';
 import 'package:planZ/screen/main/tab/tab_item.dart';
 import 'package:planZ/screen/main/tab/tab_navigator.dart';
 import 'package:flutter/material.dart';
@@ -32,10 +33,14 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
-    // TODO: implement afterFirstLayout
-    delay(() {
+    Future.delayed(Duration(milliseconds: 1500), () {
       FlutterNativeSplash.remove();
-    }, 1500.ms);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage(themeColors: widget.themeColors)),
+      );
+    });
   }
 
   @override
