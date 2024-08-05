@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:planZ/common/common.dart';
 
 class SpotDetail extends StatefulWidget {
   final String spotName;
@@ -7,6 +8,7 @@ class SpotDetail extends StatefulWidget {
   final String contact;
   final String hours;
   final bool parking;
+  final List<String> imageLinks;
   List<dynamic>? hashtags;
 
   SpotDetail({
@@ -16,6 +18,7 @@ class SpotDetail extends StatefulWidget {
     required this.hours,
     required this.parking,
     required this.hashtags,
+    required this.imageLinks,
   });
 
   @override
@@ -29,14 +32,14 @@ class _SpotDetailState extends State<SpotDetail> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Navigate back to the previous page
           },
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           children: <Widget>[
             Container(
@@ -44,11 +47,13 @@ class _SpotDetailState extends State<SpotDetail> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(widget.spotName,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                    ),),
+                    Text(
+                      widget.spotName,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     SvgPicture.asset(
                       'assets/image/icon/Save.svg',
                       width: 24.0,
@@ -62,21 +67,21 @@ class _SpotDetailState extends State<SpotDetail> {
                 alignment: Alignment.centerLeft,
                 child: widget.hashtags != null
                     ? Wrap(
-                  spacing: 8.0,
-                  children: widget.hashtags!.map((hashtag) {
-                    return Text(
-                      '# $hashtag',
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.black, // You can change the color if needed
-                      ),
-                    );
-                  }).toList(),
-                )
+                        spacing: 8.0,
+                        children: widget.hashtags!.map((hashtag) {
+                          return Text(
+                            '# $hashtag',
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.black, // You can change the color if needed
+                            ),
+                          );
+                        }).toList(),
+                      )
                     : const Text(
-                  'Loading hashtags...',
-                  style: TextStyle(fontSize: 12.0),
-                ),
+                        'Loading hashtags...',
+                        style: TextStyle(fontSize: 12.0),
+                      ),
               ),
             ),
 
@@ -87,10 +92,13 @@ class _SpotDetailState extends State<SpotDetail> {
                   width: 12.0,
                   height: 12.0,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 4.0,
                 ),
-                Text("4 min", style: TextStyle(fontSize: 13),),
+                const Text(
+                  "4 min",
+                  style: TextStyle(fontSize: 13),
+                ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: SvgPicture.asset(
@@ -99,11 +107,11 @@ class _SpotDetailState extends State<SpotDetail> {
                     height: 14.0,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 4.0,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
+                const Padding(
+                  padding: EdgeInsets.only(right: 8.0),
                   child: Text("4 min"),
                 ),
                 SvgPicture.asset(
@@ -111,10 +119,10 @@ class _SpotDetailState extends State<SpotDetail> {
                   width: 14.0,
                   height: 14.0,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 4.0,
                 ),
-                Text("15 min"),
+                const Text("15 min"),
               ],
             ),
 
@@ -129,13 +137,17 @@ class _SpotDetailState extends State<SpotDetail> {
                       child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.black, backgroundColor: Colors.grey, // Text color
-                          minimumSize: Size(0, 40), // Width and height
+                          foregroundColor: Colors.black,
+                          backgroundColor: Colors.grey,
+                          // Text color
+                          minimumSize: Size(0, 40),
+                          // Width and height
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(100), // Rounded corners
+                            borderRadius:
+                                BorderRadius.circular(100), // Rounded corners
                           ), // Shadow elevation
                         ),
-                        child: Text(
+                        child: const Text(
                           "Reserve",
                           style: TextStyle(
                             fontSize: 14.0,
@@ -143,18 +155,24 @@ class _SpotDetailState extends State<SpotDetail> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 24,),
+                    const SizedBox(
+                      width: 24,
+                    ),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.black, backgroundColor: Colors.grey, // Text color
-                          minimumSize: Size(0, 40), // Width and height
+                          foregroundColor: Colors.black,
+                          backgroundColor: Colors.grey,
+                          // Text color
+                          minimumSize: Size(0, 40),
+                          // Width and height
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(100), // Rounded corners
+                            borderRadius:
+                                BorderRadius.circular(100), // Rounded corners
                           ), // Shadow elevation
                         ),
-                        child: Text(
+                        child: const Text(
                           "Add to Plan",
                           style: TextStyle(
                             fontSize: 14.0,
@@ -172,40 +190,27 @@ class _SpotDetailState extends State<SpotDetail> {
               padding: const EdgeInsets.only(bottom: 20.0),
               child: SizedBox(
                 height: 270.0,
-                child: ListView(
+                child: widget.imageLinks.isEmpty
+                ? Center(
+                  child: Text("No images available"),
+                )
+                : ListView.builder(
+                  itemCount: widget.imageLinks.length,
                   scrollDirection: Axis.horizontal,
-                  children: [
-                    Container(
-                      width: 167.0,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(4)
-                      ),
-                    ),
-                    SizedBox(
-                      width: 24.0,
-                    ),
-                    Container(
-                      width: 167.0,
-                      decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(4)
-                      ),
-                    ),
-                    SizedBox(
-                      width: 24.0,
-                    ),
-                    Container(
-                      width: 167.0,
-                      decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(4)
-                      ),
-                    ),
-                    SizedBox(
-                      width: 24.0,
-                    ),
-                  ],
+                  itemBuilder: (context, index) {
+                    return Row(children: [
+                        AspectRatio(
+                            aspectRatio: 9 / 16,
+                            child: Image.network(
+                              widget.imageLinks[index],
+                              fit: BoxFit.cover,
+                            ),
+                        ),
+                      const SizedBox(
+                        width: 24,
+                      )
+                    ]);
+                  },
                 ),
               ),
             ),
@@ -215,7 +220,6 @@ class _SpotDetailState extends State<SpotDetail> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 40.0,
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border(
@@ -235,10 +239,10 @@ class _SpotDetailState extends State<SpotDetail> {
                               width: 14.0,
                               height: 14.0,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 8.0,
                             ),
-                            Text(widget.hours),
+                            Expanded(child: Text(widget.hours)),
                           ],
                         ),
                       ),
@@ -263,7 +267,7 @@ class _SpotDetailState extends State<SpotDetail> {
                             width: 14.0,
                             height: 14.0,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8.0,
                           ),
                           Expanded(child: Text(widget.address)),

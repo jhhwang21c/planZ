@@ -44,9 +44,24 @@ class _FeedFragmentState extends State<FeedFragment>
   Future<List<Map<String, dynamic>>> _fetchSpot() async {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('spot').limit(5).get();
-    return querySnapshot.docs
-        .map((doc) => doc.data() as Map<String, dynamic>)
-        .toList();
+
+    List<Map<String, dynamic>> spots = [];
+
+    for (var doc in querySnapshot.docs) {
+      var spotData = doc.data() as Map<String,dynamic>;
+
+      //fetch from "image" subcollection
+      QuerySnapshot imageSnapshot =
+          await doc.reference.collection('image').get();
+      List<String> imageLinks = imageSnapshot.docs
+          .map((imageDoc) => imageDoc['image_link'] as String)
+          .toList();
+
+      spotData['image_links'] = imageLinks;
+      spots.add(spotData);
+    }
+
+    return spots;
   }
 
   @override
@@ -98,6 +113,8 @@ class _FeedFragmentState extends State<FeedFragment>
                           }
                         }
 
+                        List<String> imageLinks = spot['image_links'] ?? [];
+
                         return InkWell(
                           onTap: () {
                             Navigator.push(
@@ -113,6 +130,7 @@ class _FeedFragmentState extends State<FeedFragment>
                                   hours: spot['translated_hours'][currentLanguage] ?? "Hours Unavailable",
                                   parking: spot['parking'] ?? "No Parking Info",
                                   hashtags: hashtags,
+                                  imageLinks: imageLinks,
                                 ),
                               ),
                             );

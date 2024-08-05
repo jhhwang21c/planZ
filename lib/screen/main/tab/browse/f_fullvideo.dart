@@ -95,14 +95,26 @@ class _FullVideoState extends State<FullVideo>
 
   Future<void> _fetchSpotData(String spotId) async {
     DocumentSnapshot spotSnapshot =
-        await _firestore.collection('spot').doc(spotId).get();
-    setState(() {
-      _spot = spotSnapshot.data() as Map<String, dynamic>?;
-      _hashtags = _spot?['hashtags'] as List<dynamic>?;
-      _spotLocation = _spot?['location'];
-    });
-  }
+    await _firestore.collection('spot').doc(spotId).get();
 
+    if (spotSnapshot.exists) {
+      var spotData = spotSnapshot.data() as Map<String, dynamic>;
+
+      // Fetch images from the "image" subcollection
+      QuerySnapshot imageSnapshot =
+      await spotSnapshot.reference.collection('image').get();
+      List<String> imageLinks = imageSnapshot.docs
+          .map((imageDoc) => imageDoc['image_link'] as String)
+          .toList();
+
+      setState(() {
+        _spot = spotData;
+        _hashtags = _spot?['hashtags'] as List<dynamic>?;
+        _spotLocation = _spot?['location'];
+        _spot!['image_links'] = imageLinks;
+      });
+    }
+  }
   void _onTabTapped(int index) {
     _tabController.animateTo(index);
     if (index == 1 && _controllers[_currentIndex] != null) {
@@ -250,6 +262,7 @@ class _FullVideoState extends State<FullVideo>
                                                     hours: _spot != null ? _spot!['translated_hours'][currentLanguage] ?? "Hours Unavailable" : 'Loading',
                                                     parking: _spot != null ? _spot!['parking'] ?? false : false,
                                                     hashtags: _hashtags,
+                                                    imageLinks: _spot != null ? _spot!['image_links'] as List<String> : [],
                                                   ),
                                                 ),
                                               );
