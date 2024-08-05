@@ -147,6 +147,7 @@ class _FeedFragmentState extends State<FeedFragment>
                                 spot['translated_area']['en'] ?? "No Info",
                             hashtags: hashtags,
                             themeColors: widget.themeColors,
+                            imageLinks: imageLinks,
                           ),
                         );
                       },

@@ -8,14 +8,17 @@ class CardList extends StatefulWidget {
   final String shortDescription;
   final String area;
   final AbstractThemeColors themeColors;
+  final List<String> imageLinks;
   List<dynamic>? hashtags;
 
   CardList({
+    super.key,
     required this.spotTitle,
     required this.shortDescription,
     required this.area,
     required this.hashtags,
     required this.themeColors,
+    required this.imageLinks,
   });
 
   @override
@@ -46,6 +49,11 @@ class _CardListState extends State<CardList> {
                     end: Alignment.topCenter,
                     stops: [0, 0.4],
                   ),
+                  image: widget.imageLinks.isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(widget.imageLinks[0]),
+                          fit: BoxFit.cover)
+                      : null,
                 ),
               ),
               Padding(
@@ -93,8 +101,10 @@ class _CardListState extends State<CardList> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8.0),
                                       decoration: BoxDecoration(
-                                        color: widget.themeColors.blackFillHalfOp,
-                                        borderRadius: BorderRadius.circular(100),
+                                        color:
+                                            widget.themeColors.blackFillHalfOp,
+                                        borderRadius:
+                                            BorderRadius.circular(100),
                                       ),
                                       child: Text(
                                         '# $hashtag',
@@ -133,7 +143,8 @@ class _CardListState extends State<CardList> {
                 ],
               ),
               child: Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15, top: 19.5,bottom: 15),
+                padding: const EdgeInsets.only(
+                    left: 15, right: 15, top: 19.5, bottom: 15),
                 child: Column(
                   children: [
                     Row(
@@ -142,13 +153,14 @@ class _CardListState extends State<CardList> {
                           widget.spotTitle,
                           style: TextStyle(
                             fontSize: 24.0,
-                            fontWeight: FontWeight.bold
-                            ,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height:12 ,),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -156,9 +168,7 @@ class _CardListState extends State<CardList> {
                             child: Text(
                           widget.shortDescription,
                           style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400
-                          ),
+                              fontSize: 12, fontWeight: FontWeight.w400),
                         )),
                         SvgPicture.asset('assets/image/icon/Save.svg')
                       ],
