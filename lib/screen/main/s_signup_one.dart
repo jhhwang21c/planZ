@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:planZ/common/common.dart';
+import 'package:planZ/screen/main/authentication.dart';
 import 'package:planZ/screen/main/s_signup_two.dart';
 
 import '../../common/widget/scaffold/w_text_field.dart';
@@ -8,6 +9,7 @@ import '../../common/widget/w_button.dart';
 
 class SignUpPageOne extends StatefulWidget {
   final AbstractThemeColors themeColors;
+
   const SignUpPageOne({super.key, required this.themeColors});
 
   @override
@@ -18,8 +20,23 @@ class _SignUpPageOneState extends State<SignUpPageOne> {
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
 
+
+  void _goToNextPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SignUpPageTwo(
+          themeColors: widget.themeColors,
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -37,7 +54,7 @@ class _SignUpPageOneState extends State<SignUpPageOne> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const SizedBox(
-                height: 131,
+                height: 80,
               ),
               const SizedBox(
                 width: 198,
@@ -62,25 +79,32 @@ class _SignUpPageOneState extends State<SignUpPageOne> {
                 style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
               ),
               TextFieldInpute(
-                textEditingController: firstNameController, hintText: 'Your first name',
+                textEditingController: firstNameController,
+                hintText: 'Your first name',
               ),
               const Text(
                 'Last Name',
                 style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
               ),
               TextFieldInpute(
-                textEditingController: lastNameController, hintText: 'Your last name',
+                textEditingController: lastNameController,
+                hintText: 'Your last name',
               ),
-              MyButton(
-                  onTab: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SignUpPageTwo(themeColors: widget.themeColors),
-                      ),
-                    );
-                  },
-                  text: "Next"),
+              ElevatedButton(
+                onPressed: _goToNextPage,
+                child: Text("Next"),
+              ),
+              // MyButton(
+              //     onTab: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //           builder: (context) =>
+              //               SignUpPageTwo(themeColors: widget.themeColors),
+              //         ),
+              //       );
+              //     },
+              //     text: "Next"),
             ],
           ),
         ),

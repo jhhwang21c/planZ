@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:planZ/common/common.dart';
+import 'package:planZ/screen/main/authentication.dart';
 import 'package:planZ/screen/main/s_signup_three.dart';
 
 import '../../common/widget/scaffold/w_text_field.dart';
@@ -8,7 +9,14 @@ import '../../common/widget/w_button.dart';
 
 class SignUpPageTwo extends StatefulWidget {
   final AbstractThemeColors themeColors;
-  const SignUpPageTwo({super.key, required this.themeColors});
+  final String firstName;
+  final String lastName;
+
+  const SignUpPageTwo(
+      {super.key,
+      required this.themeColors,
+      required this.firstName,
+      required this.lastName});
 
   @override
   State<SignUpPageTwo> createState() => _SignUpPageTwoState();
@@ -17,6 +25,22 @@ class SignUpPageTwo extends StatefulWidget {
 class _SignUpPageTwoState extends State<SignUpPageTwo> {
   final TextEditingController birthdayController = TextEditingController();
   final TextEditingController genderController = TextEditingController();
+
+  void _goToNextPage() async {
+    // Store the first name, last name, birthday, and gender temporarily
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SignUpPageThree(
+          themeColors: widget.themeColors,
+          firstName: widget.firstName,
+          lastName: widget.lastName,
+          birthday: birthdayController.text,
+          gender: genderController.text,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,25 +86,32 @@ class _SignUpPageTwoState extends State<SignUpPageTwo> {
                 style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
               ),
               TextFieldInpute(
-                textEditingController: birthdayController, hintText: 'DD/MM/YYYY',
+                textEditingController: birthdayController,
+                hintText: 'DD/MM/YYYY',
               ),
               const Text(
                 'Last Name',
                 style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
               ),
               TextFieldInpute(
-                textEditingController: genderController, hintText: 'Gender',
+                textEditingController: genderController,
+                hintText: 'Gender',
               ),
-              MyButton(
-                  onTab: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>  SignUpPageThree(themeColors: widget.themeColors),
-                      ),
-                    );
-                  },
-                  text: "Next"),
+              ElevatedButton(
+                onPressed: _goToNextPage,
+                child: Text("Next"),
+              ),
+              // MyButton(
+              //     onTab: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //           builder: (context) =>
+              //               SignUpPageThree(themeColors: widget.themeColors),
+              //         ),
+              //       );
+              //     },
+              //     text: "Next"),
             ],
           ),
         ),

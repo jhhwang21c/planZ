@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:planZ/common/common.dart';
+import 'package:planZ/screen/main/authentication.dart';
 import 'package:planZ/screen/main/s_main.dart';
 
 import '../../common/widget/scaffold/w_text_field.dart';
@@ -8,7 +9,22 @@ import '../../common/widget/w_button.dart';
 
 class SignUpPageFour extends StatefulWidget {
   final AbstractThemeColors themeColors;
-  const SignUpPageFour({super.key, required this.themeColors});
+  final String firstName;
+  final String lastName;
+  final String birthday;
+  final String gender;
+  final String email;
+  final String uid;
+
+  const SignUpPageFour(
+      {super.key,
+      required this.themeColors,
+      required this.firstName,
+      required this.lastName,
+      required this.birthday,
+      required this.gender,
+      required this.email,
+      required this.uid,});
 
   @override
   State<SignUpPageFour> createState() => _SignUpPageFourState();
@@ -16,6 +32,24 @@ class SignUpPageFour extends StatefulWidget {
 
 class _SignUpPageFourState extends State<SignUpPageFour> {
   final TextEditingController usernameController = TextEditingController();
+  final AuthServicews _authService = AuthServicews();
+
+  void _completeSignUp() async {
+    await _authService.updateUserProfile(
+      uid: widget.uid,
+      data: {
+        'username': usernameController.text,
+      },
+    );
+
+    // Navigate to the MainScreen or wherever appropriate
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MainScreen(themeColors: widget.themeColors),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,18 +87,10 @@ class _SignUpPageFourState extends State<SignUpPageFour> {
                 style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
               ),
               TextFieldInpute(
-                textEditingController: usernameController, hintText: 'yourusername',
+                textEditingController: usernameController,
+                hintText: 'your username',
               ),
-              MyButton(
-                  onTab: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MainScreen(themeColors: widget.themeColors),
-                      ),
-                    );
-                  },
-                  text: "Done!"),
+              ElevatedButton(onPressed: _completeSignUp, child: Text('Done!'))
             ],
           ),
         ),
