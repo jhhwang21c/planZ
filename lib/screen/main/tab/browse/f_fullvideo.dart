@@ -15,12 +15,12 @@ class FullVideo extends StatefulWidget {
   final int initialIndex;
   final AbstractThemeColors themeColors;
 
-  const FullVideo(
-      {super.key,
-        required this.videos,
-        required this.initialIndex,
-        required this.themeColors,
-      });
+  const FullVideo({
+    super.key,
+    required this.videos,
+    required this.initialIndex,
+    required this.themeColors,
+  });
 
   @override
   _FullVideoState createState() => _FullVideoState();
@@ -95,14 +95,14 @@ class _FullVideoState extends State<FullVideo>
 
   Future<void> _fetchSpotData(String spotId) async {
     DocumentSnapshot spotSnapshot =
-    await _firestore.collection('spot').doc(spotId).get();
+        await _firestore.collection('spot').doc(spotId).get();
 
     if (spotSnapshot.exists) {
       var spotData = spotSnapshot.data() as Map<String, dynamic>;
 
       // Fetch images from the "image" subcollection
       QuerySnapshot imageSnapshot =
-      await spotSnapshot.reference.collection('image').get();
+          await spotSnapshot.reference.collection('image').get();
       List<String> imageLinks = imageSnapshot.docs
           .map((imageDoc) => imageDoc['image_link'] as String)
           .toList();
@@ -115,6 +115,7 @@ class _FullVideoState extends State<FullVideo>
       });
     }
   }
+
   void _onTabTapped(int index) {
     _tabController.animateTo(index);
     if (index == 1 && _controllers[_currentIndex] != null) {
@@ -194,117 +195,185 @@ class _FullVideoState extends State<FullVideo>
                                   : CircularProgressIndicator(),
                             ),
 
-                            //User
+                            //bottom part
                             Positioned(
-                              bottom: 20,
-                              left:24.0,
-                              right:24.0,
+                              bottom: 0,
                               child: Container(
+                                width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [widget.themeColors.mainBlack, Colors.transparent],
+                                    colors: [
+                                      widget.themeColors.mainBlack,
+                                      Colors.transparent
+                                    ],
                                     begin: Alignment.bottomCenter,
                                     end: Alignment.topCenter,
                                     stops: [0, 1],
                                   ),
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => UserInfo(
-                                              profileImageUrl: _user!['profile_img_link'],
-                                              username: _user!['username'],
-                                              followersCount: _user!['follower']?.length ?? "no followers",
-                                              followingCount: _user!['following']?.length ?? "no following",
-                                              userId: video['user_id'],
-                                              themeColors: widget.themeColors,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Row(
-                                        children: [
-                                          if (_user != null && _user!['profile_img_link'] != null)
-                                            CircleAvatar(
-                                              backgroundImage: NetworkImage(_user!['profile_img_link']),
-                                              radius: 16.0,
-                                            ),
-                                          const SizedBox(width: 10.0),
-                                          Text(
-                                            _user != null ? _user!['username'] ?? 'Unknown User' : 'Loading',
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                      child: Row(
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => SpotDetail(
-                                                    spotName: _spot != null ? _spot!['translated_name'][currentLanguage] ?? "Unknown Name" : 'Loading',
-                                                    address: _spot != null ? _spot!['translated_address'][currentLanguage] ?? _spot!['translated_address']['en'] ?? "No Address" : 'Loading',
-                                                    contact: _spot != null ? _spot!['contact'] ?? "No Contact" : 'Loading',
-                                                    hours: _spot != null ? _spot!['translated_hours'][currentLanguage] ?? "Hours Unavailable" : 'Loading',
-                                                    parking: _spot != null ? _spot!['parking'] ?? false : false,
-                                                    hashtags: _hashtags,
-                                                    imageLinks: _spot != null ? _spot!['image_links'] as List<String> : [],
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            child: Container(
-                                              height: 26.0,
-                                              decoration: BoxDecoration(
-                                                color: Colors.black.withOpacity(0.25),
-                                                borderRadius: BorderRadius.circular(100),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 20, left: 24, right: 24),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => UserInfo(
+                                                profileImageUrl:
+                                                    _user!['profile_img_link'],
+                                                username: _user!['username'],
+                                                followersCount:
+                                                    _user!['follower']
+                                                            ?.length ??
+                                                        "no followers",
+                                                followingCount:
+                                                    _user!['following']
+                                                            ?.length ??
+                                                        "no following",
+                                                userId: video['user_id'],
+                                                themeColors: widget.themeColors,
                                               ),
-                                              child: Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                                                child: Center(
-                                                  child: Row(
-                                                    children: [
-                                                      SvgPicture.asset(
-                                                        'assets/image/icon/Location.svg',
-                                                        width: 8.0,
-                                                        height: 10.0,
-                                                      ),
-                                                      const SizedBox(width: 4.0),
-                                                      Text(
-                                                        _spot != null ? _spot!['translated_name'][currentLanguage] ?? 'No Info' : 'Loading',
-                                                        style: TextStyle(
-                                                          fontSize: 10.0,
-                                                          color: Colors.white,
+                                            ),
+                                          );
+                                        },
+                                        child: Row(
+                                          children: [
+                                            if (_user != null &&
+                                                _user!['profile_img_link'] !=
+                                                    null)
+                                              CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    _user!['profile_img_link']),
+                                                radius: 16.0,
+                                              ),
+                                            const SizedBox(width: 10.0),
+                                            Text(
+                                              _user != null
+                                                  ? _user!['username'] ??
+                                                      'Unknown User'
+                                                  : 'Loading',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
+                                        child: Row(
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SpotDetail(
+                                                      spotName: _spot != null
+                                                          ? _spot!['translated_name']
+                                                                  [
+                                                                  currentLanguage] ??
+                                                              "Unknown Name"
+                                                          : 'Loading',
+                                                      address: _spot != null
+                                                          ? _spot!['translated_address']
+                                                                  [
+                                                                  currentLanguage] ??
+                                                              _spot!['translated_address']
+                                                                  ['en'] ??
+                                                              "No Address"
+                                                          : 'Loading',
+                                                      contact: _spot != null
+                                                          ? _spot!['contact'] ??
+                                                              "No Contact"
+                                                          : 'Loading',
+                                                      hours: _spot != null
+                                                          ? _spot!['translated_hours']
+                                                                  [
+                                                                  currentLanguage] ??
+                                                              "Hours Unavailable"
+                                                          : 'Loading',
+                                                      parking: _spot != null
+                                                          ? _spot!['parking'] ??
+                                                              false
+                                                          : false,
+                                                      hashtags: _hashtags,
+                                                      imageLinks: _spot != null
+                                                          ? _spot![
+                                                                  'image_links']
+                                                              as List<String>
+                                                          : [],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: Container(
+                                                height: 26.0,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black
+                                                      .withOpacity(0.25),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 10.0,
+                                                      vertical: 6.0),
+                                                  child: Center(
+                                                    child: Row(
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          'assets/image/icon/Location.svg',
+                                                          width: 8.0,
+                                                          height: 10.0,
                                                         ),
-                                                      ),
-                                                    ],
+                                                        const SizedBox(
+                                                            width: 4.0),
+                                                        Text(
+                                                          _spot != null
+                                                              ? _spot!['translated_name']
+                                                                      [
+                                                                      currentLanguage] ??
+                                                                  'No Info'
+                                                              : 'Loading',
+                                                          style: TextStyle(
+                                                            fontSize: 10.0,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      _spot != null ? _spot!['translated_short_description'][currentLanguage] ?? 'Unknown Description' : 'Loading',
-                                      style: TextStyle(color: Colors.white, fontSize: 12.0),
-                                    ),
-                                  ],
+                                      Text(
+                                        _spot != null
+                                            ? _spot!['translated_short_description']
+                                                    [currentLanguage] ??
+                                                'Unknown Description'
+                                            : 'Loading',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.0),
+                                        softWrap: true,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -324,7 +393,8 @@ class _FullVideoState extends State<FullVideo>
               //Tab Bar
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
-                child: ToggleBarWidget(labels: labels,
+                child: ToggleBarWidget(
+                  labels: labels,
                   pageController: _pageController,
                   tabController: _tabController,
                   themeColors: widget.themeColors,
