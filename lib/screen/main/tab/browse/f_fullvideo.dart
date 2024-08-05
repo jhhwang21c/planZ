@@ -6,8 +6,9 @@ import 'package:planZ/screen/main/tab/browse/f_map_view.dart';
 import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
 import 'package:planZ/screen/main/tab/mypage/f_userinfo.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+import 'package:planZ/app_state.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 
 class FullVideo extends StatefulWidget {
   final List<Map<String, dynamic>> videos;
@@ -124,6 +125,8 @@ class _FullVideoState extends State<FullVideo>
 
   @override
   Widget build(BuildContext context) {
+    String currentLanguage = AppState.instance.appLanguage;
+    print("Current language in FeedFragment: $currentLanguage");
     return DefaultTabController(
       length: labels.length,
       child: Scaffold(
@@ -241,10 +244,10 @@ class _FullVideoState extends State<FullVideo>
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) => SpotDetail(
-                                                    spotName: _spot != null ? _spot!['name'] ?? "Unknown Name" : 'Loading',
-                                                    address: _spot != null ? _spot!['address'] ?? "No Address" : 'Loading',
+                                                    spotName: _spot != null ? _spot!['translated_name'][currentLanguage] ?? "Unknown Name" : 'Loading',
+                                                    address: _spot != null ? _spot!['translated_address'][currentLanguage] ?? _spot!['translated_address']['en'] ?? "No Address" : 'Loading',
                                                     contact: _spot != null ? _spot!['contact'] ?? "No Contact" : 'Loading',
-                                                    hours: _spot != null ? _spot!['hours'] ?? "Hours Unavailable" : 'Loading',
+                                                    hours: _spot != null ? _spot!['translated_hours'][currentLanguage] ?? "Hours Unavailable" : 'Loading',
                                                     parking: _spot != null ? _spot!['parking'] ?? false : false,
                                                     hashtags: _hashtags,
                                                   ),
@@ -269,7 +272,7 @@ class _FullVideoState extends State<FullVideo>
                                                       ),
                                                       const SizedBox(width: 4.0),
                                                       Text(
-                                                        _spot != null ? _spot!['translated_name']['en'] ?? 'Unknown Name' : 'Loading',
+                                                        _spot != null ? _spot!['translated_name'][currentLanguage] ?? 'No Info' : 'Loading',
                                                         style: TextStyle(
                                                           fontSize: 10.0,
                                                           color: Colors.white,
@@ -285,7 +288,7 @@ class _FullVideoState extends State<FullVideo>
                                       ),
                                     ),
                                     Text(
-                                      _spot != null ? _spot!['translated_short_description']['en'] ?? 'Unknown Description' : 'Loading',
+                                      _spot != null ? _spot!['translated_short_description'][currentLanguage] ?? 'Unknown Description' : 'Loading',
                                       style: TextStyle(color: Colors.white, fontSize: 12.0),
                                     ),
                                   ],
@@ -305,7 +308,7 @@ class _FullVideoState extends State<FullVideo>
                 ],
               ),
 
-              //Tabbar
+              //Tab Bar
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: ToggleBarWidget(labels: labels,
