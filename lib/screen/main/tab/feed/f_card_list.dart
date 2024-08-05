@@ -50,68 +50,71 @@ class _CardListState extends State<CardList> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 120, left: 12),
-                child: Row(
-                  children: [
-                    Container(
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: widget.themeColors.blackFillHalfOp,
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/image/icon/Location.svg',
-                              width: 8,
-                              height: 10,
-                            ),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            Text(
-                              widget.area,
-                              style: TextStyle(
-                                color: Colors.white,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 20,
+                        decoration: BoxDecoration(
+                          color: widget.themeColors.blackFillHalfOp,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/image/icon/Location.svg',
+                                width: 8,
+                                height: 10,
                               ),
-                            )
-                          ],
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              Text(
+                                widget.area,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: widget.hashtags != null
-                            ? Wrap(
-                                spacing: 8.0,
-                                children: widget.hashtags!.map((hashtag) {
-                                  return Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    decoration: BoxDecoration(
-                                      color: widget.themeColors.blackFillHalfOp,
-                                      borderRadius: BorderRadius.circular(100),
-                                    ),
-                                    child: Text(
-                                      '# $hashtag',
-                                      style: const TextStyle(
-                                        fontSize: 14.0,
-                                        color: Colors.white,
+                      Container(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: widget.hashtags != null
+                              ? Wrap(
+                                  spacing: 8.0,
+                                  children: widget.hashtags!.map((hashtag) {
+                                    return Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      decoration: BoxDecoration(
+                                        color: widget.themeColors.blackFillHalfOp,
+                                        borderRadius: BorderRadius.circular(100),
                                       ),
-                                    ),
-                                  );
-                                }).toList(),
-                              )
-                            : const Text(
-                                'Loading hashtags...',
-                                style: TextStyle(
-                                    fontSize: 12.0, color: Colors.white),
-                              ),
+                                      child: Text(
+                                        '# $hashtag',
+                                        style: const TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Text(
+                                  'Loading hashtags...',
+                                  style: TextStyle(
+                                      fontSize: 12.0, color: Colors.white),
+                                ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               )
             ]),

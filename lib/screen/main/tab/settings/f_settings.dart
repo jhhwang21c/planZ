@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planZ/common/common.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:planZ/app_state.dart';
 
 class SettingsFragment extends StatefulWidget {
   final AbstractThemeColors themeColors;
@@ -25,8 +26,43 @@ class _SettingsFragmentState extends State<SettingsFragment> {
   @override
   void initState() {
     super.initState();
-    //below should be signed-in user
+    // Load user data and language preference
     _fetchUserData('FebuBZg9a1RZ2GbPHbbhegnza2M2');
+    AppState.instance.loadAppLanguage();
+  }
+
+  void _showLanguagePicker(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: const Text('Korean'),
+                onTap: () => _selectLanguage('ko'),
+              ),
+              ListTile(
+                title: const Text('English'),
+                onTap: () => _selectLanguage('en'),
+              ),
+              ListTile(
+                title: const Text('Chinese'),
+                onTap: () => _selectLanguage('zh'),
+              ),
+              ListTile(
+                title: const Text('Japanese'),
+                onTap: () => _selectLanguage('ja'),
+              ),
+            ],
+          );
+        });
+  }
+
+  void _selectLanguage(String language) {
+    Navigator.pop(context);
+    AppState.instance.setAppLanguage(language);
+    setState(() {}); // Update the state to reflect the language change
   }
 
   @override
@@ -38,16 +74,18 @@ class _SettingsFragmentState extends State<SettingsFragment> {
         children: [
           // user info
           Padding(
-            padding: const EdgeInsets.only(left: 24.0, top: 12.0, bottom: 18.0),
+            padding: const EdgeInsets.only(
+                left: 25.0, top: 25.0, bottom: 18.0),
             child: Row(
               children: [
                 // user profile
-                Container(
+                SizedBox(
                   width: 88.0,
                   height: 88.0,
                   child: CircleAvatar(
-                    backgroundColor:
-                    _user!['profile_img_link'] == null ? Colors.grey : null,
+                    backgroundColor: _user!['profile_img_link'] == null
+                        ? Colors.grey
+                        : null,
                     backgroundImage: _user!['profile_img_link'] != null
                         ? NetworkImage(_user!['profile_img_link'])
                         : null,
@@ -55,7 +93,7 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                   ),
                 ),
                 const SizedBox(
-                  width: 24.0,
+                  width: 25.0,
                 ),
 
                 // username
@@ -65,7 +103,7 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                     Text("@${_user!['username'] ?? 'Unknown'}"),
                     SizedBox(
                       width: 108.0,
-                      height: 24.0,
+                      height: 25.0,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -77,7 +115,7 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                     ),
                     SizedBox(
                       width: 108.0,
-                      height: 24.0,
+                      height: 25.0,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -95,24 +133,100 @@ class _SettingsFragmentState extends State<SettingsFragment> {
           const Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: EdgeInsets.only(left: 24.0),
+              padding: EdgeInsets.only(left: 25.0),
               child: Text(
                 'Settings',
-                style: TextStyle(fontSize: 25),
+                style:
+                TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
               ),
             ),
           ),
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: EdgeInsets.only(left: 24.0),
-              child: Column(children: [
-                Text('1', style: TextStyle(fontSize: 25),),
-                Text('2', style: TextStyle(fontSize: 25),),
-                Text('3', style: TextStyle(fontSize: 25),),
-
-
-              ],),
+              padding: const EdgeInsets.only(left: 25.0, top: 20),
+              child: Column(
+                children: [
+                  const Row(
+                    children: [
+                      Icon(Icons.schedule),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          'My Saved',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(
+                    height: 20,
+                    thickness: 1,
+                    indent: 0,
+                    endIndent: 25,
+                    color: Colors.black26,
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.language),
+                      GestureDetector(
+                        onTap: () => _showLanguagePicker(context),
+                        child: const Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            'Language Preferences',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(
+                    height: 20,
+                    thickness: 1,
+                    indent: 0,
+                    endIndent: 25,
+                    color: Colors.black26,
+                  ),
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.local_parking,
+                        size: 20,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          'Display',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(
+                    height: 20,
+                    thickness: 1,
+                    indent: 0,
+                    endIndent: 25,
+                    color: Colors.black26,
+                  ),
+                  const Row(
+                    children: [
+                      Icon(
+                        Icons.contact_support_outlined,
+                        size: 20,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          'Privacy',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
