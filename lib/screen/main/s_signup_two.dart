@@ -5,7 +5,6 @@ import 'package:planZ/screen/main/authentication.dart';
 import 'package:planZ/screen/main/s_signup_three.dart';
 
 import '../../common/widget/scaffold/w_text_field.dart';
-import '../../common/widget/w_button.dart';
 
 class SignUpPageTwo extends StatefulWidget {
   final AbstractThemeColors themeColors;
@@ -101,17 +100,6 @@ class _SignUpPageTwoState extends State<SignUpPageTwo> {
                 onPressed: _goToNextPage,
                 child: Text("Next"),
               ),
-              // MyButton(
-              //     onTab: () {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (context) =>
-              //               SignUpPageThree(themeColors: widget.themeColors),
-              //         ),
-              //       );
-              //     },
-              //     text: "Next"),
             ],
           ),
         ),

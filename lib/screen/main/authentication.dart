@@ -5,6 +5,7 @@ class AuthServicews {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  //for signup
   Future<User?> createUserWithEmailAndPassword({
     required String email,
     required String password,
@@ -12,6 +13,23 @@ class AuthServicews {
     User? user;
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      user = credential.user;
+    } catch (e) {
+      print(e.toString());
+    }
+    return user;
+  }
+
+  Future<User?> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    User? user;
+    try {
+      UserCredential credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -33,6 +51,7 @@ class AuthServicews {
     }
   }
 
+
   Future<void> updateUserProfile({
     required String uid,
     required Map<String, dynamic> data,
@@ -43,4 +62,5 @@ class AuthServicews {
       print(e.toString());
     }
   }
+
 }

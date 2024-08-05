@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:planZ/common/common.dart';
 import 'package:planZ/screen/main/authentication.dart';
+import 'package:planZ/screen/main/s_login.dart';
 import 'package:planZ/screen/main/s_main.dart';
 
 import '../../common/widget/scaffold/w_text_field.dart';
-import '../../common/widget/w_button.dart';
 
 class SignUpPageFour extends StatefulWidget {
   final AbstractThemeColors themeColors;
@@ -34,6 +34,7 @@ class _SignUpPageFourState extends State<SignUpPageFour> {
   final TextEditingController usernameController = TextEditingController();
   final AuthServicews _authService = AuthServicews();
 
+
   void _completeSignUp() async {
     await _authService.updateUserProfile(
       uid: widget.uid,
@@ -46,7 +47,7 @@ class _SignUpPageFourState extends State<SignUpPageFour> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => MainScreen(themeColors: widget.themeColors),
+        builder: (context) => LoginPage(themeColors: widget.themeColors),
       ),
     );
   }

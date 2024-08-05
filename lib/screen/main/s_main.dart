@@ -1,4 +1,5 @@
 import 'package:after_layout/after_layout.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:planZ/common/dart/extension/num_duration_extension.dart';
 import 'package:planZ/screen/main/s_login.dart';
@@ -20,28 +21,24 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin, AfterLayoutMixin {
   TabItem _currentTab = TabItem.feed;
-  final tabs = [TabItem.feed, TabItem.browse, TabItem.plan, TabItem.mypage, TabItem.settings];
+  final tabs = [
+    TabItem.feed,
+    TabItem.browse,
+    TabItem.plan,
+    TabItem.mypage,
+    TabItem.settings
+  ];
   final List<GlobalKey<NavigatorState>> navigatorKeys = [];
 
   int get _currentIndex => tabs.indexOf(_currentTab);
 
-  GlobalKey<NavigatorState> get _currentTabNavigationKey => navigatorKeys[_currentIndex];
+  GlobalKey<NavigatorState> get _currentTabNavigationKey =>
+      navigatorKeys[_currentIndex];
 
   bool get extendBody => true;
 
   static double get bottomNavigationBarBorderRadius => 0.0;
 
-  @override
-  FutureOr<void> afterFirstLayout(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 1500), () {
-      FlutterNativeSplash.remove();
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage(themeColors: widget.themeColors)),
-      );
-    });
-  }
 
   @override
   void initState() {
@@ -73,12 +70,15 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   }
 
   bool get isRootPage =>
-      _currentTab == TabItem.feed && _currentTabNavigationKey.currentState?.canPop() == false;
+      _currentTab == TabItem.feed &&
+          _currentTabNavigationKey.currentState?.canPop() == false;
 
-  IndexedStack get pages => IndexedStack(
-      index: _currentIndex,
-      children: tabs
-          .mapIndexed((tab, index) => Offstage(
+  IndexedStack get pages =>
+      IndexedStack(
+          index: _currentIndex,
+          children: tabs
+              .mapIndexed((tab, index) =>
+              Offstage(
                 offstage: _currentTab != tab,
                 child: TabNavigator(
                   navigatorKey: navigatorKeys[index],
@@ -86,7 +86,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
                   themeColors: widget.themeColors,
                 ),
               ))
-          .toList());
+              .toList());
 
   void _handleBackPressed(bool didPop) {
     if (!didPop) {
@@ -130,11 +130,12 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   List<BottomNavigationBarItem> navigationBarItems(BuildContext context) {
     return tabs
         .mapIndexed(
-          (tab, index) => tab.toNavigationBarItem(
+          (tab, index) =>
+          tab.toNavigationBarItem(
             context,
             isActivated: _currentIndex == index,
           ),
-        )
+    )
         .toList();
   }
 
@@ -144,13 +145,14 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     });
   }
 
-  BottomNavigationBarItem bottomItem(
-      bool activate, IconData iconData, IconData inActivateIconData, String label) {
+  BottomNavigationBarItem bottomItem(bool activate, IconData iconData,
+      IconData inActivateIconData, String label) {
     return BottomNavigationBarItem(
         icon: Icon(
           key: ValueKey(label),
           activate ? iconData : inActivateIconData,
-          color: activate ? context.appColors.iconButton : context.appColors.iconButtonInactivate,
+          color: activate ? context.appColors.iconButton : context.appColors
+              .iconButtonInactivate,
         ),
         label: label);
   }
@@ -177,6 +179,27 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   void initNavigatorKeys() {
     for (final _ in tabs) {
       navigatorKeys.add(GlobalKey<NavigatorState>());
+    }
+  }
+
+
+  @override
+  FutureOr<void> afterFirstLayout(BuildContext context) async {
+    // Check if user is logged in
+    User? user = FirebaseAuth.instance.currentUser;
+
+    // If user is not logged in, navigate to LoginPage
+    if (user == null) {
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        FlutterNativeSplash.remove();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LoginPage(themeColors: widget.themeColors)),
+        );
+      });
+    } else {
+      FlutterNativeSplash.remove();
     }
   }
 }

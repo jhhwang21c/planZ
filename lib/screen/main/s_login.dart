@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:planZ/common/common.dart';
-import 'package:planZ/common/widget/w_button.dart';
+import 'package:planZ/screen/main/authentication.dart';
+import 'package:planZ/screen/main/s_main.dart';
 import 'package:planZ/screen/main/s_signup_one.dart';
 
 import '../../common/widget/scaffold/w_text_field.dart';
@@ -19,83 +21,109 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final AuthServicews _authService = AuthServicews();
+
+  void _login() async {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Email and password cannot be empty')));
+      return;
+    }
+
+    User? user = await _authService.signInWithEmailAndPassword(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+
+    if (user != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainScreen(themeColors: widget.themeColors),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Incorrect email or password")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child:
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 131,),
-            Center(
-              child: Image.asset(
-                'assets/image/splash/loginLogo.png',
-                width: 80,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(
                 height: 131,
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40.0,),
-              child: Text('Email',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16
+              Center(
+                child: Image.asset(
+                  'assets/image/splash/loginLogo.png',
+                  width: 80,
+                  height: 131,
                 ),
               ),
-            ),
-            TextFieldInpute(
-              textEditingController: emailController, hintText: '',),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40.0,),
-              child: Text('Password',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16
-                ),
+              const Text(
+                'Email',
+                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
               ),
-            ),
-            TextFieldInpute(
-              textEditingController: passwordController, hintText: '',),
-            const Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                "Forgot Password?",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Colors.blue,
-                ),
+              TextFieldInpute(
+                textEditingController: emailController,
+                hintText: '',
               ),
-            ),
-            MyButton(onTab: () {}, text: "Log In"),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Not a member?  ",
+              const Text(
+                'Password',
+                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
+              ),
+              TextFieldInpute(
+                textEditingController: passwordController,
+                hintText: '',
+              ),
+              const Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "Forgot Password?",
                   style: TextStyle(
-                      fontSize: 16
-                  ),),
-                GestureDetector(onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) =>  SignUpPageOne(themeColors: widget.themeColors),
-                      ),
-                  );
-                },
-                  child: const Text('Sign up',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16
-                    ),),
-                )
-              ],
-            )
-          ],
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+              ElevatedButton(onPressed: _login, child: Text('Log In')),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Not a member?  ",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              SignUpPageOne(themeColors: widget.themeColors),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      'Sign up',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
-      ),
-
       ),
     );
   }
