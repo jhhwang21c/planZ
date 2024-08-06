@@ -138,7 +138,7 @@ class _FullVideoState extends State<FullVideo>
 
   @override
   Widget build(BuildContext context) {
-    String currentLanguage = AppState.instance.appLanguage;
+    String currentLanguage = AppLangState.instance.appLanguage;
     print("Current language in FeedFragment: $currentLanguage");
     return DefaultTabController(
       length: labels.length,

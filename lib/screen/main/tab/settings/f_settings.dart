@@ -42,7 +42,7 @@ class _SettingsFragmentState extends State<SettingsFragment> {
     if (currentUser != null) {
       _fetchUserData(currentUser.uid);
     }
-    AppState.instance.loadAppLanguage();
+    AppLangState.instance.loadAppLanguage();
   }
 
   void _showLanguagePicker(BuildContext context) {
@@ -75,7 +75,7 @@ class _SettingsFragmentState extends State<SettingsFragment> {
 
   void _selectLanguage(String language) {
     Navigator.pop(context);
-    AppState.instance.setAppLanguage(language);
+    AppLangState.instance.setAppLanguage(language);
     setState(() {}); // Update the state to reflect the language change
   }
 
