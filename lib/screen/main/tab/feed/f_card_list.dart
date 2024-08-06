@@ -82,7 +82,7 @@ class _CardListState extends State<CardList> {
                               ),
                               Text(
                                 widget.area,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
                                 ),
                               )
@@ -151,7 +151,7 @@ class _CardListState extends State<CardList> {
                       children: [
                         Text(
                           widget.spotTitle,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 24.0,
                             fontWeight: FontWeight.bold,
                           ),
@@ -167,7 +167,7 @@ class _CardListState extends State<CardList> {
                         Expanded(
                             child: Text(
                           widget.shortDescription,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w400),
                         )),
                         SvgPicture.asset('assets/image/icon/Save.svg')
@@ -177,7 +177,7 @@ class _CardListState extends State<CardList> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 28,
             )
           ],

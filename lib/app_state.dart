@@ -1,11 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AppState {
+class AppLangState {
   // Private constructor
-  AppState._privateConstructor();
+  AppLangState._privateConstructor();
 
   // Singleton instance
-  static final AppState instance = AppState._privateConstructor();
+  static final AppLangState instance = AppLangState._privateConstructor();
 
   // App language
   String _appLanguage = 'en'; // Default language

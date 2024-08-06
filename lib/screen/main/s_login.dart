@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:planZ/common/common.dart';
 import 'package:planZ/screen/main/authentication.dart';
 import 'package:planZ/screen/main/s_main.dart';
@@ -26,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   void _login() async {
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Email and password cannot be empty')));
+          const SnackBar(content: Text('Email and password cannot be empty')));
       return;
     }
 
@@ -44,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Incorrect email or password")),
+        const SnackBar(content: Text("Incorrect email or password")),
       );
     }
   }
@@ -83,6 +81,7 @@ class _LoginPageState extends State<LoginPage> {
               TextFieldInpute(
                 textEditingController: passwordController,
                 hintText: '',
+                isObscure: true,
               ),
               const Align(
                 alignment: Alignment.centerRight,
@@ -95,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              ElevatedButton(onPressed: _login, child: Text('Log In')),
+              ElevatedButton(onPressed: _login, child: const Text('Log In')),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

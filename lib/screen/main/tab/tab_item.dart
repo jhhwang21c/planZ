@@ -1,6 +1,5 @@
 import 'package:planZ/common/common.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:planZ/screen/main/tab/browse/f_browse.dart';
 import 'package:planZ/screen/main/tab/feed/f_feed.dart';
 import 'package:planZ/screen/main/tab/mypage/f_mypage.dart';

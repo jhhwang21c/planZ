@@ -67,7 +67,7 @@ class _FeedFragmentState extends State<FeedFragment>
 
   @override
   Widget build(BuildContext context) {
-    String currentLanguage = AppState.instance.appLanguage;
+    String currentLanguage = AppLangState.instance.appLanguage;
     print("Current language in FeedFragment: $currentLanguage");
     return Column(
       children: [

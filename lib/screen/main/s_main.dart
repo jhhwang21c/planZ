@@ -1,14 +1,12 @@
 import 'package:after_layout/after_layout.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:planZ/common/dart/extension/num_duration_extension.dart';
 import 'package:planZ/screen/main/s_login.dart';
 import 'package:planZ/screen/main/tab/tab_item.dart';
 import 'package:planZ/screen/main/tab/tab_navigator.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/common.dart';
-// import 'w_menu_drawer.dart';
 
 class MainScreen extends StatefulWidget {
   final AbstractThemeColors themeColors;
@@ -190,7 +188,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
     // If user is not logged in, navigate to LoginPage
     if (user == null) {
-      Future.delayed(const Duration(milliseconds: 1500), () {
+      Future.delayed(const Duration(milliseconds: 1000), () {
         FlutterNativeSplash.remove();
         Navigator.pushReplacement(
           context,

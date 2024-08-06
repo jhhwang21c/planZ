@@ -48,7 +48,7 @@ abstract class AbstractThemeColors {
 
   //custom
   Color get selected => const Color(0xFFEAC50C);
-  Color get  logoBright=> const Color(0xFFFDDC3A);
+  Color get logoBright=> const Color(0xFFFDDC3A);
   Color get logoPale => const Color(0xFFFFE877);
   Color get iconBackground => const Color(0xFFFFFBF0);
   Color get mainBlack => const Color(0xFF2A2A2A);
