@@ -33,6 +33,9 @@ dependencies:
   google_maps_flutter: ^2.3.0
   location: ^5.0.3
 
+  #floating button
+  floating_menu_panel: ^0.0.2
+
   #launcher icon
   flutter_launcher_icons: "^0.13.1"
 
@@ -123,6 +126,7 @@ flutter:
     - assets/json/
     - assets/image/
     - assets/image/icon/
+    - assets/image/icon/add_notes.svg
     - assets/image/splash/
     - assets/image/flag/
     - assets/image/darkmode/

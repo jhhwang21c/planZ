@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:floating_menu_panel/floating_menu_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:planZ/common/common.dart';
+import 'package:planZ/common/widget/w_floating_menu.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../browse/f_fullvideo.dart';
@@ -29,7 +31,7 @@ class _MyPageFragmentState extends State<MyPageFragment>
 
   Future<void> _fetchUserData(String userId) async {
     DocumentSnapshot userSnapshot =
-    await _firestore.collection('user').doc(userId).get();
+        await _firestore.collection('user').doc(userId).get();
     setState(() {
       _user = userSnapshot.data() as Map<String, dynamic>?;
     });
@@ -120,70 +122,133 @@ class _MyPageFragmentState extends State<MyPageFragment>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          //user info
-          Padding(
-            padding: EdgeInsets.only(left: 24.0, top: 12.0, bottom: 18.0),
-            child: Row(
-              children: [
-                //user profile
-                Container(
-                  width: 88.0,
-                  height: 88.0,
-                  child: CircleAvatar(
+    return Column(
+      children: [
+        //user info
+        Padding(
+          padding: EdgeInsets.only(left: 24.0, top: 12.0, bottom: 18.0),
+          child: Row(
+            children: [
+              //user profile
+              Container(
+                width: 88.0,
+                height: 88.0,
+                child: Stack(children: [
+                  CircleAvatar(
                     backgroundColor:
                         _user!['profile_img_link'] == null ? Colors.grey : null,
                     backgroundImage: _user!['profile_img_link'] != null
                         ? NetworkImage(_user!['profile_img_link'])
                         : null,
-                    radius: 20.0,
+                    radius: 44.0,
                   ),
-                ),
-                SizedBox(
-                  width: 24.0,
-                ),
+                  Positioned(
+                      right: 5,
+                      bottom: 0,
+                      child: SvgPicture.asset(
+                        'assets/image/icon/Badge.svg',
+                        width: 19.36,
+                        height: 19.36,
+                      ))
+                ]),
+              ),
+              SizedBox(
+                width: 24.0,
+              ),
 
-                //username
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("@${_user!['username'] ?? 'Unknown'}"),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text("Ranking Lv. 1"),
-                    ),
-                    SizedBox(
-                      width: 108.0,
-                      height: 24.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Following"),
-                          Text("${_user!['following']?.length ?? 0}")
-                        ],
+              //username
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        _user!['username'] ?? 'Unknown',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 12,
+                      ),
+                      Text('🇰🇷')
+                    ],
+                  ),
+
+                  //edit profile
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Container(
+                      width: 62,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: context.appColors.mainGray,
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Edit profile",
+                          style: TextStyle(
+                              color: context.appColors.mainWhite,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
                     ),
-                    SizedBox(
-                      width: 108.0,
-                      height: 24.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Follower"),
-                          Text("${_user!['followers']?.length ?? 0}")
-                        ],
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
+                  ),
+
+                  //following
+                  SizedBox(
+                    width: 108.0,
+                    height: 24.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Following",
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          "${_user!['following']?.length ?? 0}",
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500),
+                        )
+                      ],
+                    ),
+                  ),
+
+                  //followers
+                  SizedBox(
+                    width: 108.0,
+                    height: 24.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Follower",
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          "${_user!['followers']?.length ?? 0}",
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ],
           ),
+        ),
 
-          //toggle bar
-          TabBar(
+        //toggle bar
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 3.0),
+          child: TabBar(
             controller: _tabController,
             onTap: _onTabTapped,
             tabs: labels.map((label) {
@@ -192,20 +257,31 @@ class _MyPageFragmentState extends State<MyPageFragment>
                 child: Tab(text: label),
               );
             }).toList(),
-            indicator: BoxDecoration(
-              color: Colors.grey[700],
+            indicator: UnderlineTabIndicator(
+              borderSide: BorderSide(
+                color: context.appColors.mainBlack,
+                width: 2.0,
+              ),
             ),
+            indicatorColor: Colors.transparent,
             indicatorSize: TabBarIndicatorSize.tab,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.black,
-            labelStyle: const TextStyle(fontWeight: FontWeight.normal),
-            unselectedLabelStyle:
-                const TextStyle(fontWeight: FontWeight.normal),
+            labelColor: context.appColors.mainBlack,
+            labelStyle: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+            ),
+            unselectedLabelColor: context.appColors.mainGray,
+            unselectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
+            ),
           ),
+        ),
 
-          //TabBarView with grid
-          Expanded(
-              child: TabBarView(
+        //TabBarView with grid
+        Expanded(
+            child: Stack(children: [
+          TabBarView(
             controller: _tabController,
             children: [
               //Zips Tab
@@ -287,9 +363,19 @@ class _MyPageFragmentState extends State<MyPageFragment>
                     }
                   }),
             ],
+          ),
+          Positioned(
+            right: 24,
+              bottom: 24,
+              child: FloatingMenu(
+            onPressed: () {},
+            buttons: [
+              PopupMenuItem(value: 'Journey', child: Text('Journey')),
+              PopupMenuItem(value: 'Zip', child: Text('Zip'))
+            ],
           ))
-        ],
-      ),
+        ]))
+      ],
     );
   }
 }

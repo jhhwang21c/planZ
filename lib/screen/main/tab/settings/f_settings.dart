@@ -81,8 +81,7 @@ class _SettingsFragmentState extends State<SettingsFragment> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _user == null
+    return  _user == null
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
@@ -243,7 +242,6 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                 ),
                 ElevatedButton(onPressed: _logout, child: Text('Log Out'))
               ],
-            ),
     );
   }
 }
