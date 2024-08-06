@@ -43,13 +43,13 @@ class _SpotDetailState extends State<SpotDetail> {
         child: Column(
           children: <Widget>[
             Container(
-                padding: EdgeInsets.only(top: 12.0),
+                padding: const EdgeInsets.only(top: 12.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       widget.spotName,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w600,
                       ),
@@ -71,7 +71,7 @@ class _SpotDetailState extends State<SpotDetail> {
                         children: widget.hashtags!.map((hashtag) {
                           return Text(
                             '# $hashtag',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 14.0,
                               color: Colors.black, // You can change the color if needed
                             ),
@@ -140,7 +140,7 @@ class _SpotDetailState extends State<SpotDetail> {
                           foregroundColor: Colors.black,
                           backgroundColor: Colors.grey,
                           // Text color
-                          minimumSize: Size(0, 40),
+                          minimumSize: const Size(0, 40),
                           // Width and height
                           shape: RoundedRectangleBorder(
                             borderRadius:
@@ -165,7 +165,7 @@ class _SpotDetailState extends State<SpotDetail> {
                           foregroundColor: Colors.black,
                           backgroundColor: Colors.grey,
                           // Text color
-                          minimumSize: Size(0, 40),
+                          minimumSize: const Size(0, 40),
                           // Width and height
                           shape: RoundedRectangleBorder(
                             borderRadius:
@@ -191,7 +191,7 @@ class _SpotDetailState extends State<SpotDetail> {
               child: SizedBox(
                 height: 270.0,
                 child: widget.imageLinks.isEmpty
-                ? Center(
+                ? const Center(
                   child: Text("No images available"),
                 )
                 : ListView.builder(
