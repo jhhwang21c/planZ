@@ -278,6 +278,7 @@ class _FullVideoState extends State<FullVideo>
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         SpotDetail(
+                                                          spotId: video['spot_id'],
                                                       spotName: _spot != null
                                                           ? _spot!['translated_name']
                                                                   [

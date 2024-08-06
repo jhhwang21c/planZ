@@ -1,8 +1,12 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:planZ/common/common.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:video_player/video_player.dart';
 
 class SpotDetail extends StatefulWidget {
+  final String spotId;
   final String spotName;
   final String address;
   final String contact;
@@ -12,6 +16,7 @@ class SpotDetail extends StatefulWidget {
   List<dynamic>? hashtags;
 
   SpotDetail({
+    required this.spotId,
     required this.spotName,
     required this.address,
     required this.contact,
@@ -26,6 +31,40 @@ class SpotDetail extends StatefulWidget {
 }
 
 class _SpotDetailState extends State<SpotDetail> {
+  List<String> videoLinks = [];
+  List<VideoPlayerController> _videoControllers = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchVideoLinks();
+  }
+
+  void fetchVideoLinks() async {
+    QuerySnapshot videoSnapshot = await FirebaseFirestore.instance
+        .collection('video')
+        .where('spot_id', isEqualTo: widget.spotId)
+        .get();
+
+    List<String> links =
+        videoSnapshot.docs.map((doc) => doc['video_link'] as String).toList();
+
+    setState(() {
+      videoLinks = links;
+      _videoControllers = links
+          .map((link) => VideoPlayerController.network(link)..initialize())
+          .toList();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    for (var controller in _videoControllers) {
+      controller.dispose();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +112,8 @@ class _SpotDetailState extends State<SpotDetail> {
                             '# $hashtag',
                             style: TextStyle(
                               fontSize: 14.0,
-                              color: Colors.black, // You can change the color if needed
+                              color: Colors
+                                  .black, // You can change the color if needed
                             ),
                           );
                         }).toList(),
@@ -190,28 +230,44 @@ class _SpotDetailState extends State<SpotDetail> {
               padding: const EdgeInsets.only(bottom: 20.0),
               child: SizedBox(
                 height: 270.0,
-                child: widget.imageLinks.isEmpty
-                ? Center(
-                  child: Text("No images available"),
-                )
-                : ListView.builder(
-                  itemCount: widget.imageLinks.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Row(children: [
-                        AspectRatio(
-                            aspectRatio: 9 / 16,
-                            child: Image.network(
-                              widget.imageLinks[index],
-                              fit: BoxFit.cover,
-                            ),
-                        ),
-                      const SizedBox(
-                        width: 24,
+                child: widget.imageLinks.isEmpty && videoLinks.isEmpty
+                    ? const Center(
+                        child: Text("No images or videos available"),
                       )
-                    ]);
-                  },
-                ),
+                    : ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          if (widget.imageLinks.isNotEmpty)
+                            ...widget.imageLinks.map((imageLink) => Row(
+                                  children: [
+                                    AspectRatio(
+                                      aspectRatio: 9 / 16,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(4.0), // Adjust the radius as needed
+                                        child: Image.network(
+                                          imageLink,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 24),
+                                  ],
+                                )),
+                          if (videoLinks.isNotEmpty)
+                            ..._videoControllers.map((controller) => Row(
+                                  children: [
+                                    AspectRatio(
+                                      aspectRatio: 9 / 16,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(4.0), // Border radius
+                                        child: VideoPlayer(controller),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 24),
+                                  ],
+                                )),
+                        ],
+                      ),
               ),
             ),
 

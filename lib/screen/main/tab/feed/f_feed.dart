@@ -49,6 +49,7 @@ class _FeedFragmentState extends State<FeedFragment>
 
     for (var doc in querySnapshot.docs) {
       var spotData = doc.data() as Map<String,dynamic>;
+      spotData['id'] = doc.id;
 
       //fetch from "image" subcollection
       QuerySnapshot imageSnapshot =
@@ -121,6 +122,7 @@ class _FeedFragmentState extends State<FeedFragment>
                               context,
                               MaterialPageRoute(
                                 builder: (context) => SpotDetail(
+                                  spotId: spot['id'],
                                   spotName: spot['translated_name']
                                           [currentLanguage] ??
                                       'No Title',
