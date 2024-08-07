@@ -62,7 +62,12 @@ class _ChatbotFragmentState extends State<ChatbotFragment> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Z bot"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios), // Custom back button icon
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: Column(
         children: [

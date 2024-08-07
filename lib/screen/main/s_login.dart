@@ -51,77 +51,95 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(
-                height: 131,
-              ),
-              Center(
-                child: Image.asset(
-                  'assets/image/splash/loginLogo.png',
-                  width: 80,
-                  height: 131,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
                 ),
-              ),
-              const Text(
-                'Email',
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
-              ),
-              TextFieldInpute(
-                textEditingController: emailController,
-                hintText: '',
-              ),
-              const Text(
-                'Password',
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
-              ),
-              TextFieldInpute(
-                textEditingController: passwordController,
-                hintText: '',
-                isObscure: true,
-              ),
-              const Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  "Forgot Password?",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.blue,
-                  ),
-                ),
-              ),
-              ElevatedButton(onPressed: _login, child: const Text('Log In')),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Not a member?  ",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              SignUpPageOne(themeColors: widget.themeColors),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const SizedBox(
+                          height: 131,
                         ),
-                      );
-                    },
-                    child: const Text(
-                      'Sign up',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        Center(
+                          child: Image.asset(
+                            'assets/image/splash/loginLogo.png',
+                            width: 80,
+                            height: 131,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Email',
+                          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
+                        ),
+                        TextFieldInpute(
+                          textEditingController: emailController,
+                          hintText: '',
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Password',
+                          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
+                        ),
+                        TextFieldInpute(
+                          textEditingController: passwordController,
+                          hintText: '',
+                          isObscure: true,
+                        ),
+                        const SizedBox(height: 16),
+                        const Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(onPressed: _login, child: const Text('Log In')),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Not a member?  ",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        SignUpPageOne(themeColors: widget.themeColors),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                'Sign up',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Spacer(), // Add spacer to push the content up and avoid overflow
+                      ],
                     ),
-                  )
-                ],
-              )
-            ],
-          ),
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
