@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:planZ/app_state.dart';
 import 'package:planZ/common/dart/extension/context_extension.dart';
+import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
 import 'package:video_player/video_player.dart';
 
 class JourneyPage extends StatelessWidget {
@@ -45,9 +46,13 @@ class JourneyPage extends StatelessWidget {
         if (spotDoc.exists) {
           var spotData = spotDoc.data() as Map<String, dynamic>;
           journeySpotData['translated_name'] = spotData['translated_name'];
+          journeySpotData['translated_address'] = spotData['translated_address'];
+          journeySpotData['translated_hours'] = spotData['translated_hours'];
+          journeySpotData['contact'] = spotData['contact'];
+          journeySpotData['parking'] = spotData['parking'];
+          journeySpotData['id'] = spotData['id'];
         }
       }
-
       journeySpots.add(journeySpotData);
     }
 
@@ -59,10 +64,8 @@ class JourneyPage extends StatelessWidget {
     String currentLanguage = AppLangState.instance.appLanguage;
 
     List<String> hashtags = [];
-    String journeyName =
-        journeyItem['translated_title']?[currentLanguage] ?? 'No Name';
-    String description =
-        journeyItem['translated_description']?[currentLanguage] ?? 'No Description';
+    String journeyName = journeyItem['translated_title']?[currentLanguage] ?? 'No Name';
+    String description = journeyItem['translated_description']?[currentLanguage] ?? 'No Description';
     String journeyId = journeyItem['id'];
 
     if (journeyItem['translated_hashtags'] != null) {
@@ -193,12 +196,8 @@ class JourneyPage extends StatelessWidget {
 
                   return Column(
                     children: journeySpots.map((spot) {
-                      String spotName = spot['translated_name']
-                              ?[currentLanguage] ??
-                          'No Info';
-                      String spotDescription = spot['translated_description']
-                              ?[currentLanguage] ??
-                          'No Description';
+                      String spotName = spot['translated_name']?[currentLanguage] ?? 'No Info';
+                      String spotDescription = spot['translated_description']?[currentLanguage] ?? 'No Description';
 
                       List<String> spotImages = [];
                       if (spot['image_link'] is List) {
@@ -213,18 +212,35 @@ class JourneyPage extends StatelessWidget {
                         videoLink = spot['video_link'];
                       }
 
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //spot content
+                          InkWell(
+                            onTap: () {
+                              if (spot != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        SpotDetail(spotItem: spot),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Spot details are not available.')),
+                                );
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24.0, vertical: 24),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
                                         child: Text(
@@ -234,35 +250,40 @@ class JourneyPage extends StatelessWidget {
                                               fontSize: 24),
                                         ),
                                       ),
-                                      SvgPicture.asset('assets/image/icon/Save.svg'),
+                                      SvgPicture.asset(
+                                          'assets/image/icon/Save.svg'),
                                     ],
                                   ),
                                   const SizedBox(height: 12),
                                   Text(
                                     spotDescription,
                                     style: TextStyle(
-                                        fontSize: 12, fontWeight: FontWeight.w400),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
                                   ),
                                   const SizedBox(height: 12),
+
                                   // Spot images
                                   if (spotImages.isNotEmpty)
                                     Container(
-                                      padding: EdgeInsets.symmetric(vertical: 20),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 20),
                                       height: 310,
                                       child: ListView.builder(
                                         scrollDirection: Axis.horizontal,
                                         itemCount: spotImages.length,
                                         itemBuilder: (context, index) {
                                           return Padding(
-                                            padding:
-                                            const EdgeInsets.only(right: 20.0),
+                                            padding: const EdgeInsets.only(
+                                                right: 20.0),
                                             child: Row(
                                               children: [
                                                 AspectRatio(
                                                   aspectRatio: 9 / 16,
                                                   child: ClipRRect(
                                                     borderRadius:
-                                                    BorderRadius.circular(4.0),
+                                                        BorderRadius.circular(
+                                                            4.0),
                                                     // Adjust the radius as needed
                                                     child: Image.network(
                                                       spotImages[index],
@@ -279,13 +300,16 @@ class JourneyPage extends StatelessWidget {
                                     )
                                   else if (videoLink != null)
                                     Container(
-                                      padding: EdgeInsets.symmetric(vertical: 20),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 20),
                                       height: 310,
                                       child: AspectRatio(
                                         aspectRatio: 9 / 16,
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(4),
-                                          child: VideoWidget(videoUrl: videoLink),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                          child:
+                                              VideoWidget(videoUrl: videoLink),
                                         ),
                                       ),
                                     )
@@ -294,12 +318,13 @@ class JourneyPage extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Container(
-                              height: 10,
-                              color: context.appColors.baseGray,
-                            ),
-                          ],
-                        ),
+                          ),
+
+                          Container(
+                            height: 10,
+                            color: context.appColors.baseGray,
+                          ),
+                        ],
                       );
                     }).toList(),
                   );

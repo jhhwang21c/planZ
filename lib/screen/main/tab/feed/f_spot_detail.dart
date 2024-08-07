@@ -90,17 +90,17 @@ class _SpotDetailState extends State<SpotDetail> {
   @override
   Widget build(BuildContext context) {
     String currentLanguage = AppLangState.instance.appLanguage;
-    String spotName =  widget.spotItem?['translated_name'][currentLanguage] ?? 'No Info';
-    String address = widget.spotItem?['translated_address'][currentLanguage] ?? 'No Address';
+    String spotName =  widget.spotItem?['translated_name']?[currentLanguage]  ?? 'No Info';
+    String address = widget.spotItem?['translated_address']?[currentLanguage] ?? 'No Address';
     String contact = widget.spotItem?['contact'] ?? 'No Contact';
-    String hours = widget.spotItem?['translated_hours'][currentLanguage] ?? 'hours unavailable';
+    String hours = widget.spotItem?['translated_hours']?[currentLanguage] ??'hours unavailable';
     String parking = widget.spotItem?['parking'] == true ? 'Parking Available' : 'Parking unavailable';
 
     List<String> hashtags = [];
     if (widget.spotItem?['translated_hashtags'] != null) {
       var translatedHashtags = widget.spotItem?['translated_hashtags'];
       for (var i = 0; i < translatedHashtags.length; i++) {
-        hashtags.add(translatedHashtags[i.toString()][currentLanguage] ?? '');
+        hashtags.add(translatedHashtags[i.toString()]?[currentLanguage] ?? '');
       }
     }
 
@@ -142,80 +142,86 @@ class _SpotDetailState extends State<SpotDetail> {
             Container(
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: hashtags.isNotEmpty
-                    ? Wrap(
-                  spacing: 12.0,
-                  children: hashtags.map((hashtag) {
-                    return Container(
-                      height: 20,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 1.0,
-                            color: context.appColors.mainGray),
-                        color: Colors.transparent,
-                        borderRadius:
-                        BorderRadius.circular(100),
-                      ),
-                      child: Text(
-                        '# $hashtag',
-                        style: const TextStyle(
-                          fontSize: 10.0,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: hashtags.isNotEmpty
+                      ? Wrap(
+                    spacing: 12.0,
+                    children: hashtags.map((hashtag) {
+                      return Container(
+                        height: 20,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 1.0,
+                              color: context.appColors.mainGray),
+                          color: Colors.transparent,
+                          borderRadius:
+                          BorderRadius.circular(100),
                         ),
-                      ),
-                    );
-                  }).toList(),
-                )
-                    : const Text(
-                  'Loading hashtags...',
-                  style: TextStyle(
-                      fontSize: 10.0, color: Colors.white),
+                        child: Text(
+                          '# $hashtag',
+                          style: const TextStyle(
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  )
+                      : const Text(
+                    'Loading hashtags...',
+                    style: TextStyle(
+                        fontSize: 10.0, color: Colors.white),
+                  ),
                 ),
               ),
             ),
 
-            Row(
-              children: [
-                SvgPicture.asset(
-                  'assets/image/icon/Car.svg',
-                  width: 12.0,
-                  height: 12.0,
-                ),
-                const SizedBox(
-                  width: 4.0,
-                ),
-                const Text(
-                  "4 min",
-                  style: TextStyle(fontSize: 13),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: SvgPicture.asset(
-                    'assets/image/icon/Transit.svg',
+            Padding(
+              padding: const EdgeInsets.only(top: 2.0),
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/image/icon/Car.svg',
+                    width: 12.0,
+                    height: 12.0,
+                  ),
+                  const SizedBox(
+                    width: 4.0,
+                  ),
+                  const Text(
+                    "4 min",
+                    style: TextStyle(fontSize: 13),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: SvgPicture.asset(
+                      'assets/image/icon/Transit.svg',
+                      width: 14.0,
+                      height: 14.0,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 4.0,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(right: 8.0),
+                    child: Text("4 min"),
+                  ),
+                  SvgPicture.asset(
+                    'assets/image/icon/Walk.svg',
                     width: 14.0,
                     height: 14.0,
                   ),
-                ),
-                const SizedBox(
-                  width: 4.0,
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 8.0),
-                  child: Text("4 min"),
-                ),
-                SvgPicture.asset(
-                  'assets/image/icon/Walk.svg',
-                  width: 14.0,
-                  height: 14.0,
-                ),
-                const SizedBox(
-                  width: 4.0,
-                ),
-                const Text("15 min"),
-              ],
+                  const SizedBox(
+                    width: 4.0,
+                  ),
+                  const Text("15 min"),
+                ],
+              ),
             ),
 
             //buttons
