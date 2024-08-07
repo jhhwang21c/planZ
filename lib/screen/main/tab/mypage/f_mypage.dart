@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:floating_menu_panel/floating_menu_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:planZ/common/common.dart';
@@ -125,6 +124,9 @@ class _MyPageFragmentState extends State<MyPageFragment>
     return Column(
       children: [
         //user info
+        if (_user == null)
+          const Center(child: CircularProgressIndicator())
+        else
         Padding(
           padding: EdgeInsets.only(left: 24.0, top: 12.0, bottom: 18.0),
           child: Row(

@@ -3,27 +3,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:planZ/app_state.dart';
 import 'package:video_player/video_player.dart';
 
 class SpotDetail extends StatefulWidget {
+  final Map<String, dynamic>? item;
   final String spotId;
-  final String spotName;
-  final String address;
-  final String contact;
-  final String hours;
-  final String parking;
+  // final String spotName;
+  // final String address;
+  // final String contact;
+  // final String hours;
+  // final String parking;
   final List<String> imageLinks;
   List<dynamic>? hashtags;
 
   SpotDetail({
     required this.spotId,
-    required this.spotName,
-    required this.address,
-    required this.contact,
-    required this.hours,
-    required this.parking,
+    // required this.spotName,
+    // required this.address,
+    // required this.contact,
+    // required this.hours,
+    // required this.parking,
     required this.hashtags,
-    required this.imageLinks,
+    required this.imageLinks, required this.item,
   });
 
   @override
@@ -67,6 +69,13 @@ class _SpotDetailState extends State<SpotDetail> {
 
   @override
   Widget build(BuildContext context) {
+    String currentLanguage = AppLangState.instance.appLanguage;
+    String spotName =  widget.item?['translated_name'][currentLanguage] ?? 'No Info';
+    String address = widget.item?['translated_address'][currentLanguage] ?? 'No Address';
+    String contact = widget.item?['contact'] ?? 'No Contact';
+    String hours = widget.item?['translated_hours'][currentLanguage] ?? 'hours unavailable';
+    String parking = widget.item?['parking'] == true ? 'Parking Available' : 'Parking unavailable';
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -87,7 +96,7 @@ class _SpotDetailState extends State<SpotDetail> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.spotName,
+                      spotName,
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w600,
@@ -298,7 +307,7 @@ class _SpotDetailState extends State<SpotDetail> {
                             const SizedBox(
                               width: 8.0,
                             ),
-                            Expanded(child: Text(widget.hours)),
+                            Expanded(child: Text(hours)),
                           ],
                         ),
                       ),
@@ -326,7 +335,7 @@ class _SpotDetailState extends State<SpotDetail> {
                           const SizedBox(
                             width: 8.0,
                           ),
-                          Expanded(child: Text(widget.address)),
+                          Expanded(child: Text(address)),
                         ],
                       ),
                     ),
@@ -353,7 +362,7 @@ class _SpotDetailState extends State<SpotDetail> {
                           const SizedBox(
                             width: 8.0,
                           ),
-                          Text(widget.parking),
+                          Text(parking),
                         ],
                       ),
                     ),
@@ -380,7 +389,7 @@ class _SpotDetailState extends State<SpotDetail> {
                           const SizedBox(
                             width: 8.0,
                           ),
-                          Text("Contact: (+82) ${widget.contact}"),
+                          Text("Contact: (+82) ${contact}"),
                         ],
                       ),
                     ),

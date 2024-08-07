@@ -120,6 +120,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
           showSelectedLabels: true,
           showUnselectedLabels: true,
           type: BottomNavigationBarType.fixed,
+          backgroundColor: context.appColors.mainWhite,
         ),
       ),
     );

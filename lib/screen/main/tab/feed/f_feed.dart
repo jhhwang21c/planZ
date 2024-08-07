@@ -138,15 +138,7 @@ class _FeedFragmentState extends State<FeedFragment>
                                 builder: (context) => item['type'] == 'spot'
                                     ? SpotDetail(
                                         spotId: '',
-                                        spotName: item['translated_name']
-                                        [currentLanguage] ??
-                                            'No Info',
-                                        address: item['translated_address'][currentLanguage] ??
-                                            'No Address',
-                                        contact: item['contact'],
-                                        hours: item['translated_hours'][currentLanguage] ??
-                                            'hours unavailable',
-                                        parking: item['parking'] == true ? 'Parking Available' : 'Parking unavailable',
+                                        item: item,
                                         hashtags: hashtags,
                                         imageLinks: imageLinks,
                                       )

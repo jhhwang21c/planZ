@@ -279,34 +279,7 @@ class _FullVideoState extends State<FullVideo>
                                                     builder: (context) =>
                                                         SpotDetail(
                                                           spotId: video['spot_id'],
-                                                      spotName: _spot != null
-                                                          ? _spot!['translated_name']
-                                                                  [
-                                                                  currentLanguage] ??
-                                                              "Unknown Name"
-                                                          : 'Loading',
-                                                      address: _spot != null
-                                                          ? _spot!['translated_address']
-                                                                  [
-                                                                  currentLanguage] ??
-                                                              _spot!['translated_address']
-                                                                  ['en'] ??
-                                                              "No Address"
-                                                          : 'Loading',
-                                                      contact: _spot != null
-                                                          ? _spot!['contact'] ??
-                                                              "No Contact"
-                                                          : 'Loading',
-                                                      hours: _spot != null
-                                                          ? _spot!['translated_hours']
-                                                                  [
-                                                                  currentLanguage] ??
-                                                              "Hours Unavailable"
-                                                          : 'Loading',
-                                                      parking: _spot != null
-                                                          ? _spot!['parking'] ??
-                                                              false
-                                                          : false,
+                                                      item: _spot,
                                                       hashtags: _hashtags,
                                                       imageLinks: _spot != null
                                                           ? _spot![

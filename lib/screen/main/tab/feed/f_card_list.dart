@@ -57,7 +57,7 @@ class CardList extends StatelessWidget {
                   image: imageLinks.isNotEmpty
                       ? DecorationImage(
                           image: NetworkImage(imageLinks[0]), fit: BoxFit.cover)
-                      : null,
+                      : DecorationImage(image: AssetImage('assets/image/fallbackImage.png'), fit: BoxFit.cover,),
                 ),
               ),
               Padding(
