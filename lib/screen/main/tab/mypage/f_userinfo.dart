@@ -30,7 +30,7 @@ class UserInfo extends StatefulWidget {
 }
 
 class _UserInfoState extends State<UserInfo>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   List<String> labels = ['Journeys', 'Zips'];
 
   late TabController _tabController;

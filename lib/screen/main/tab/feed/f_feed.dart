@@ -18,7 +18,7 @@ class FeedFragment extends StatefulWidget {
 }
 
 class _FeedFragmentState extends State<FeedFragment>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   List<String> labels = ['Discover', 'Following'];
 
   late PageController _pageController;

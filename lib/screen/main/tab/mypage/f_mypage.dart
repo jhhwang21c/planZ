@@ -20,7 +20,7 @@ class MyPageFragment extends StatefulWidget {
 }
 
 class _MyPageFragmentState extends State<MyPageFragment>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   List<String> labels = ['Journeys', 'Zips'];
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Map<String, dynamic>? _user;

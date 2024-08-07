@@ -18,7 +18,7 @@ class BrowseFragment extends StatefulWidget {
 }
 
 class _BrowseFragmentState extends State<BrowseFragment>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   List<String> labels = ['Browse', 'Map'];
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late TabController _tabController;
