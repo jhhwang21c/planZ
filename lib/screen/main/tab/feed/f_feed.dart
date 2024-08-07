@@ -78,7 +78,7 @@ class _FeedFragmentState extends State<FeedFragment>
     return Column(
       children: [
         // Search Bar
-        SearchBarWidget(themeColors: widget.themeColors),
+        SearchBarWidget(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 66, vertical: 22),
           child: ToggleBarWidget(

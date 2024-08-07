@@ -57,41 +57,27 @@ class _MapViewState extends State<MapView> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        (widget.spotLocation == null && currentLocation == null)
-            ? const Center(child: Text("Loading location"))
-            : GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: widget.spotLocation != null
-                ? LatLng(widget.spotLocation!.latitude, widget.spotLocation!.longitude)
-                : LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-            zoom: 15.0,
+    return (widget.spotLocation == null && currentLocation == null)
+        ? const Center(child: Text("Loading location"))
+        : GoogleMap(
+      initialCameraPosition: CameraPosition(
+        target: widget.spotLocation != null
+            ? LatLng(widget.spotLocation!.latitude, widget.spotLocation!.longitude)
+            : LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+        zoom: 15.0,
+      ),
+      markers: {
+        if (widget.spotLocation != null)
+          Marker(
+            markerId: const MarkerId("spot"),
+            position: LatLng(widget.spotLocation!.latitude, widget.spotLocation!.longitude),
           ),
-          markers: {
-            if (widget.spotLocation != null)
-              Marker(
-                markerId: const MarkerId("spot"),
-                position: LatLng(widget.spotLocation!.latitude, widget.spotLocation!.longitude),
-              ),
-            if (currentLocation != null)
-              Marker(
-                markerId: const MarkerId("current"),
-                position: LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-              ),
-          },
-        ),
-        DraggableScrollableSheet(
-          initialChildSize: 0.1,
-          minChildSize: 0.1,
-          maxChildSize: 1,
-          builder: (BuildContext context, ScrollController scrollController) {
-            return Container(
-              color: Colors.blue,
-            );
-          },
-        ),
-      ],
+        if (currentLocation != null)
+          Marker(
+            markerId: const MarkerId("current"),
+            position: LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
+          ),
+      },
     );
   }
 }

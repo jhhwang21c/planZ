@@ -25,7 +25,7 @@ enum TabItem {
       case TabItem.browse:
         return BrowseFragment(themeColors: themeColors,);
       case TabItem.plan:
-        return PlanFragment(themeColors: themeColors);
+        return PlanFragment();
       case TabItem.mypage:
         return MyPageFragment(themeColors: themeColors);
       case TabItem.settings:

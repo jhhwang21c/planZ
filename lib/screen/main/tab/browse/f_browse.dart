@@ -101,7 +101,7 @@ class _BrowseFragmentState extends State<BrowseFragment>
       length: labels.length,
       child: Column(
         children: [
-          SearchBarWidget(themeColors: widget.themeColors,),
+          SearchBarWidget(),
           SizedBox(
             height: 12,
           ),
@@ -193,7 +193,18 @@ class _BrowseFragmentState extends State<BrowseFragment>
                         },
                       ),
                       // Map Tab
-                      MapView(),
+                      Stack(children: [
+                        MapView(),
+                        DraggableScrollableSheet(
+                        initialChildSize: 0.1,
+                        minChildSize: 0.1,
+                        maxChildSize: 1,
+                        builder: (BuildContext context, ScrollController scrollController) {
+                          return Container(
+                            color: Colors.blue,
+                          );
+                        },
+                      ),]),
                     ],
                   ),
                 ),
