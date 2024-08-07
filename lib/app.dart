@@ -48,6 +48,7 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
           locale: context.locale,
           title: 'PlanZ', //"image finder?"
           theme: ThemeData(
+            colorSchemeSeed: Colors.white,
             textTheme: Theme.of(context).textTheme.apply(
             fontFamily: 'SFProDisplay',
           ),
