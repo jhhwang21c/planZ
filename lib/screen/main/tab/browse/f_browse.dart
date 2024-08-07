@@ -204,7 +204,8 @@ class _BrowseFragmentState extends State<BrowseFragment>
                             color: Colors.blue,
                           );
                         },
-                      ),]),
+                      ),
+                      ]),
                     ],
                   ),
                 ),

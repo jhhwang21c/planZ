@@ -17,6 +17,8 @@ class SearchBarWidget extends StatelessWidget {
               height: 60.0,
               child: TextField(
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: context.appColors.mainWhite,
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(100.0),
                     borderSide: BorderSide(
