@@ -52,14 +52,6 @@ class _FeedFragmentState extends State<FeedFragment>
       var spotData = doc.data() as Map<String, dynamic>;
       spotData['id'] = doc.id;
 
-      // Fetch from "image" subcollection
-      QuerySnapshot imageSnapshot =
-          await doc.reference.collection('image').get();
-      List<String> imageLinks = imageSnapshot.docs
-          .map((imageDoc) => imageDoc['image_link'] as String)
-          .toList();
-
-      spotData['image_links'] = imageLinks;
       spotData['type'] = 'spot';
       combinedData.add(spotData);
     }
@@ -128,8 +120,6 @@ class _FeedFragmentState extends State<FeedFragment>
                           }
                         }
 
-                        List<String> imageLinks = item['image_links'] ?? [];
-
                         return InkWell(
                           onTap: () {
                             Navigator.push(
@@ -137,20 +127,16 @@ class _FeedFragmentState extends State<FeedFragment>
                               MaterialPageRoute(
                                 builder: (context) => item['type'] == 'spot'
                                     ? SpotDetail(
-                                        spotId: '',
-                                        item: item,
-                                        hashtags: hashtags,
-                                        imageLinks: imageLinks,
+                                        spotItem: item,
                                       )
                                     : JourneyPage(
-                                  item: item,
+                                  journeyItem: item,
                                 ),
                               ),
                             );
                           },
                           child: CardList(
                             item:item,
-                            themeColors: widget.themeColors,
                           ),
                         );
                       },

@@ -2,30 +2,15 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:planZ/app_state.dart';
+import 'package:planZ/common/common.dart';
 import 'package:video_player/video_player.dart';
 
 class SpotDetail extends StatefulWidget {
-  final Map<String, dynamic>? item;
-  final String spotId;
-  // final String spotName;
-  // final String address;
-  // final String contact;
-  // final String hours;
-  // final String parking;
-  final List<String> imageLinks;
-  List<dynamic>? hashtags;
+  final Map<String, dynamic>? spotItem;
 
   SpotDetail({
-    required this.spotId,
-    // required this.spotName,
-    // required this.address,
-    // required this.contact,
-    // required this.hours,
-    // required this.parking,
-    required this.hashtags,
-    required this.imageLinks, required this.item,
+    required this.spotItem,
   });
 
   @override
@@ -35,29 +20,64 @@ class SpotDetail extends StatefulWidget {
 class _SpotDetailState extends State<SpotDetail> {
   List<String> videoLinks = [];
   List<VideoPlayerController> _videoControllers = [];
+  List<String> imageLinks = [];
 
   @override
   void initState() {
     super.initState();
     fetchVideoLinks();
+    fetchImageLinks();
   }
 
   void fetchVideoLinks() async {
-    QuerySnapshot videoSnapshot = await FirebaseFirestore.instance
-        .collection('video')
-        .where('spot_id', isEqualTo: widget.spotId)
-        .get();
+    try {
+      if (widget.spotItem?['id'] != null) {
+        QuerySnapshot videoSnapshot = await FirebaseFirestore.instance
+            .collection('video')
+            .where('spot_id', isEqualTo: widget.spotItem?['id'])
+            .get();
 
-    List<String> links =
-        videoSnapshot.docs.map((doc) => doc['video_link'] as String).toList();
+        List<String> links = videoSnapshot.docs
+            .map((doc) => doc['video_link'] as String? ?? '')
+            .toList();
 
-    setState(() {
-      videoLinks = links;
-      _videoControllers = links
-          .map((link) => VideoPlayerController.network(link)..initialize())
-          .toList();
-    });
+        setState(() {
+          videoLinks = links;
+          _videoControllers = links
+              .where((link) => link.isNotEmpty)
+              .map((link) =>
+          VideoPlayerController.network(link)
+            ..initialize())
+              .toList();
+        });
+      }
+    } catch (e) {
+      print('Error fetching video links: $e');
+    }
   }
+
+  void fetchImageLinks() async {
+    try {
+      if (widget.spotItem?['id'] != null) {
+        QuerySnapshot imageSnapshot = await FirebaseFirestore.instance
+            .collection('spot')
+            .doc(widget.spotItem?['id'])
+            .collection('image')
+            .get();
+
+        List<String> links = imageSnapshot.docs
+            .map((doc) => doc['image_link'] as String? ?? '')
+            .toList();
+
+        setState(() {
+          imageLinks = links;
+        });
+      }
+    } catch (e) {
+      print('Error fetching image links: $e');
+    }
+  }
+
 
   @override
   void dispose() {
@@ -70,11 +90,20 @@ class _SpotDetailState extends State<SpotDetail> {
   @override
   Widget build(BuildContext context) {
     String currentLanguage = AppLangState.instance.appLanguage;
-    String spotName =  widget.item?['translated_name'][currentLanguage] ?? 'No Info';
-    String address = widget.item?['translated_address'][currentLanguage] ?? 'No Address';
-    String contact = widget.item?['contact'] ?? 'No Contact';
-    String hours = widget.item?['translated_hours'][currentLanguage] ?? 'hours unavailable';
-    String parking = widget.item?['parking'] == true ? 'Parking Available' : 'Parking unavailable';
+    String spotName =  widget.spotItem?['translated_name'][currentLanguage] ?? 'No Info';
+    String address = widget.spotItem?['translated_address'][currentLanguage] ?? 'No Address';
+    String contact = widget.spotItem?['contact'] ?? 'No Contact';
+    String hours = widget.spotItem?['translated_hours'][currentLanguage] ?? 'hours unavailable';
+    String parking = widget.spotItem?['parking'] == true ? 'Parking Available' : 'Parking unavailable';
+
+    List<String> hashtags = [];
+    if (widget.spotItem?['translated_hashtags'] != null) {
+      var translatedHashtags = widget.spotItem?['translated_hashtags'];
+      for (var i = 0; i < translatedHashtags.length; i++) {
+        hashtags.add(translatedHashtags[i.toString()][currentLanguage] ?? '');
+      }
+    }
+
 
     return Scaffold(
       appBar: AppBar(
@@ -113,24 +142,38 @@ class _SpotDetailState extends State<SpotDetail> {
             Container(
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: widget.hashtags != null
+                child: hashtags.isNotEmpty
                     ? Wrap(
-                        spacing: 8.0,
-                        children: widget.hashtags!.map((hashtag) {
-                          return Text(
-                            '# $hashtag',
-                            style: const TextStyle(
-                              fontSize: 14.0,
-                              color: Colors
-                                  .black, // You can change the color if needed
-                            ),
-                          );
-                        }).toList(),
-                      )
-                    : const Text(
-                        'Loading hashtags...',
-                        style: TextStyle(fontSize: 12.0),
+                  spacing: 12.0,
+                  children: hashtags.map((hashtag) {
+                    return Container(
+                      height: 20,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 1.0,
+                            color: context.appColors.mainGray),
+                        color: Colors.transparent,
+                        borderRadius:
+                        BorderRadius.circular(100),
                       ),
+                      child: Text(
+                        '# $hashtag',
+                        style: const TextStyle(
+                          fontSize: 10.0,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                )
+                    : const Text(
+                  'Loading hashtags...',
+                  style: TextStyle(
+                      fontSize: 10.0, color: Colors.white),
+                ),
               ),
             ),
 
@@ -239,15 +282,15 @@ class _SpotDetailState extends State<SpotDetail> {
               padding: const EdgeInsets.only(bottom: 20.0),
               child: SizedBox(
                 height: 270.0,
-                child: widget.imageLinks.isEmpty && videoLinks.isEmpty
+                child: imageLinks.isEmpty && videoLinks.isEmpty
                     ? const Center(
                         child: Text("No images or videos available"),
                       )
                     : ListView(
                         scrollDirection: Axis.horizontal,
                         children: [
-                          if (widget.imageLinks.isNotEmpty)
-                            ...widget.imageLinks.map((imageLink) => Row(
+                          if (imageLinks.isNotEmpty)
+                            ...imageLinks.map((imageLink) => Row(
                                   children: [
                                     AspectRatio(
                                       aspectRatio: 9 / 16,

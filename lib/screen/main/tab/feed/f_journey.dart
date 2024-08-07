@@ -7,9 +7,9 @@ import 'package:planZ/common/dart/extension/context_extension.dart';
 import 'package:video_player/video_player.dart';
 
 class JourneyPage extends StatelessWidget {
-  final Map<String, dynamic> item;
+  final Map<String, dynamic> journeyItem;
 
-  const JourneyPage({super.key, required this.item});
+  const JourneyPage({super.key, required this.journeyItem});
 
   Future<List<Map<String, dynamic>>> _fetchJourneySpots(
       String journeyId) async {
@@ -60,13 +60,13 @@ class JourneyPage extends StatelessWidget {
 
     List<String> hashtags = [];
     String journeyName =
-        item['translated_title']?[currentLanguage] ?? 'No Name';
+        journeyItem['translated_title']?[currentLanguage] ?? 'No Name';
     String description =
-        item['translated_description']?[currentLanguage] ?? 'No Description';
-    String journeyId = item['id'];
+        journeyItem['translated_description']?[currentLanguage] ?? 'No Description';
+    String journeyId = journeyItem['id'];
 
-    if (item['translated_hashtags'] != null) {
-      var translatedHashtags = item['translated_hashtags'];
+    if (journeyItem['translated_hashtags'] != null) {
+      var translatedHashtags = journeyItem['translated_hashtags'];
       for (var i = 0; i < translatedHashtags.length; i++) {
         hashtags.add(translatedHashtags[i.toString()][currentLanguage]);
       }
@@ -214,78 +214,90 @@ class JourneyPage extends StatelessWidget {
                       }
 
                       return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // First line
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    spotName,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 24),
-                                  ),
-                                ),
-                                SvgPicture.asset('assets/image/icon/Save.svg'),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              spotDescription,
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.w400),
-                            ),
-                            const SizedBox(height: 12),
-                            // Spot images
-                            if (spotImages.isNotEmpty)
-                              Container(
-                                height: 310,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: spotImages.length,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 20.0),
-                                      child: Row(
-                                        children: [
-                                          AspectRatio(
-                                            aspectRatio: 9 / 16,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(4.0),
-                                              // Adjust the radius as needed
-                                              child: Image.network(
-                                                spotImages[index],
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 20),
-                                        ],
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          spotName,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 24),
+                                        ),
                                       ),
-                                    );
-                                  },
-                                ),
-                              )
-                            else if (videoLink != null)
-                              Container(
-                                height: 310,
-                                child: AspectRatio(
-                                  aspectRatio: 9 / 16,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(4),
-                                    child: VideoWidget(videoUrl: videoLink),
+                                      SvgPicture.asset('assets/image/icon/Save.svg'),
+                                    ],
                                   ),
-                                ),
-                              )
-                            else
-                              SizedBox.shrink(),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    spotDescription,
+                                    style: TextStyle(
+                                        fontSize: 12, fontWeight: FontWeight.w400),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  // Spot images
+                                  if (spotImages.isNotEmpty)
+                                    Container(
+                                      padding: EdgeInsets.symmetric(vertical: 20),
+                                      height: 310,
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: spotImages.length,
+                                        itemBuilder: (context, index) {
+                                          return Padding(
+                                            padding:
+                                            const EdgeInsets.only(right: 20.0),
+                                            child: Row(
+                                              children: [
+                                                AspectRatio(
+                                                  aspectRatio: 9 / 16,
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                    BorderRadius.circular(4.0),
+                                                    // Adjust the radius as needed
+                                                    child: Image.network(
+                                                      spotImages[index],
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 20),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    )
+                                  else if (videoLink != null)
+                                    Container(
+                                      padding: EdgeInsets.symmetric(vertical: 20),
+                                      height: 310,
+                                      child: AspectRatio(
+                                        aspectRatio: 9 / 16,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(4),
+                                          child: VideoWidget(videoUrl: videoLink),
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    SizedBox.shrink(),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              height: 10,
+                              color: context.appColors.baseGray,
+                            ),
                           ],
                         ),
                       );

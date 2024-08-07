@@ -100,18 +100,9 @@ class _FullVideoState extends State<FullVideo>
     if (spotSnapshot.exists) {
       var spotData = spotSnapshot.data() as Map<String, dynamic>;
 
-      // Fetch images from the "image" subcollection
-      QuerySnapshot imageSnapshot =
-          await spotSnapshot.reference.collection('image').get();
-      List<String> imageLinks = imageSnapshot.docs
-          .map((imageDoc) => imageDoc['image_link'] as String)
-          .toList();
-
       setState(() {
         _spot = spotData;
-        _hashtags = _spot?['hashtags'] as List<dynamic>?;
         _spotLocation = _spot?['location'];
-        _spot!['image_links'] = imageLinks;
       });
     }
   }
@@ -278,14 +269,7 @@ class _FullVideoState extends State<FullVideo>
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         SpotDetail(
-                                                          spotId: video['spot_id'],
-                                                      item: _spot,
-                                                      hashtags: _hashtags,
-                                                      imageLinks: _spot != null
-                                                          ? _spot![
-                                                                  'image_links']
-                                                              as List<String>
-                                                          : [],
+                                                      spotItem: _spot ?? {},
                                                     ),
                                                   ),
                                                 );

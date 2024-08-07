@@ -1,18 +1,51 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:planZ/app_state.dart';
+import 'package:planZ/common/dart/extension/context_extension.dart';
 
 import '../../../../common/theme/color/abs_theme_colors.dart';
 
-class CardList extends StatelessWidget {
+class CardList extends StatefulWidget {
   final Map<String, dynamic> item;
-  final AbstractThemeColors themeColors;
 
   CardList({
     super.key,
     required this.item,
-    required this.themeColors,
   });
+
+  @override
+  State<CardList> createState() => _CardListState();
+}
+
+class _CardListState extends State<CardList> {
+  List<String> imageLinks = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchImageLinks();
+  }
+
+  void fetchImageLinks() async {
+    try {
+      QuerySnapshot imageSnapshot = await FirebaseFirestore.instance
+          .collection('spot')
+          .doc(widget.item['id'])
+          .collection('image')
+          .get();
+
+      List<String> links = imageSnapshot.docs
+          .map((doc) => doc['image_link'] as String? ?? '')
+          .toList();
+
+      setState(() {
+        imageLinks = links;
+      });
+    } catch (e) {
+      print('Error fetching image links: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +53,16 @@ class CardList extends StatelessWidget {
 
     List<String> hashtags = [];
 
-    if (item['translated_hashtags'] != null) {
-      var translatedHashtags = item['translated_hashtags'];
+    if (widget.item['translated_hashtags'] != null) {
+      var translatedHashtags = widget.item['translated_hashtags'];
       for (var i = 0; i < translatedHashtags.length; i++) {
         hashtags.add(translatedHashtags[i.toString()][currentLanguage]);
       }
     }
 
-    List<String> imageLinks = item['image_links'] ?? [];
-    String area = item['translated_area']?[currentLanguage] ?? 'No Info';
-    String spotName = item['translated_title']?[currentLanguage] ?? item['translated_name'] ? [currentLanguage] ?? 'No Info';
-    String shortDescription = item['translated_short_description']?[currentLanguage] ?? item['translated_description']?[currentLanguage] ?? 'No Info';
+    String area = widget.item['translated_area']?[currentLanguage] ?? 'No Info';
+    String spotName = widget.item['translated_title']?[currentLanguage] ?? widget.item['translated_name'] ? [currentLanguage] ?? 'No Info';
+    String shortDescription = widget.item['translated_short_description']?[currentLanguage] ?? widget.item['translated_description']?[currentLanguage] ?? 'No Info';
 
 
     return Padding(
@@ -49,7 +81,7 @@ class CardList extends StatelessWidget {
                     topRight: Radius.circular(15.0),
                   ),
                   gradient: LinearGradient(
-                    colors: [themeColors.mainBlack, Colors.blue],
+                    colors: [context.appColors.mainBlack, Colors.blue],
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     stops: [0, 0.4],
@@ -70,7 +102,7 @@ class CardList extends StatelessWidget {
                       Container(
                         height: 20,
                         decoration: BoxDecoration(
-                          color: themeColors.blackFillHalfOp,
+                          color: context.appColors.blackFillHalfOp,
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Padding(
@@ -106,7 +138,7 @@ class CardList extends StatelessWidget {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8.0),
                                       decoration: BoxDecoration(
-                                        color: themeColors.blackFillHalfOp,
+                                        color: context.appColors.blackFillHalfOp,
                                         borderRadius:
                                             BorderRadius.circular(100),
                                       ),
@@ -136,7 +168,7 @@ class CardList extends StatelessWidget {
             //bottom card
             Container(
               decoration: BoxDecoration(
-                color: themeColors.mainWhite,
+                color: context.appColors.mainWhite,
                 boxShadow: const [
                   BoxShadow(
                     color: Color(0x64959DA5),
