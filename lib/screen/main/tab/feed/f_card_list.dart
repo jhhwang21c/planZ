@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:planZ/app_state.dart';
 
 import '../../../../common/theme/color/abs_theme_colors.dart';
 
-class CardList extends StatefulWidget {
-  final String spotTitle;
-  final String shortDescription;
-  final String area;
+class CardList extends StatelessWidget {
+  final Map<String, dynamic> item;
   final AbstractThemeColors themeColors;
-  final List<String> imageLinks;
-  List<dynamic>? hashtags;
 
   CardList({
     super.key,
-    required this.spotTitle,
-    required this.shortDescription,
-    required this.area,
-    required this.hashtags,
+    required this.item,
     required this.themeColors,
-    required this.imageLinks,
   });
 
   @override
-  State<CardList> createState() => _CardListState();
-}
-
-class _CardListState extends State<CardList> {
-  @override
   Widget build(BuildContext context) {
+    String currentLanguage = AppLangState.instance.appLanguage;
+
+    List<String> hashtags = [];
+
+    if (item['translated_hashtags'] != null) {
+      var translatedHashtags = item['translated_hashtags'];
+      for (var i = 0; i < translatedHashtags.length; i++) {
+        hashtags.add(translatedHashtags[i.toString()][currentLanguage]);
+      }
+    }
+
+    List<String> imageLinks = item['image_links'] ?? [];
+    String area = item['translated_area']?[currentLanguage] ?? 'No Info';
+    String spotName = item['translated_title']?[currentLanguage] ?? item['translated_name'] ? [currentLanguage] ?? 'No Info';
+    String shortDescription = item['translated_short_description']?[currentLanguage] ?? item['translated_description']?[currentLanguage] ?? 'No Info';
+
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Container(
@@ -44,15 +49,14 @@ class _CardListState extends State<CardList> {
                     topRight: Radius.circular(15.0),
                   ),
                   gradient: LinearGradient(
-                    colors: [widget.themeColors.mainBlack, Colors.blue],
+                    colors: [themeColors.mainBlack, Colors.blue],
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     stops: [0, 0.4],
                   ),
-                  image: widget.imageLinks.isNotEmpty
+                  image: imageLinks.isNotEmpty
                       ? DecorationImage(
-                          image: NetworkImage(widget.imageLinks[0]),
-                          fit: BoxFit.cover)
+                          image: NetworkImage(imageLinks[0]), fit: BoxFit.cover)
                       : null,
                 ),
               ),
@@ -62,10 +66,11 @@ class _CardListState extends State<CardList> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
+                      if (area != 'No Info')
                       Container(
                         height: 20,
                         decoration: BoxDecoration(
-                          color: widget.themeColors.blackFillHalfOp,
+                          color: themeColors.blackFillHalfOp,
                           borderRadius: BorderRadius.circular(100),
                         ),
                         child: Padding(
@@ -81,7 +86,7 @@ class _CardListState extends State<CardList> {
                                 width: 4,
                               ),
                               Text(
-                                widget.area,
+                               area,
                                 style: const TextStyle(
                                   color: Colors.white,
                                 ),
@@ -93,16 +98,15 @@ class _CardListState extends State<CardList> {
                       Container(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: widget.hashtags != null
+                          child: hashtags.isNotEmpty
                               ? Wrap(
                                   spacing: 8.0,
-                                  children: widget.hashtags!.map((hashtag) {
+                                  children: hashtags.map((hashtag) {
                                     return Container(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8.0),
                                       decoration: BoxDecoration(
-                                        color:
-                                            widget.themeColors.blackFillHalfOp,
+                                        color: themeColors.blackFillHalfOp,
                                         borderRadius:
                                             BorderRadius.circular(100),
                                       ),
@@ -132,7 +136,7 @@ class _CardListState extends State<CardList> {
             //bottom card
             Container(
               decoration: BoxDecoration(
-                color: widget.themeColors.mainWhite,
+                color: themeColors.mainWhite,
                 boxShadow: const [
                   BoxShadow(
                     color: Color(0x64959DA5),
@@ -149,11 +153,13 @@ class _CardListState extends State<CardList> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          widget.spotTitle,
-                          style: const TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Text(
+                            spotName,
+                            style: const TextStyle(
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],
@@ -166,7 +172,7 @@ class _CardListState extends State<CardList> {
                       children: [
                         Expanded(
                             child: Text(
-                          widget.shortDescription,
+                          shortDescription,
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w400),
                         )),

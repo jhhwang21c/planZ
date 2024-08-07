@@ -11,7 +11,7 @@ class SpotDetail extends StatefulWidget {
   final String address;
   final String contact;
   final String hours;
-  final bool parking;
+  final String parking;
   final List<String> imageLinks;
   List<dynamic>? hashtags;
 
@@ -353,9 +353,7 @@ class _SpotDetailState extends State<SpotDetail> {
                           const SizedBox(
                             width: 8.0,
                           ),
-                          Text(widget.parking
-                              ? "Parking available"
-                              : "No Parking"),
+                          Text(widget.parking),
                         ],
                       ),
                     ),

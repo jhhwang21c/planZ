@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planZ/common/widget/w_togglebar.dart';
 import 'package:planZ/screen/main/tab/feed/f_card_list.dart';
+import 'package:planZ/screen/main/tab/feed/f_journey.dart';
 import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:planZ/common/widget/w_searchbar.dart';
@@ -41,17 +42,17 @@ class _FeedFragmentState extends State<FeedFragment>
     _pageController.jumpToPage(index);
   }
 
-  Future<List<Map<String, dynamic>>> _fetchSpot() async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('spot').limit(5).get();
+  Future<List<Map<String, dynamic>>> _fetchData() async {
+    List<Map<String, dynamic>> combinedData = [];
 
-    List<Map<String, dynamic>> spots = [];
+    QuerySnapshot spotQuerySnapshot =
+        await FirebaseFirestore.instance.collection('spot').limit(3).get();
 
-    for (var doc in querySnapshot.docs) {
-      var spotData = doc.data() as Map<String,dynamic>;
+    for (var doc in spotQuerySnapshot.docs) {
+      var spotData = doc.data() as Map<String, dynamic>;
       spotData['id'] = doc.id;
 
-      //fetch from "image" subcollection
+      // Fetch from "image" subcollection
       QuerySnapshot imageSnapshot =
           await doc.reference.collection('image').get();
       List<String> imageLinks = imageSnapshot.docs
@@ -59,16 +60,29 @@ class _FeedFragmentState extends State<FeedFragment>
           .toList();
 
       spotData['image_links'] = imageLinks;
-      spots.add(spotData);
+      spotData['type'] = 'spot';
+      combinedData.add(spotData);
     }
 
-    return spots;
+    QuerySnapshot journeyQuerySnapshot =
+        await FirebaseFirestore.instance.collection('journey').get();
+
+    for (var doc in journeyQuerySnapshot.docs) {
+      var journeyData = doc.data() as Map<String, dynamic>;
+      journeyData['id'] = doc.id;
+
+      journeyData['type'] = 'journey';
+      combinedData.add(journeyData);
+    }
+
+    return combinedData;
   }
 
   @override
   Widget build(BuildContext context) {
     String currentLanguage = AppLangState.instance.appLanguage;
     print("Current language in FeedFragment: $currentLanguage");
+
     return Column(
       children: [
         // Search Bar
@@ -88,68 +102,63 @@ class _FeedFragmentState extends State<FeedFragment>
             physics: const NeverScrollableScrollPhysics(),
             children: labels.map((label) {
               return FutureBuilder<List<Map<String, dynamic>>>(
-                future: _fetchSpot(),
+                future: _fetchData(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('No Spots Found'));
+                    return const Center(child: Text('No Data Found'));
                   } else {
-                    var spots = snapshot.data!;
+                    var items = snapshot.data!;
 
                     return ListView.builder(
-                      itemCount: spots.length,
+                      itemCount: items.length,
                       itemBuilder: (context, index) {
-                        var spot = spots[index];
+                        var item = items[index];
 
                         // Extract hashtags for the current language
                         List<String> hashtags = [];
-                        if (spot['translated_hashtags'] != null) {
-                          var translatedHashtags = spot['translated_hashtags'];
+                        if (item['translated_hashtags'] != null) {
+                          var translatedHashtags = item['translated_hashtags'];
                           for (var i = 0; i < translatedHashtags.length; i++) {
                             hashtags.add(translatedHashtags[i.toString()]
                                 [currentLanguage]);
                           }
                         }
 
-                        List<String> imageLinks = spot['image_links'] ?? [];
+                        List<String> imageLinks = item['image_links'] ?? [];
 
                         return InkWell(
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SpotDetail(
-                                  spotId: spot['id'],
-                                  spotName: spot['translated_name']
-                                          [currentLanguage] ??
-                                      'No Title',
-                                  address: spot['translated_address'][currentLanguage] ??
-                                      spot['translated_address']['en'] ?? "No Address",
-                                  contact: spot['contact'] ?? "No Contact",
-                                  hours: spot['translated_hours'][currentLanguage] ?? "Hours Unavailable",
-                                  parking: spot['parking'] ?? "No Parking Info",
-                                  hashtags: hashtags,
-                                  imageLinks: imageLinks,
+                                builder: (context) => item['type'] == 'spot'
+                                    ? SpotDetail(
+                                        spotId: '',
+                                        spotName: item['translated_name']
+                                        [currentLanguage] ??
+                                            'No Info',
+                                        address: item['translated_address'][currentLanguage] ??
+                                            'No Address',
+                                        contact: item['contact'],
+                                        hours: item['translated_hours'][currentLanguage] ??
+                                            'hours unavailable',
+                                        parking: item['parking'] == true ? 'Parking Available' : 'Parking unavailable',
+                                        hashtags: hashtags,
+                                        imageLinks: imageLinks,
+                                      )
+                                    : JourneyPage(
+                                  item: item,
                                 ),
                               ),
                             );
                           },
                           child: CardList(
-                            spotTitle: spot['translated_name']
-                                    [currentLanguage] ??
-                                'No Info',
-                            shortDescription:
-                                spot['translated_short_description']
-                                        [currentLanguage] ??
-                                    'No Info',
-                            area: spot['translated_area'][currentLanguage] ??
-                                spot['translated_area']['en'] ?? "No Info",
-                            hashtags: hashtags,
+                            item:item,
                             themeColors: widget.themeColors,
-                            imageLinks: imageLinks,
                           ),
                         );
                       },
