@@ -78,13 +78,25 @@ class JourneyPage extends StatelessWidget {
       child: Column(
         children: [
           //image carousel
-          Container(
-            height: 282,
-            color: Colors.grey,
-            child: Center(
-              child: Text('Image Carousel'),
+          Stack(
+            children: [
+              Container(
+              height: 282,
+              color: Colors.grey,
+              child: Center(
+                child: Text('Image Carousel'),
+              ),
             ),
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(
+                      context); // Navigate back to the previous page
+                },
+              ),
+      ]
           ),
+
 
           //journey info
           Container(

@@ -8,6 +8,9 @@ import 'package:planZ/common/widget/w_togglebar.dart';
 import 'package:planZ/screen/main/tab/feed/f_card_list.dart';
 import 'package:planZ/screen/main/tab/feed/f_journey.dart';
 import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
+import 'package:planZ/screen/main/tab/mypage/f_cardlist_plan.dart';
+
+import '../../../../common/common.dart';
 
 class MySaves extends StatefulWidget {
   const MySaves({super.key});
@@ -60,9 +63,6 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
     return await _firestore.collection('spot').doc(spotId).get();
   }
 
-  Future<DocumentSnapshot> _fetchJourneyData(String journeyId) async {
-    return await _firestore.collection('journey').doc(journeyId).get();
-  }
 
   void fetchImageLinks(String spotId) async {
     try {
@@ -151,20 +151,12 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                                     return Center(
                                         child: Text('Spot not found'));
                                   } else {
-                                    var spotData = snapshot.data!.data()
-                                        as Map<String, dynamic>;
+                                    var spotData = snapshot.data!.data() as Map<String, dynamic>;
                                     print(spotData);
 
-                                    String spotName =
-                                        spotData['translated_name']
-                                                ?[currentLanguage] ??
-                                            'No name';
-                                    String shortDescription =
-                                        spotData['translated_short_description']
-                                                ?[currentLanguage] ??
-                                            'No description';
-                                    List<String> images =
-                                        spotImages[spotId] ?? [];
+                                    String spotName = spotData['translated_name']?[currentLanguage] ?? 'No name';
+                                    String shortDescription = spotData['translated_short_description']?[currentLanguage] ?? 'No description';
+                                    List<String> images = spotImages[spotId] ?? [];
 
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -182,18 +174,12 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            SpotDetail(
-                                                                spotItem:
-                                                                    spotData),
+                                                            SpotDetail(spotItem: spotData),
                                                       ),
                                                     );
                                                   } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                          content: Text(
-                                                              'Spot details are not available.')),
+                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                      SnackBar(content: Text('Spot details are not available.')),
                                                     );
                                                   }
                                                 },
@@ -214,43 +200,34 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                                                             : DecorationImage(
                                                                 image: AssetImage(
                                                                     'assets/image/fallbackImage.png'),
-                                                                fit: BoxFit
-                                                                    .cover,
+                                                                fit: BoxFit.cover,
                                                               ),
                                                       ),
                                                     ),
                                                     const SizedBox(width: 16),
                                                     SizedBox(
                                                       width: 213,
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Text(
                                                             spotName,
                                                             style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
+                                                                fontWeight: FontWeight.w500,
                                                                 fontSize: 16,
-                                                                color: context
-                                                                    .appColors
-                                                                    .mainBlack),
+                                                                color: context.appColors.mainBlack),
                                                           ),
                                                           Text(
+                                                            overflow:
+                                                                TextOverflow.ellipsis,
                                                             shortDescription,
                                                             style: TextStyle(
                                                                 fontSize: 12,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
+                                                                fontWeight: FontWeight.w500,
                                                                 color: context
                                                                     .appColors
                                                                     .placeholder,
                                                                 overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis),
+                                                                    TextOverflow.ellipsis),
                                                           ),
                                                         ],
                                                       ),
@@ -271,53 +248,33 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                         );
                 } else if (label == 'Journeys') {
                   return savedJourneys.isEmpty
-                      ? Center(
-                          child: Text('No saved journeys'),
-                        )
+                      ? Center(child: Text('No saved journeys'),)
                       : ListView.builder(
                           itemCount: savedJourneys.length,
                           itemBuilder: (context, index) {
                             String journeyId = savedJourneys[index];
-                            return FutureBuilder<DocumentSnapshot>(
-                                future: _fetchJourneyData(journeyId),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Center(
-                                        child: CircularProgressIndicator());
-                                  } else if (snapshot.hasError) {
-                                    return Center(
-                                        child: Text(
-                                            'Error fetching Journey details'));
-                                  } else if (!snapshot.hasData ||
-                                      !snapshot.data!.exists) {
-                                    return Center(
-                                        child: Text('Journey not found'));
-                                  } else {
-                                    var journeyData = snapshot.data!.data() as Map<String, dynamic>?;
-                                    print(journeyData);
-
-                                    return InkWell(
-                                        onTap: () {
-                                          if (journeyData != null) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => JourneyPage(journeyItem: journeyData)
-                                              ),
-                                            );
-                                          } else {
-                                            ScaffoldMessenger.of(
-                                                context)
-                                                .showSnackBar(
-                                              SnackBar(content: Text('Journey details are not available.')),
-                                            );
-                                          }
-                                        },
-                                        child: CardList(item: journeyData,)
-                                    );
-                                  }
-                                });
+                            return CardListPlan(journeyId: journeyId,);
+                            // return FutureBuilder<DocumentSnapshot>(
+                            //     future: _fetchJourneyData(journeyId),
+                            //     builder: (context, snapshot) {
+                            //       if (snapshot.connectionState ==
+                            //           ConnectionState.waiting) {
+                            //         return Center(
+                            //             child: CircularProgressIndicator());
+                            //       } else if (snapshot.hasError) {
+                            //         return Center(
+                            //             child: Text(
+                            //                 'Error fetching Journey details'));
+                            //       } else if (!snapshot.hasData ||
+                            //           !snapshot.data!.exists) {
+                            //         return Center(
+                            //             child: Text('Journey not found'));
+                            //       } else {
+                            //         var journeyData = snapshot.data!.data() as Map<String, dynamic>?;
+                            //         print(journeyData);
+                            //
+                            //       }
+                            //     });
                           },
                         );
                 } else {
