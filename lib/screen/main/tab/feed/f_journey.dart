@@ -50,7 +50,7 @@ class JourneyPage extends StatelessWidget {
           journeySpotData['translated_hours'] = spotData['translated_hours'];
           journeySpotData['contact'] = spotData['contact'];
           journeySpotData['parking'] = spotData['parking'];
-          journeySpotData['id'] = spotData['id'];
+          journeySpotData['id'] = spotDoc.id;
         }
       }
       journeySpots.add(journeySpotData);
