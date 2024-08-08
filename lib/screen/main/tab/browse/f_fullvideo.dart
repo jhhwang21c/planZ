@@ -355,7 +355,6 @@ class _FullVideoState extends State<FullVideo>
                   labels: labels,
                   pageController: _pageController,
                   tabController: _tabController,
-                  themeColors: widget.themeColors,
                 ),
               )
             ],

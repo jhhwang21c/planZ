@@ -85,7 +85,6 @@ class _FeedFragmentState extends State<FeedFragment>
             labels: labels,
             pageController: _pageController,
             tabController: _tabController,
-            themeColors: widget.themeColors,
           ),
         ),
         Expanded(
