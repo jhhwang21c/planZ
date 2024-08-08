@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:planZ/common/common.dart';
 import 'package:planZ/common/widget/w_searchbar.dart';
 import 'package:planZ/screen/main/tab/browse/f_map_view.dart';
+import 'package:planZ/screen/main/tab/plan/f_saves.dart';
 
 class PlanFragment extends StatefulWidget {
   const PlanFragment({super.key});
@@ -55,6 +56,8 @@ class _PlanFragmentState extends State<PlanFragment> {
                         thickness: 1,
                         color: Color(0xFFE1E4E8),
                       ),
+
+                      //My trips
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 10.0),
                         child: Row(
@@ -74,18 +77,31 @@ class _PlanFragmentState extends State<PlanFragment> {
                         thickness: 1,
                         color: Color(0xFFE1E4E8),
                       ),
-                      const Padding(
+
+
+                      //my saves
+                      Padding(
                         padding: EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'My saves',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w400),
-                            ),
-                            Icon(Icons.arrow_forward_ios),
-                          ],
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MySaves(),
+                              ),
+                            );
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'My saves',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w400),
+                              ),
+                              Icon(Icons.arrow_forward_ios),
+                            ],
+                          ),
                         ),
                       ),
                     ],
