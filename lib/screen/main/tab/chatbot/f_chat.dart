@@ -63,7 +63,7 @@ class _ChatbotFragmentState extends State<ChatbotFragment> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios), // Custom back button icon
+          icon: Icon(Icons.arrow_back_ios),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -76,13 +76,32 @@ class _ChatbotFragmentState extends State<ChatbotFragment> {
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                return BubbleNormal(
-                  text: message.text,
-                  isSender: message.isUser,
-                  color: message.isUser
-                      ? context.appColors.logoPale.withOpacity(0.7)
-                      : context.appColors.baseGrayPale,
-                  textStyle: TextStyle(color: Colors.black, fontSize: 18),
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (!message.isUser)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 1.0, top: 5),
+                          child: CircleAvatar(
+                            backgroundImage: AssetImage('assets/image/circleLogo.png'),
+                            radius: 20.0,
+                          ),
+                        ),
+                      Expanded(
+                        child: BubbleNormal(
+                          text: message.text,
+                          isSender: message.isUser,
+                          tail: false,
+                          color: message.isUser
+                              ? context.appColors.logoPale.withOpacity(0.7)
+                              : context.appColors.baseGrayPale,
+                          textStyle: TextStyle(color: Colors.black, fontSize: 18),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -90,7 +109,7 @@ class _ChatbotFragmentState extends State<ChatbotFragment> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-              height: 50.0,  // Adjust the height as needed
+              height: 50.0, // Adjust the height as needed
               child: TextField(
                 controller: _controller,
                 decoration: InputDecoration(
