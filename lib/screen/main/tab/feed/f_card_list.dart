@@ -8,10 +8,12 @@ import '../../../../common/theme/color/abs_theme_colors.dart';
 
 class CardList extends StatefulWidget {
   final Map<String, dynamic> item;
+  final bool isSpot;
 
   CardList({
     super.key,
     required this.item,
+    this.isSpot = true,
   });
 
   @override
@@ -64,6 +66,12 @@ class _CardListState extends State<CardList> {
     String spotName = widget.item['translated_title']?[currentLanguage] ?? widget.item['translated_name'] ? [currentLanguage] ?? 'No Info';
     String shortDescription = widget.item['translated_short_description']?[currentLanguage] ?? widget.item['translated_description']?[currentLanguage] ?? 'No Info';
 
+    String imageUrl = '';
+    if (widget.isSpot && imageLinks.isNotEmpty) {
+      imageUrl = imageLinks[0];
+    } else if (!widget.isSpot) {
+      imageUrl = widget.item['main_image'];
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -86,9 +94,9 @@ class _CardListState extends State<CardList> {
                     end: Alignment.topCenter,
                     stops: [0, 0.4],
                   ),
-                  image: imageLinks.isNotEmpty
+                  image: imageUrl.isNotEmpty
                       ? DecorationImage(
-                          image: NetworkImage(imageLinks[0]), fit: BoxFit.cover)
+                          image: NetworkImage(imageUrl), fit: BoxFit.cover)
                       : DecorationImage(image: AssetImage('assets/image/fallbackImage.png'), fit: BoxFit.cover,),
                 ),
               ),

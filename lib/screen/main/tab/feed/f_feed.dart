@@ -134,7 +134,7 @@ class _FeedFragmentState extends State<FeedFragment>
                               ),
                             );
                           },
-                          child: CardList(item: item,)
+                          child: CardList(item: item, isSpot: item['type'] == 'spot')
                         );
                       },
                     );

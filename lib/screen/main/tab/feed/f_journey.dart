@@ -81,9 +81,11 @@ class JourneyPage extends StatelessWidget {
           //image carousel
           Container(
             height: 282,
-            color: Colors.grey,
-            child: Center(
-              child: Text('Image Carousel'),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(journeyItem['main_image']), // Replace with your image URL or AssetImage('assets/your_image.png')
+                fit: BoxFit.cover,
+              ),
             ),
           ),
 
