@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:planZ/app_state.dart';
@@ -8,7 +7,7 @@ import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
 import 'package:video_player/video_player.dart';
 
 class JourneyPage extends StatelessWidget {
-  final Map<String, dynamic> journeyItem;
+  final Map<String, dynamic>? journeyItem;
 
   const JourneyPage({super.key, required this.journeyItem});
 
@@ -64,12 +63,12 @@ class JourneyPage extends StatelessWidget {
     String currentLanguage = AppLangState.instance.appLanguage;
 
     List<String> hashtags = [];
-    String journeyName = journeyItem['translated_title']?[currentLanguage] ?? 'No Name';
-    String description = journeyItem['translated_description']?[currentLanguage] ?? 'No Description';
-    String journeyId = journeyItem['id'];
+    String journeyName = journeyItem!['translated_title']?[currentLanguage] ?? 'No Name';
+    String description = journeyItem!['translated_description']?[currentLanguage] ?? 'No Description';
+    String journeyId = journeyItem!['id'];
 
-    if (journeyItem['translated_hashtags'] != null) {
-      var translatedHashtags = journeyItem['translated_hashtags'];
+    if (journeyItem!['translated_hashtags'] != null) {
+      var translatedHashtags = journeyItem!['translated_hashtags'];
       for (var i = 0; i < translatedHashtags.length; i++) {
         hashtags.add(translatedHashtags[i.toString()][currentLanguage]);
       }

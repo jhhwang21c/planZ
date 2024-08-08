@@ -81,7 +81,7 @@ class _SettingsFragmentState extends State<SettingsFragment> {
 
   @override
   Widget build(BuildContext context) {
-    return  _user == null
+    return _user == null
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [

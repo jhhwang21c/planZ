@@ -4,10 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:planZ/app_state.dart';
 import 'package:planZ/common/dart/extension/context_extension.dart';
 
-import '../../../../common/theme/color/abs_theme_colors.dart';
 
 class CardList extends StatefulWidget {
-  final Map<String, dynamic> item;
+  final Map<String, dynamic>? item;
 
   CardList({
     super.key,
@@ -31,7 +30,7 @@ class _CardListState extends State<CardList> {
     try {
       QuerySnapshot imageSnapshot = await FirebaseFirestore.instance
           .collection('spot')
-          .doc(widget.item['id'])
+          .doc(widget.item!['id'])
           .collection('image')
           .get();
 
@@ -53,16 +52,16 @@ class _CardListState extends State<CardList> {
 
     List<String> hashtags = [];
 
-    if (widget.item['translated_hashtags'] != null) {
-      var translatedHashtags = widget.item['translated_hashtags'];
+    if (widget.item!['translated_hashtags'] != null) {
+      var translatedHashtags = widget.item!['translated_hashtags'];
       for (var i = 0; i < translatedHashtags.length; i++) {
         hashtags.add(translatedHashtags[i.toString()][currentLanguage]);
       }
     }
 
-    String area = widget.item['translated_area']?[currentLanguage] ?? 'No Info';
-    String spotName = widget.item['translated_title']?[currentLanguage] ?? widget.item['translated_name'] ? [currentLanguage] ?? 'No Info';
-    String shortDescription = widget.item['translated_short_description']?[currentLanguage] ?? widget.item['translated_description']?[currentLanguage] ?? 'No Info';
+    String area = widget.item!['translated_area']?[currentLanguage] ?? 'No Info';
+    String spotName = widget.item!['translated_title']?[currentLanguage] ?? widget.item!['translated_name'] ? [currentLanguage] ?? 'No Info';
+    String shortDescription = widget.item!['translated_short_description']?[currentLanguage] ?? widget.item!['translated_description']?[currentLanguage] ?? 'No Info';
 
 
     return Padding(
@@ -204,6 +203,7 @@ class _CardListState extends State<CardList> {
                       children: [
                         Expanded(
                             child: Text(
+                              overflow: TextOverflow.ellipsis,
                           shortDescription,
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w400),
