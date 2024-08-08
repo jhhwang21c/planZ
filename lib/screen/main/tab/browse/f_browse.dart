@@ -18,7 +18,7 @@ class BrowseFragment extends StatefulWidget {
 }
 
 class _BrowseFragmentState extends State<BrowseFragment>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   List<String> labels = ['Browse', 'Map'];
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late TabController _tabController;
@@ -101,15 +101,11 @@ class _BrowseFragmentState extends State<BrowseFragment>
       length: labels.length,
       child: Column(
         children: [
-          SearchBarWidget(),
-          SizedBox(
-            height: 12,
-          ),
           Expanded(
             child: Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5,),
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: PageView(
                     controller: _pageController,
                     physics: NeverScrollableScrollPhysics(),
@@ -121,10 +117,8 @@ class _BrowseFragmentState extends State<BrowseFragment>
                       FutureBuilder<List<Map<String, dynamic>>>(
                         future: _fetchVideos(),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator());
                           }
                           if (!snapshot.hasData || snapshot.data!.isEmpty) {
                             return const Center(child: Text('No videos found'));
@@ -132,8 +126,7 @@ class _BrowseFragmentState extends State<BrowseFragment>
                           var videos = snapshot.data!;
                           return GridView.builder(
                             itemCount: videos.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
                               childAspectRatio: 9 / 16,
                             ),
@@ -142,16 +135,11 @@ class _BrowseFragmentState extends State<BrowseFragment>
                               return FutureBuilder<String>(
                                 future: _generateThumbnail(video['video_link']),
                                 builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const Center(
-                                        child: CircularProgressIndicator());
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return const Center(child: CircularProgressIndicator());
                                   }
-                                  if (!snapshot.hasData ||
-                                      snapshot.data!.isEmpty) {
-                                    return const Center(
-                                        child:
-                                            Text('Error generating thumbnail'));
+                                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                    return const Center(child: Text('Error generating thumbnail'));
                                   }
                                   var thumbnailPath = snapshot.data!;
                                   return GestureDetector(
@@ -160,8 +148,8 @@ class _BrowseFragmentState extends State<BrowseFragment>
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => FullVideo(
-                                              videos: videos,
-                                              initialIndex: index,
+                                            videos: videos,
+                                            initialIndex: index,
                                             themeColors: widget.themeColors,
                                           ),
                                         ),
@@ -176,12 +164,11 @@ class _BrowseFragmentState extends State<BrowseFragment>
                                           width: 50,
                                           color: Colors.blue,
                                           child: thumbnailPath.isEmpty
-                                              ? const Center(
-                                                  child: Text('No Thumbnail'))
+                                              ? const Center(child: Text('No Thumbnail'))
                                               : Image.file(
-                                                  File(thumbnailPath),
-                                                  fit: BoxFit.cover,
-                                                ),
+                                            File(thumbnailPath),
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -196,28 +183,37 @@ class _BrowseFragmentState extends State<BrowseFragment>
                       Stack(children: [
                         MapView(),
                         DraggableScrollableSheet(
-                        initialChildSize: 0.1,
-                        minChildSize: 0.1,
-                        maxChildSize: 1,
-                        builder: (BuildContext context, ScrollController scrollController) {
-                          return Container(
-                            color: Colors.blue,
-                          );
-                        },
-                      ),
+                          initialChildSize: 0.1,
+                          minChildSize: 0.1,
+                          maxChildSize: 1,
+                          builder: (BuildContext context, ScrollController scrollController) {
+                            return Container(
+                              color: Colors.blue,
+                            );
+                          },
+                        ),
                       ]),
                     ],
                   ),
                 ),
-                // Tab Bar
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: ToggleBarWidget(
-                    labels: labels,
-                    pageController: _pageController,
-                    tabController: _tabController,
+
+                // Centered Tab Bar
+                Positioned(
+                  top: 74,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: ToggleBarWidget(
+                        labels: labels,
+                        pageController: _pageController,
+                        tabController: _tabController,
+                      ),
+                    ),
                   ),
                 ),
+                SearchBarWidget(),
               ],
             ),
           ),

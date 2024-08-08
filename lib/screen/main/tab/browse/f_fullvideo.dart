@@ -27,7 +27,7 @@ class FullVideo extends StatefulWidget {
 }
 
 class _FullVideoState extends State<FullVideo>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late PageController _pageController;
   late List<VideoPlayerController?> _controllers;

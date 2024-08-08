@@ -18,7 +18,7 @@ class ToggleBarWidget extends StatefulWidget {
   State<ToggleBarWidget> createState() => _ToggleBarWidgetState();
 }
 
-class _ToggleBarWidgetState extends State<ToggleBarWidget> with SingleTickerProviderStateMixin{
+class _ToggleBarWidgetState extends State<ToggleBarWidget> with TickerProviderStateMixin{
 
   @override
   void initState() {

@@ -18,7 +18,7 @@ class FeedFragment extends StatefulWidget {
 }
 
 class _FeedFragmentState extends State<FeedFragment>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   List<String> labels = ['Discover', 'Following'];
 
   late PageController _pageController;
@@ -134,7 +134,7 @@ class _FeedFragmentState extends State<FeedFragment>
                               ),
                             );
                           },
-                          child: CardList(item: item,)
+                          child: CardList(item: item, isSpot: item['type'] == 'spot')
                         );
                       },
                     );

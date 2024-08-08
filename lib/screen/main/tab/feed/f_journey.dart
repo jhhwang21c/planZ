@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:planZ/app_state.dart';
@@ -49,7 +50,7 @@ class JourneyPage extends StatelessWidget {
           journeySpotData['translated_hours'] = spotData['translated_hours'];
           journeySpotData['contact'] = spotData['contact'];
           journeySpotData['parking'] = spotData['parking'];
-          journeySpotData['id'] = spotData['id'];
+          journeySpotData['id'] = spotDoc.id;
         }
       }
       journeySpots.add(journeySpotData);
@@ -78,23 +79,14 @@ class JourneyPage extends StatelessWidget {
       child: Column(
         children: [
           //image carousel
-          Stack(
-            children: [
-              Container(
-              height: 282,
-              color: Colors.grey,
-              child: Center(
-                child: Text('Image Carousel'),
+          Container(
+            height: 282,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(journeyItem!['main_image']), // Replace with your image URL or AssetImage('assets/your_image.png')
+                fit: BoxFit.cover,
               ),
             ),
-              IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pop(
-                      context); // Navigate back to the previous page
-                },
-              ),
-      ]
           ),
 
 
