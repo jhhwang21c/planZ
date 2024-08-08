@@ -216,7 +216,6 @@ class _BrowseFragmentState extends State<BrowseFragment>
                     labels: labels,
                     pageController: _pageController,
                     tabController: _tabController,
-                    themeColors: widget.themeColors,
                   ),
                 ),
               ],
