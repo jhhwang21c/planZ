@@ -10,8 +10,7 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
 
 class BrowseFragment extends StatefulWidget {
-  final AbstractThemeColors themeColors;
-  const BrowseFragment({super.key, required this.themeColors});
+  const BrowseFragment({super.key,});
 
   @override
   State<BrowseFragment> createState() => _BrowseFragmentState();
@@ -150,7 +149,6 @@ class _BrowseFragmentState extends State<BrowseFragment>
                                           builder: (context) => FullVideo(
                                             videos: videos,
                                             initialIndex: index,
-                                            themeColors: widget.themeColors,
                                           ),
                                         ),
                                       );

@@ -13,13 +13,11 @@ import 'package:planZ/app_state.dart';
 class FullVideo extends StatefulWidget {
   final List<Map<String, dynamic>> videos;
   final int initialIndex;
-  final AbstractThemeColors themeColors;
 
   const FullVideo({
     super.key,
     required this.videos,
     required this.initialIndex,
-    required this.themeColors,
   });
 
   @override
@@ -194,7 +192,7 @@ class _FullVideoState extends State<FullVideo>
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      widget.themeColors.mainBlack,
+                                      context.appColors.mainBlack,
                                       Colors.transparent
                                     ],
                                     begin: Alignment.bottomCenter,
@@ -215,19 +213,11 @@ class _FullVideoState extends State<FullVideo>
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) => UserInfo(
-                                                profileImageUrl:
-                                                    _user!['profile_img_link'],
+                                                profileImageUrl: _user!['profile_img_link'],
                                                 username: _user!['username'],
-                                                followersCount:
-                                                    _user!['follower']
-                                                            ?.length ??
-                                                        "no followers",
-                                                followingCount:
-                                                    _user!['following']
-                                                            ?.length ??
-                                                        "no following",
+                                                followersCount: _user!['follower']?.length ?? "no followers",
+                                                followingCount: _user!['following']?.length ?? "no following",
                                                 userId: video['user_id'],
-                                                themeColors: widget.themeColors,
                                               ),
                                             ),
                                           );

@@ -23,11 +23,11 @@ enum TabItem {
       case TabItem.feed:
         return FeedFragment(themeColors: themeColors);
       case TabItem.browse:
-        return BrowseFragment(themeColors: themeColors,);
+        return BrowseFragment();
       case TabItem.plan:
         return PlanFragment();
       case TabItem.mypage:
-        return MyPageFragment(themeColors: themeColors);
+        return MyPageFragment();
       case TabItem.settings:
         return SettingsFragment(themeColors: themeColors);
     }

@@ -11,9 +11,8 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 import '../browse/f_fullvideo.dart';
 
 class MyPageFragment extends StatefulWidget {
-  final AbstractThemeColors themeColors;
 
-  MyPageFragment({super.key, required this.themeColors});
+  MyPageFragment({super.key,});
 
   @override
   State<MyPageFragment> createState() => _MyPageFragmentState();
@@ -333,7 +332,6 @@ class _MyPageFragmentState extends State<MyPageFragment>
                                       builder: (context) => FullVideo(
                                         videos: videos,
                                         initialIndex: index,
-                                        themeColors: widget.themeColors,
                                       ),
                                     ),
                                   );
