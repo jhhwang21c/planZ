@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:planZ/app_state.dart';
 import 'package:planZ/common/dart/extension/context_extension.dart';
 import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
+import 'package:planZ/screen/main/tab/plan/global.dart';
 
 class CardListPlan extends StatefulWidget {
   final String journeyId;
@@ -306,11 +307,12 @@ class _CardListPlanState extends State<CardListPlan> {
                                                 child: Text('Spot not found'));
                                           } else {
                                             var spotData = snapshot.data!.data() as Map<String, dynamic>;
-                                            print(spotData);
+                                            // print(spotData);
 
                                             String spotName = spotData['translated_name']?[currentLanguage] ?? 'No name';
                                             String shortDescription = spotData['translated_short_description']?[currentLanguage] ?? 'No description';
                                             List<String> images = spotImages[spotId] ?? [];
+                                            bool added = selectedSpots.any((spot) => spot['spotName'] == spotName);
 
                                             return Padding(
                                               padding: const EdgeInsets.only(right: 15.0),
@@ -355,7 +357,7 @@ class _CardListPlanState extends State<CardListPlan> {
                                                             const
                                                             SizedBox(width: 16),
                                                             SizedBox(
-                                                              width: 213,
+                                                              width: 180,
                                                               child: Column(
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                 children: [
@@ -380,7 +382,21 @@ class _CardListPlanState extends State<CardListPlan> {
                                                           ],
                                                         ),
                                                       ),
-                                                      Icon(Icons.add),
+                                                      IconButton(
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              if (added) {
+                                                                selectedSpots.removeWhere(
+                                                                        (spot) => spot['spotName'] == spotName);
+                                                              } else {
+                                                                selectedSpots.add({
+                                                                  'spotName': spotName,
+                                                                  'imageUrl': images.isNotEmpty ? images[0] : '',
+                                                                });
+                                                              }
+                                                            });
+                                                          },
+                                                          icon: Icon(added ? Icons.check_circle_rounded : Icons.add)),
                                                     ],
                                                   ),
                                                   const SizedBox(height: 12),

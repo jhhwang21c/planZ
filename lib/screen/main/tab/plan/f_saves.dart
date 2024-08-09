@@ -3,14 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:planZ/app_state.dart';
 import 'package:planZ/common/dart/extension/context_extension.dart';
-import 'package:planZ/common/language/language.dart';
 import 'package:planZ/common/widget/w_togglebar.dart';
-import 'package:planZ/screen/main/tab/feed/f_card_list.dart';
-import 'package:planZ/screen/main/tab/feed/f_journey.dart';
 import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
-import 'package:planZ/screen/main/tab/mypage/f_cardlist_plan.dart';
+import 'package:planZ/screen/main/tab/plan/f_cardlist_plan.dart';
 
 import '../../../../common/common.dart';
+import 'global.dart';
 
 class MySaves extends StatefulWidget {
   const MySaves({super.key});
@@ -26,6 +24,7 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Map<String, dynamic>? _user;
   Map<String, List<String>> spotImages = {};
+  // Map<String,bool> isSpotAdded = {};
 
   Future<void> _fetchUserData(String userId) async {
     try {
@@ -89,6 +88,7 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
     String currentLanguage = AppLangState.instance.appLanguage;
     List<dynamic> savedSpots = _user?['saved_spots'] ?? [];
     List<dynamic> savedJourneys = _user?['saved_journey'] ?? [];
+    print('selected spots are: $selectedSpots');
 
     return Scaffold(
       body: Column(
@@ -102,8 +102,7 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                   IconButton(
                     icon: Icon(Icons.arrow_back),
                     onPressed: () {
-                      Navigator.pop(
-                          context); // Navigate back to the previous page
+                      Navigator.pop(context, true); // Navigate back to the previous page
                     },
                   ),
                 ],
@@ -118,6 +117,7 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                 tabController: _tabController,
                 pageController: _pageController),
           ),
+
           // Spots
           Expanded(
             child: PageView(
@@ -157,6 +157,7 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                                     String spotName = spotData['translated_name']?[currentLanguage] ?? 'No name';
                                     String shortDescription = spotData['translated_short_description']?[currentLanguage] ?? 'No description';
                                     List<String> images = spotImages[spotId] ?? [];
+                                    bool added = selectedSpots.any((spot) => spot['spotName'] == spotName);
 
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -170,8 +171,7 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                                               InkWell(
                                                 onTap: () {
                                                   if (spotData != null) {
-                                                    Navigator.push(
-                                                      context,
+                                                    Navigator.push(context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
                                                             SpotDetail(spotItem: spotData),
@@ -190,16 +190,9 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                                                       height: 60,
                                                       decoration: BoxDecoration(
                                                         image: images.isNotEmpty
-                                                            ? DecorationImage(
-                                                                image:
-                                                                    NetworkImage(
-                                                                        images[
-                                                                            0]),
-                                                                fit: BoxFit
-                                                                    .cover)
+                                                            ? DecorationImage(image: NetworkImage(images[0]), fit: BoxFit.cover)
                                                             : DecorationImage(
-                                                                image: AssetImage(
-                                                                    'assets/image/fallbackImage.png'),
+                                                                image: AssetImage('assets/image/fallbackImage.png'),
                                                                 fit: BoxFit.cover,
                                                               ),
                                                       ),
@@ -217,17 +210,13 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                                                                 color: context.appColors.mainBlack),
                                                           ),
                                                           Text(
-                                                            overflow:
-                                                                TextOverflow.ellipsis,
+                                                            overflow: TextOverflow.ellipsis,
                                                             shortDescription,
                                                             style: TextStyle(
                                                                 fontSize: 12,
                                                                 fontWeight: FontWeight.w500,
-                                                                color: context
-                                                                    .appColors
-                                                                    .placeholder,
-                                                                overflow:
-                                                                    TextOverflow.ellipsis),
+                                                                color: context.appColors.placeholder,
+                                                                overflow: TextOverflow.ellipsis),
                                                           ),
                                                         ],
                                                       ),
@@ -235,7 +224,21 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                                                   ],
                                                 ),
                                               ),
-                                              Icon(Icons.add),
+                                              IconButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      if (added) {
+                                                        selectedSpots.removeWhere(
+                                                            (spot) => spot['spotName'] == spotName);
+                                                      } else {
+                                                        selectedSpots.add({
+                                                          'spotName': spotName,
+                                                          'imageUrl': images.isNotEmpty ? images[0] : '',
+                                                        });
+                                                      }
+                                                    });
+                                                  },
+                                                  icon: Icon(added ? Icons.check_circle_rounded : Icons.add))
                                             ],
                                           ),
                                           const SizedBox(height: 12),
@@ -254,27 +257,6 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                           itemBuilder: (context, index) {
                             String journeyId = savedJourneys[index];
                             return CardListPlan(journeyId: journeyId,);
-                            // return FutureBuilder<DocumentSnapshot>(
-                            //     future: _fetchJourneyData(journeyId),
-                            //     builder: (context, snapshot) {
-                            //       if (snapshot.connectionState ==
-                            //           ConnectionState.waiting) {
-                            //         return Center(
-                            //             child: CircularProgressIndicator());
-                            //       } else if (snapshot.hasError) {
-                            //         return Center(
-                            //             child: Text(
-                            //                 'Error fetching Journey details'));
-                            //       } else if (!snapshot.hasData ||
-                            //           !snapshot.data!.exists) {
-                            //         return Center(
-                            //             child: Text('Journey not found'));
-                            //       } else {
-                            //         var journeyData = snapshot.data!.data() as Map<String, dynamic>?;
-                            //         print(journeyData);
-                            //
-                            //       }
-                            //     });
                           },
                         );
                 } else {
