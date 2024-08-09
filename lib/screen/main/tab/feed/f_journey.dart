@@ -79,14 +79,24 @@ class JourneyPage extends StatelessWidget {
       child: Column(
         children: [
           //image carousel
-          Container(
-            height: 282,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(journeyItem!['main_image']), // Replace with your image URL or AssetImage('assets/your_image.png')
-                fit: BoxFit.cover,
+          Stack(
+            children: [
+              Container(
+              height: 282,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(journeyItem!['main_image']), // Replace with your image URL or AssetImage('assets/your_image.png')
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context); // Navigate back to the previous page
+                },
+              ),
+      ]
           ),
 
 

@@ -116,9 +116,9 @@ class _CardListPlanState extends State<CardListPlan> {
                         end: Alignment.topCenter,
                         stops: [0, 0.4],
                       ),
-                      image: imageLinks.isNotEmpty
+                      image: journeyData['main_image'].isNotEmpty
                           ? DecorationImage(
-                          image: NetworkImage(imageLinks[0]), fit: BoxFit.cover)
+                          image: NetworkImage(journeyData['main_image']), fit: BoxFit.cover)
                           : DecorationImage(
                         image: AssetImage('assets/image/fallbackImage.png'),
                         fit: BoxFit.cover,),

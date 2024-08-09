@@ -4,6 +4,7 @@ import 'package:planZ/common/common.dart';
 import 'package:planZ/common/widget/w_searchbar.dart';
 import 'package:planZ/screen/main/tab/browse/f_map_view.dart';
 import 'package:planZ/screen/main/tab/plan/f_saves.dart';
+import 'package:planZ/screen/main/tab/plan/f_trips.dart';
 
 class PlanFragment extends StatefulWidget {
   const PlanFragment({super.key});
@@ -58,18 +59,28 @@ class _PlanFragmentState extends State<PlanFragment> {
                       ),
 
                       //My trips
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'My trips',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w400),
-                            ),
-                            Icon(Icons.arrow_forward_ios),
-                          ],
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyTrips(),
+                              ),
+                            );
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'My trips',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w400),
+                              ),
+                              Icon(Icons.arrow_forward_ios),
+                            ],
+                          ),
                         ),
                       ),
                       const Divider(
