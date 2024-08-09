@@ -245,7 +245,37 @@ class _CardListPlanState extends State<CardListPlan> {
                             ),
                             Row(
                               children: [
-                                Icon(Icons.add),
+                                IconButton(
+                                    onPressed: () async {
+                                      var journeySpots = await _fetchJourneySpots(widget.journeyId);
+                                      setState(()  {
+                                        for (var journeySpot in journeySpots) {
+                                          var spotData = journeySpot.data() as Map<String, dynamic>;
+                                          var spotId = spotData['spot_id'];
+
+                                          //fetch spot details
+                                          _fetchSpotData(spotId).then((spotSnapshot) {
+                                            var spotDetails = spotSnapshot.data() as Map<String,dynamic>;
+                                            String spotName  = spotDetails['translated_name']?[currentLanguage] ?? "No name";
+                                            List<String> images = spotImages[spotId] ?? [];
+
+                                            if (selectedSpots.any((spot) => spot['spotName'] == spotName)) {
+                                              selectedSpots.removeWhere(
+                                                      (spot) => spot['spotName'] == spotName);
+                                            } else {
+                                              selectedSpots.add({
+                                                'spotName': spotName,
+                                                'imageUrl': images.isNotEmpty ? images[0] : '',
+                                              });
+                                            }
+                                          });
+                                        }
+                                      });
+                                    },
+                                    icon: Icon(selectedSpots.any((spot) => spot['spotName'] == spotName)
+                                        ? Icons.check_circle_rounded
+                                        : Icons.add)
+                                ),
                                 IconButton(
                                   icon: Icon(isExpanded
                                       ? Icons.keyboard_arrow_up

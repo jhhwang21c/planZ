@@ -181,6 +181,7 @@ class _PlanFragmentState extends State<PlanFragment> {
 
                             if (result != null) {
                               setState(() {
+
                               });
                             }
                           },
