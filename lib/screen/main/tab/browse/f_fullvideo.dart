@@ -24,8 +24,7 @@ class FullVideo extends StatefulWidget {
   _FullVideoState createState() => _FullVideoState();
 }
 
-class _FullVideoState extends State<FullVideo>
-    with TickerProviderStateMixin {
+class _FullVideoState extends State<FullVideo> with TickerProviderStateMixin {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late PageController _pageController;
   late List<VideoPlayerController?> _controllers;
@@ -191,7 +190,10 @@ class _FullVideoState extends State<FullVideo>
                                 width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [context.appColors.mainBlack, Colors.transparent],
+                                    colors: [
+                                      context.appColors.mainBlack,
+                                      Colors.transparent
+                                    ],
                                     begin: Alignment.bottomCenter,
                                     end: Alignment.topCenter,
                                     stops: [0, 0.6],
@@ -202,7 +204,7 @@ class _FullVideoState extends State<FullVideo>
                                       bottom: 20, left: 24, right: 80),
                                   child: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       InkWell(
                                         onTap: () {
@@ -210,10 +212,17 @@ class _FullVideoState extends State<FullVideo>
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) => UserInfo(
-                                                profileImageUrl: _user!['profile_img_link'],
+                                                profileImageUrl:
+                                                    _user!['profile_img_link'],
                                                 username: _user!['username'],
-                                                followersCount: _user!['follower']?.length ?? "no followers",
-                                                followingCount: _user!['following']?.length ?? "no following",
+                                                followersCount:
+                                                    _user!['follower']
+                                                            ?.length ??
+                                                        "no followers",
+                                                followingCount:
+                                                    _user!['following']
+                                                            ?.length ??
+                                                        "no following",
                                                 userId: video['user_id'],
                                               ),
                                             ),
@@ -233,7 +242,7 @@ class _FullVideoState extends State<FullVideo>
                                             Text(
                                               _user != null
                                                   ? _user!['username'] ??
-                                                  'Unknown User'
+                                                      'Unknown User'
                                                   : 'Loading',
                                               style: const TextStyle(
                                                 color: Colors.white,
@@ -245,7 +254,8 @@ class _FullVideoState extends State<FullVideo>
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
                                         child: Row(
                                           children: [
                                             InkWell(
@@ -255,8 +265,8 @@ class _FullVideoState extends State<FullVideo>
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         SpotDetail(
-                                                          spotItem: _spot ?? {},
-                                                        ),
+                                                      spotItem: _spot ?? {},
+                                                    ),
                                                   ),
                                                 );
                                               },
@@ -266,8 +276,8 @@ class _FullVideoState extends State<FullVideo>
                                                   color: Colors.black
                                                       .withOpacity(0.25),
                                                   borderRadius:
-                                                  BorderRadius.circular(
-                                                      100),
+                                                      BorderRadius.circular(
+                                                          100),
                                                 ),
                                                 child: Padding(
                                                   padding: const EdgeInsets
@@ -287,11 +297,12 @@ class _FullVideoState extends State<FullVideo>
                                                         Text(
                                                           _spot != null
                                                               ? _spot!['translated_name']
-                                                          [
-                                                          currentLanguage] ??
-                                                              'No Info'
+                                                                      [
+                                                                      currentLanguage] ??
+                                                                  'No Info'
                                                               : 'Loading',
-                                                          style: TextStyle(
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 10.0,
                                                             color: Colors.white,
                                                           ),
@@ -307,10 +318,14 @@ class _FullVideoState extends State<FullVideo>
                                       ),
                                       Text(
                                         _spot != null
-                                            ? _spot!['translated_short_description'][currentLanguage] ?? 'Unknown Description' : 'Loading',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12.0),
+                                            ? _spot!['translated_short_description']
+                                                    [currentLanguage] ??
+                                                'Unknown Description'
+                                            : 'Loading',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12.0,
+                                        ),
                                         softWrap: true,
                                       ),
                                     ],
@@ -320,19 +335,29 @@ class _FullVideoState extends State<FullVideo>
                             ),
                             Positioned(
                               right: 24,
-                              bottom:27,
+                              bottom: 27,
                               child: Column(
                                 children: [
-                                  SvgPicture.asset('assets/image/icon/Like.svg'),
-                                  const SizedBox(height: 20,),
-                                  SvgPicture.asset('assets/image/icon/Save.svg', color: context.appColors.mainWhite,),
-                                  const SizedBox(height: 20,),
-                                  Icon(Icons.share, color: context.appColors.mainWhite,),
-                                  const SizedBox(height: 20,),
-                                  Icon(Icons.add, color: context.appColors.mainWhite)
+                                  SvgPicture.asset(
+                                      'assets/image/icon/Like.svg'),
+                                  const SizedBox(height: 20),
+                                  SvgPicture.asset(
+                                    'assets/image/icon/Save.svg',
+                                    color: context.appColors.mainWhite,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Icon(
+                                    Icons.share,
+                                    color: context.appColors.mainWhite,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Icon(
+                                    Icons.add,
+                                    color: context.appColors.mainWhite,
+                                  ),
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         ),
                       );
@@ -341,19 +366,22 @@ class _FullVideoState extends State<FullVideo>
                   Center(
                     child: _spotLocation != null
                         ? MapView(spotLocation: _spotLocation)
-                        : CircularProgressIndicator(),
+                        : const CircularProgressIndicator(),
                   ),
                 ],
               ),
-
               IconButton(
-                icon: Icon(Icons.arrow_back, color: context.appColors.mainBlack,),
+                icon:
+                    Icon(Icons.arrow_back, color: context.appColors.mainBlack),
                 onPressed: () {
-                  Navigator.pop(context, true); // Navigate back to the previous page
+                  if (_controllers[_currentIndex] != null) {
+                    _controllers[_currentIndex]!.pause();
+                  }
+                  Navigator.pop(
+                      context, true);
                 },
               ),
-
-              //Tab Bar
+              // Tab Bar
               Padding(
                 padding: const EdgeInsets.only(top: 28.0),
                 child: ToggleBarWidget(
@@ -362,7 +390,6 @@ class _FullVideoState extends State<FullVideo>
                   tabController: _tabController,
                 ),
               ),
-
             ],
           ),
         ),
