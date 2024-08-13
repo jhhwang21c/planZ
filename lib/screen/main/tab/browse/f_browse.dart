@@ -40,7 +40,11 @@ class _BrowseFragmentState extends State<BrowseFragment>
   }
 
   Future<List<Map<String, dynamic>>> _fetchVideos() async {
-    QuerySnapshot querySnapshot = await _firestore.collection('video').get();
+    QuerySnapshot querySnapshot = await _firestore
+        .collection('video')
+        .orderBy('num_likes', descending: true)
+        .get();
+
     return querySnapshot.docs
         .map((doc) => doc.data() as Map<String, dynamic>)
         .toList();
@@ -53,19 +57,19 @@ class _BrowseFragmentState extends State<BrowseFragment>
       String? thumbnailPath;
 
       if (Platform.isAndroid) {
-        // Original code for Android
+        // code for Android
         thumbnailPath = await VideoThumbnail.thumbnailFile(
           video: videoUrl,
-          thumbnailPath: tempPath, // Save to temp directory
+          thumbnailPath: tempPath,
           imageFormat: ImageFormat.PNG,
           maxWidth: 128,
           quality: 25,
         );
       } else if (Platform.isIOS) {
-        // New code for iOS
+        // code for iOS
         thumbnailPath = await VideoThumbnail.thumbnailFile(
           video: videoUrl,
-          thumbnailPath: tempPath, // Save to temp directory
+          thumbnailPath: tempPath,
           imageFormat: ImageFormat.PNG,
           maxWidth: 128,
           quality: 25,

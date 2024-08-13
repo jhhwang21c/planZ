@@ -311,6 +311,7 @@ class _FullVideoState extends State<FullVideo>
                 child: ToggleBarWidget(
                   labels: labels,
                   tabController: _tabController,
+                  videoPlayerController: _videoPlayerController,
                 ),
               ),
               IconButton(
