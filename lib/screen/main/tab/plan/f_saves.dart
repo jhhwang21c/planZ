@@ -114,8 +114,7 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
             padding: const EdgeInsets.symmetric(vertical: 24.0),
             child: ToggleBarWidget(
                 labels: labels,
-                tabController: _tabController,
-                pageController: _pageController),
+                tabController: _tabController,),
           ),
 
           // Spots

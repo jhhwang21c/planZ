@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:planZ/common/common.dart';
 import 'package:planZ/common/widget/w_floating_menu.dart';
+import 'package:planZ/screen/main/tab/browse/f_fullvideo_two.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../browse/f_fullvideo.dart';
@@ -127,34 +128,25 @@ class _MyPageFragmentState extends State<MyPageFragment>
           const Center(child: CircularProgressIndicator())
         else
         Padding(
-          padding: EdgeInsets.only(left: 24.0, top: 12.0, bottom: 18.0),
+          padding: EdgeInsets.only(left: 24.0, top: 30.0, bottom: 18.0),
           child: Row(
             children: [
               //user profile
-              Container(
-                width: 88.0,
-                height: 88.0,
-                child: Stack(children: [
-                  CircleAvatar(
-                    backgroundColor:
-                        _user!['profile_img_link'] == null ? Colors.grey : null,
-                    backgroundImage: _user!['profile_img_link'] != null
-                        ? NetworkImage(_user!['profile_img_link'])
-                        : null,
-                    radius: 44.0,
-                  ),
-                  Positioned(
-                      right: 5,
-                      bottom: 0,
-                      child: SvgPicture.asset(
-                        'assets/image/icon/Badge.svg',
-                        width: 19.36,
-                        height: 19.36,
-                      ))
-                ]),
-              ),
               SizedBox(
-                width: 24.0,
+                width: 110.0,
+                height: 110.0,
+                child: CircleAvatar(
+                  backgroundColor: _user!['profile_img_link'] == null
+                      ? Colors.grey
+                      : null,
+                  backgroundImage: _user!['profile_img_link'] != null
+                      ? NetworkImage(_user!['profile_img_link'])
+                      : null,
+                  radius: 20.0,
+                ),
+              ),
+              const SizedBox(
+                width: 25.0,
               ),
 
               //username
@@ -185,7 +177,7 @@ class _MyPageFragmentState extends State<MyPageFragment>
                       height: 20,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
-                        color: context.appColors.mainGray,
+                        color: context.appColors.mainBlack,
                       ),
                       child: Center(
                         child: Text(

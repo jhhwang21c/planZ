@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:planZ/common/common.dart';
+import 'package:planZ/screen/main/tab/browse/f_fullvideo_two.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../browse/f_fullvideo.dart';
@@ -109,172 +110,183 @@ class _UserInfoState extends State<UserInfo>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          //user info
-          Padding(
-            padding: EdgeInsets.only(left: 24.0, top: 12.0, bottom: 18.0),
-            child: Row(
-              children: [
-                //user profile
-                Container(
-                  width: 88.0,
-                  height: 88.0,
-                  child: CircleAvatar(
-                    backgroundColor:
-                        widget.profileImageUrl == null ? Colors.grey : null,
-                    backgroundImage: widget.profileImageUrl != null
-                        ? NetworkImage(widget.profileImageUrl!)
-                        : null,
-                    radius: 20.0,
+      body: Stack(
+        children: [Column(
+          children: [
+            //user info
+            Padding(
+              padding: EdgeInsets.only(left: 24.0, top: 12.0, bottom: 18.0),
+              child: Row(
+                children: [
+                  //user profile
+                  Container(
+                    width: 110.0,
+                    height: 110.0,
+                    child: CircleAvatar(
+                      backgroundColor:
+                          widget.profileImageUrl == null ? Colors.grey : null,
+                      backgroundImage: widget.profileImageUrl != null
+                          ? NetworkImage(widget.profileImageUrl!)
+                          : null,
+                      radius: 20.0,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 24.0,
-                ),
+                  SizedBox(
+                    width: 24.0,
+                  ),
 
-                //username
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("@${widget.username!}"),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text("Ranking Lv. 1"),
-                    ),
-                    SizedBox(
-                      width: 108.0,
-                      height: 24.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Following"),
-                          Text("${widget.followingCount!}")
-                        ],
+                  //username
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("@${widget.username!}"),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text("Ranking Lv. 1"),
                       ),
-                    ),
-                    SizedBox(
-                      width: 108.0,
-                      height: 24.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Follower"),
-                          Text("${widget.followersCount!}")
-                        ],
+                      SizedBox(
+                        width: 108.0,
+                        height: 24.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Following"),
+                            Text("${widget.followingCount!}")
+                          ],
+                        ),
                       ),
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-
-          //toggle bar
-          TabBar(
-            controller: _tabController,
-            onTap: _onTabTapped,
-            tabs: labels.map((label) {
-              return SizedBox(
-                width: 160.0,
-                child: Tab(text: label),
-              );
-            }).toList(),
-            indicator: BoxDecoration(
-              color: Colors.grey[700],
-            ),
-            indicatorSize: TabBarIndicatorSize.tab,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.black,
-            labelStyle: const TextStyle(fontWeight: FontWeight.normal),
-            unselectedLabelStyle:
-                const TextStyle(fontWeight: FontWeight.normal),
-          ),
-
-          //TabBarView with grid
-          Expanded(
-              child: TabBarView(
-            controller: _tabController,
-            children: [
-              //Zips Tab
-              Center(
-                child: Text("Journeys Content"),
+                      SizedBox(
+                        width: 108.0,
+                        height: 24.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Follower"),
+                            Text("${widget.followersCount!}")
+                          ],
+                        ),
+                      )
+                    ],
+                  )
+                ],
               ),
-              //Journeys Tab
-              FutureBuilder<List<Map<String, dynamic>>>(
-                  future: _fetchUserVideos(),
-                  builder: (context, snapshot)
-              {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No Videos Found'));
-                } else {
-                  var videos = snapshot.data!;
+            ),
+
+            //toggle bar
+            TabBar(
+              controller: _tabController,
+              onTap: _onTabTapped,
+              tabs: labels.map((label) {
+                return SizedBox(
+                  width: 160.0,
+                  child: Tab(text: label),
+                );
+              }).toList(),
+              indicator: BoxDecoration(
+                color: Colors.grey[700],
+              ),
+              indicatorSize: TabBarIndicatorSize.tab,
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.black,
+              labelStyle: const TextStyle(fontWeight: FontWeight.normal),
+              unselectedLabelStyle:
+                  const TextStyle(fontWeight: FontWeight.normal),
+            ),
+
+            //TabBarView with grid
+            Expanded(
+                child: TabBarView(
+              controller: _tabController,
+              children: [
+                //Zips Tab
+                Center(
+                  child: Text("Journeys Content"),
+                ),
+                //Journeys Tab
+                FutureBuilder<List<Map<String, dynamic>>>(
+                    future: _fetchUserVideos(),
+                    builder: (context, snapshot)
+                {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No Videos Found'));
+                  } else {
+                    var videos = snapshot.data!;
 
 
-                  return GridView.builder(
-                    itemCount: videos.length,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 9 / 16,
-                    ),
-                    itemBuilder: (context, index) {
-                      var video = videos[index];
-                      return FutureBuilder<String>(
-                        future: _generateThumbnail(video['video_link']),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator());
-                          }
-                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                            return const Center(child: Text('Error generating thumbnail'));
-                          }
-                          var thumbnailPath = snapshot.data!;
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => FullVideo(
-                                      videos: videos,
-                                      initialIndex: index,
+                    return GridView.builder(
+                      itemCount: videos.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 9 / 16,
+                      ),
+                      itemBuilder: (context, index) {
+                        var video = videos[index];
+                        return FutureBuilder<String>(
+                          future: _generateThumbnail(video['video_link']),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            }
+                            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              return const Center(child: Text('Error generating thumbnail'));
+                            }
+                            var thumbnailPath = snapshot.data!;
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FullVideo(
+                                        videos: videos,
+                                        initialIndex: index,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 3.0),
-                              child: AspectRatio(
-                                aspectRatio: 9 / 16,
-                                child: Container(
-                                  height: 50,
-                                  width: 50,
-                                  color: Colors.blue,
-                                  child: thumbnailPath.isEmpty
-                                      ? const Center(child: Text('No Thumbnail'))
-                                      : Image.file(
-                                    File(thumbnailPath),
-                                    fit: BoxFit.cover,
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 3.0, vertical: 3.0),
+                                child: AspectRatio(
+                                  aspectRatio: 9 / 16,
+                                  child: Container(
+                                    height: 50,
+                                    width: 50,
+                                    color: Colors.blue,
+                                    child: thumbnailPath.isEmpty
+                                        ? const Center(child: Text('No Thumbnail'))
+                                        : Image.file(
+                                      File(thumbnailPath),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  );
+                            );
+                          },
+                        );
+                      },
+                    );
+                  }
+
                 }
+                ),
 
-              }
-              ),
-
-            ],
-          ))
-        ],
+              ],
+            ))
+          ],
+        ),
+          IconButton(
+            color: context.appColors.mainBlack,
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(
+                  context, true); // Navigate back to the previous page
+            },
+          ),
+    ]
       ),
     );
   }

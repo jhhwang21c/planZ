@@ -5,6 +5,7 @@ import 'package:planZ/common/common.dart';
 import 'package:planZ/common/widget/w_searchbar.dart';
 import 'package:planZ/common/widget/w_togglebar.dart';
 import 'package:planZ/screen/main/tab/browse/f_fullvideo.dart';
+import 'package:planZ/screen/main/tab/browse/f_fullvideo_two.dart';
 import 'package:planZ/screen/main/tab/browse/f_map_view.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
@@ -108,9 +109,7 @@ class _BrowseFragmentState extends State<BrowseFragment>
                   child: PageView(
                     controller: _pageController,
                     physics: NeverScrollableScrollPhysics(),
-                    onPageChanged: (index) {
-                      _tabController.animateTo(index);
-                    },
+                    onPageChanged: (index) {_tabController.animateTo(index);},
                     children: [
                       // Browse Tab
                       FutureBuilder<List<Map<String, dynamic>>>(
@@ -143,8 +142,7 @@ class _BrowseFragmentState extends State<BrowseFragment>
                                   var thumbnailPath = snapshot.data!;
                                   return GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
+                                      Navigator.push(context,
                                         MaterialPageRoute(
                                           builder: (context) => FullVideo(
                                             videos: videos,
@@ -163,8 +161,7 @@ class _BrowseFragmentState extends State<BrowseFragment>
                                           color: Colors.blue,
                                           child: thumbnailPath.isEmpty
                                               ? const Center(child: Text('No Thumbnail'))
-                                              : Image.file(
-                                            File(thumbnailPath),
+                                              : Image.file(File(thumbnailPath),
                                             fit: BoxFit.cover,
                                           ),
                                         ),
@@ -185,9 +182,7 @@ class _BrowseFragmentState extends State<BrowseFragment>
                           minChildSize: 0.1,
                           maxChildSize: 1,
                           builder: (BuildContext context, ScrollController scrollController) {
-                            return Container(
-                              color: Colors.blue,
-                            );
+                            return Container(color: Colors.blue,);
                           },
                         ),
                       ]),
@@ -205,7 +200,6 @@ class _BrowseFragmentState extends State<BrowseFragment>
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: ToggleBarWidget(
                         labels: labels,
-                        pageController: _pageController,
                         tabController: _tabController,
                       ),
                     ),
