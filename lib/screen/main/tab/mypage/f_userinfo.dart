@@ -7,7 +7,6 @@ import 'package:planZ/common/common.dart';
 import 'package:planZ/screen/main/tab/browse/f_fullvideo_two.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-import '../browse/f_fullvideo.dart';
 
 class UserInfo extends StatefulWidget {
   final String? profileImageUrl;
@@ -110,26 +109,47 @@ class _UserInfoState extends State<UserInfo>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [Column(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            IconButton(
+              color: context.appColors.mainBlack,
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(
+                    context, true); // Navigate back to the previous page
+              },
+            ),
+
             //user info
             Padding(
-              padding: EdgeInsets.only(left: 24.0, top: 12.0, bottom: 18.0),
+              padding: EdgeInsets.only(left: 24.0, bottom: 18.0),
               child: Row(
                 children: [
                   //user profile
-                  Container(
-                    width: 110.0,
-                    height: 110.0,
-                    child: CircleAvatar(
-                      backgroundColor:
-                          widget.profileImageUrl == null ? Colors.grey : null,
-                      backgroundImage: widget.profileImageUrl != null
-                          ? NetworkImage(widget.profileImageUrl!)
-                          : null,
-                      radius: 20.0,
+                  Stack(
+                    children: [
+                      Container(
+                      width: 110.0,
+                      height: 110.0,
+                      child: CircleAvatar(
+                        backgroundColor:
+                            widget.profileImageUrl == null ? Colors.grey : null,
+                        backgroundImage: widget.profileImageUrl != null
+                            ? NetworkImage(widget.profileImageUrl!)
+                            : null,
+                        radius: 20.0,
+                      ),
                     ),
+                      Positioned(
+                          right: 8,
+                          bottom: 3,
+                          child: SvgPicture.asset(
+                            'assets/image/icon/Badge.svg',
+                            width: 20,
+                            height: 20,
+                          )),
+              ]
                   ),
                   SizedBox(
                     width: 24.0,
@@ -139,10 +159,22 @@ class _UserInfoState extends State<UserInfo>
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("@${widget.username!}"),
+                      Text("${widget.username!}", style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 24
+                      ),),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text("Ranking Lv. 1"),
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        child: Container(
+                          width: 44,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: context.appColors.mainBlack),
+                            borderRadius: BorderRadius.circular(100),
+                            color: context.appColors.mainWhite
+                          ),
+                          child: Center(child: Text('Follow', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),),),
+                        ),
                       ),
                       SizedBox(
                         width: 108.0,
@@ -278,16 +310,6 @@ class _UserInfoState extends State<UserInfo>
             ))
           ],
         ),
-          IconButton(
-            color: context.appColors.mainBlack,
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(
-                  context, true); // Navigate back to the previous page
-            },
-          ),
-    ]
-      ),
     );
   }
 }

@@ -143,12 +143,14 @@ class JourneyPage extends StatelessWidget {
                                         borderRadius:
                                             BorderRadius.circular(100),
                                       ),
-                                      child: Text(
-                                        '# $hashtag',
-                                        style: const TextStyle(
-                                          fontSize: 10.0,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black,
+                                      child: Center(
+                                        child: Text(
+                                          '# $hashtag',
+                                          style: const TextStyle(
+                                            fontSize: 10.0,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black,
+                                          ),
                                         ),
                                       ),
                                     );

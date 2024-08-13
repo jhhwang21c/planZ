@@ -92,27 +92,30 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                   child: Row(
                     children: [
                       // user profile
-                      SizedBox(
-                        width: 110.0,
-                        height: 110.0,
-                        child: CircleAvatar(
-                          backgroundColor: _user!['profile_img_link'] == null
-                              ? Colors.grey
-                              : null,
-                          backgroundImage: _user!['profile_img_link'] != null
-                              ? NetworkImage(_user!['profile_img_link'])
-                              : null,
-                          radius: 20.0,
+                      Stack(
+                        children: [SizedBox(
+                          width: 110.0,
+                          height: 110.0,
+                          child: CircleAvatar(
+                            backgroundColor: _user!['profile_img_link'] == null
+                                ? Colors.grey
+                                : null,
+                            backgroundImage: _user!['profile_img_link'] != null
+                                ? NetworkImage(_user!['profile_img_link'])
+                                : null,
+                            radius: 20.0,
+                          ),
                         ),
+                          Positioned(
+                              right: 8,
+                              bottom: 3,
+                              child: SvgPicture.asset(
+                                'assets/image/icon/Badge.svg',
+                                width: 20,
+                                height: 20,
+                              )),
+                  ]
                       ),
-                      // Positioned(
-                      //     right: 10,
-                      //     bottom: 0,
-                      //     child: SvgPicture.asset(
-                      //       'assets/image/icon/Badge.svg',
-                      //       width: 19.36,
-                      //       height: 19.36,
-                      //     )),
                       const SizedBox(
                         width: 25.0,
                       ),
@@ -233,20 +236,23 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                     ),
                   ),
                 ),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: context.appColors.baseGray,
-                      // Text color
-                      minimumSize: const Size(0, 40),
-                      // Width and height
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                        BorderRadius.circular(100), // Rounded corners
-                      ), // Shadow elevation
-                    ),
-                    onPressed: _logout,
-                    child: Text('Logout', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),))
+                Padding(
+                  padding: const EdgeInsets.only(top: 283),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.black,
+                        backgroundColor: context.appColors.baseGray,
+                        // Text color
+                        minimumSize: const Size(0, 40),
+                        // Width and height
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.circular(100), // Rounded corners
+                        ), // Shadow elevation
+                      ),
+                      onPressed: _logout,
+                      child: Text('Logout', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),)),
+                )
               ],
     );
   }

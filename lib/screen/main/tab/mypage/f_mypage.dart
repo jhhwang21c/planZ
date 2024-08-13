@@ -9,7 +9,6 @@ import 'package:planZ/common/widget/w_floating_menu.dart';
 import 'package:planZ/screen/main/tab/browse/f_fullvideo_two.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
-import '../browse/f_fullvideo.dart';
 
 class MyPageFragment extends StatefulWidget {
 
@@ -128,22 +127,33 @@ class _MyPageFragmentState extends State<MyPageFragment>
           const Center(child: CircularProgressIndicator())
         else
         Padding(
-          padding: EdgeInsets.only(left: 24.0, top: 30.0, bottom: 18.0),
+          padding: EdgeInsets.only(left: 24.0, top: 22.0, bottom: 18.0),
           child: Row(
             children: [
               //user profile
-              SizedBox(
-                width: 110.0,
-                height: 110.0,
-                child: CircleAvatar(
-                  backgroundColor: _user!['profile_img_link'] == null
-                      ? Colors.grey
-                      : null,
-                  backgroundImage: _user!['profile_img_link'] != null
-                      ? NetworkImage(_user!['profile_img_link'])
-                      : null,
-                  radius: 20.0,
+              Stack(
+                children: [SizedBox(
+                  width: 110.0,
+                  height: 110.0,
+                  child: CircleAvatar(
+                    backgroundColor: _user!['profile_img_link'] == null
+                        ? Colors.grey
+                        : null,
+                    backgroundImage: _user!['profile_img_link'] != null
+                        ? NetworkImage(_user!['profile_img_link'])
+                        : null,
+                    radius: 20.0,
+                  ),
                 ),
+                  Positioned(
+                      right: 8,
+                      bottom: 3,
+                      child: SvgPicture.asset(
+                        'assets/image/icon/Badge.svg',
+                        width: 20,
+                        height: 20,
+                      )),
+          ]
               ),
               const SizedBox(
                 width: 25.0,
