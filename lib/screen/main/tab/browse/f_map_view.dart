@@ -10,8 +10,9 @@ import 'package:video_player/video_player.dart';
 class MapView extends StatefulWidget {
   final GeoPoint? spotLocation;
   final Map<String, dynamic>? spot;
+  final void Function(double)? onSheetSizeChange;
 
-  const MapView({Key? key, this.spotLocation, this.spot}) : super(key: key);
+  const MapView({Key? key, this.spotLocation, this.spot, this.onSheetSizeChange}) : super(key: key);
 
   @override
   _MapViewState createState() => _MapViewState();
@@ -38,6 +39,9 @@ class _MapViewState extends State<MapView> {
     _draggableScrollableController.addListener(() {
       setState(() {
         _sheetSize = _draggableScrollableController.size;
+        if (widget.onSheetSizeChange != null) {
+          widget.onSheetSizeChange!(_sheetSize);
+        }
       });
     });
   }
@@ -192,6 +196,7 @@ class _MapViewState extends State<MapView> {
       ),
 
       //bottom sheet
+      if (widget.spotLocation != null)
       DraggableScrollableSheet(
           controller: _draggableScrollableController,
           maxChildSize: 1,
