@@ -251,7 +251,8 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                         ), // Shadow elevation
                       ),
                       onPressed: _logout,
-                      child: Text('Logout', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),)),
+                      child: Text('Logout', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),)
+                  ),
                 )
               ],
     );

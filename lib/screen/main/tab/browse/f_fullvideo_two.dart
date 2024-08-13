@@ -299,7 +299,7 @@ class _FullVideoState extends State<FullVideo>
                   // Map view tab
                   Center(
                     child: _spotLocation != null
-                        ? MapView(spotLocation: _spotLocation!)
+                        ? MapView(spotLocation: _spotLocation!, spot: _spot,)
                         : Text('No location available'),
                   ),
                 ],
