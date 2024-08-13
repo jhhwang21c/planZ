@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:planZ/common/common.dart';
 import 'package:planZ/common/dart/extension/context_extension.dart';
 import 'package:planZ/common/widget/w_searchbar.dart';
+import 'package:planZ/screen/main/tab/browse/f_browse.dart';
 import 'package:planZ/screen/main/tab/browse/f_map_view.dart';
 import 'package:planZ/screen/main/tab/plan/f_saves.dart';
 import 'package:planZ/screen/main/tab/plan/f_trips.dart';
@@ -18,7 +19,7 @@ class _PlanFragmentState extends State<PlanFragment> {
   double _sheetSize = 0.35;
   bool isLongPressed = false;
   final DraggableScrollableController _draggableScrollableController =
-      DraggableScrollableController();
+  DraggableScrollableController();
 
   @override
   void initState() {
@@ -96,7 +97,16 @@ class _PlanFragmentState extends State<PlanFragment> {
                                     child: Container(
                                       width: 72,
                                       height: 72,
-                                      child: SvgPicture.asset('assets/image/icon/planAdd.svg'),
+                                      child: InkWell(
+                                          onTap: () async {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => const BrowseFragment(),
+                                              ),
+                                            );
+                                          },
+                                          child: SvgPicture.asset('assets/image/icon/planAdd.svg')),
                                     ),
                                   );
                                 } else {
@@ -181,10 +191,20 @@ class _PlanFragmentState extends State<PlanFragment> {
                         if (selectedSpots.isEmpty)
                           Expanded(
                             child: Center(
-                              child: SvgPicture.asset(
-                                'assets/image/icon/planAdd.svg',
-                                width: 72,
-                                height: 72,
+                              child: InkWell(
+                                onTap: () async {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const BrowseFragment(),
+                                    ),
+                                  );
+                                },
+                                child: SvgPicture.asset(
+                                  'assets/image/icon/planAdd.svg',
+                                  width: 72,
+                                  height: 72,
+                                ),
                               ),
                             ),
                           ),
