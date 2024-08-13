@@ -23,11 +23,20 @@ class _BrowseFragmentState extends State<BrowseFragment>
   late TabController _tabController;
   late PageController _pageController;
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _tabController = TabController(length: labels.length, vsync: this);
+  //   _pageController = PageController();
+  // }
+
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: labels.length, vsync: this);
-    _pageController = PageController();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {});
+    });
   }
 
   Future<List<Map<String, dynamic>>> _fetchVideos() async {
@@ -86,18 +95,15 @@ class _BrowseFragmentState extends State<BrowseFragment>
   @override
   void dispose() {
     _tabController.dispose();
-    _pageController.dispose();
+    // _pageController.dispose();
     super.dispose();
   }
 
-  void _onTabTapped(int index) {
-    _pageController.jumpToPage(index);
-  }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: labels.length,
+      length: 2,
       child: Column(
         children: [
           Expanded(
@@ -105,10 +111,8 @@ class _BrowseFragmentState extends State<BrowseFragment>
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: PageView(
-                    controller: _pageController,
-                    physics: NeverScrollableScrollPhysics(),
-                    onPageChanged: (index) {_tabController.animateTo(index);},
+                  child: TabBarView(
+                    controller: _tabController,
                     children: [
                       // Browse Tab
                       FutureBuilder<List<Map<String, dynamic>>>(
@@ -173,17 +177,18 @@ class _BrowseFragmentState extends State<BrowseFragment>
                           );
                         },
                       ),
+
                       // Map Tab
                       Stack(children: [
                         MapView(),
-                        DraggableScrollableSheet(
-                          initialChildSize: 0.1,
-                          minChildSize: 0.1,
-                          maxChildSize: 1,
-                          builder: (BuildContext context, ScrollController scrollController) {
-                            return Container(color: Colors.blue,);
-                          },
-                        ),
+                        // DraggableScrollableSheet(
+                        //   initialChildSize: 0.1,
+                        //   minChildSize: 0.1,
+                        //   maxChildSize: 1,
+                        //   builder: (BuildContext context, ScrollController scrollController) {
+                        //     return Container(color: Colors.blue,);
+                        //   },
+                        // ),
                       ]),
                     ],
                   ),

@@ -121,23 +121,179 @@ class _FullVideoState extends State<FullVideo>
                 controller: _tabController,
                 children: [
                   // Video tab with vertical scrolling
-                  Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: FittedBox(
-                      fit: BoxFit.cover,
-                      child: SizedBox(
-                        width: _videoPlayerController.value.size.width,
-                        height: _videoPlayerController.value.size.height,
-                        child: VideoTab(
-                          videos: widget.videos,
-                          currentVideoIndex: _currentVideoIndex,
-                          videoPlayerController: _videoPlayerController,
-                          onPageChanged: _onVideoPageChanged,
-                          videoPageController: _videoPageController,
+                  Stack(
+                    children: [Container(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        child: SizedBox(
+                          width: _videoPlayerController.value.size.width,
+                          height: _videoPlayerController.value.size.height,
+                          child: VideoTab(
+                            videos: widget.videos,
+                            currentVideoIndex: _currentVideoIndex,
+                            videoPlayerController: _videoPlayerController,
+                            onPageChanged: _onVideoPageChanged,
+                            videoPageController: _videoPageController,
+                          ),
                         ),
                       ),
                     ),
+                      //bottom part
+                      Positioned(
+                        bottom: 0,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [context.appColors.mainBlack, Colors.transparent],
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              stops: [0, 0.6],
+                            ),
+                          ),
+                          child: Padding(
+                            padding:
+                            const EdgeInsets.only(bottom: 20, left: 24, right: 80),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => UserInfo(
+                                          profileImageUrl: _user!['profile_img_link'],
+                                          username: _user!['username'],
+                                          followersCount: _user!['follower']?.length ??
+                                              "no followers",
+                                          followingCount: _user!['following']?.length ??
+                                              "no following",
+                                          userId: widget.videos[_currentVideoIndex]['user_id'],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Row(
+                                    children: [
+                                      if (_user != null &&
+                                          _user!['profile_img_link'] != null)
+                                        CircleAvatar(
+                                          backgroundImage:
+                                          NetworkImage(_user!['profile_img_link']),
+                                          radius: 16.0,
+                                        ),
+                                      const SizedBox(width: 10.0),
+                                      Text(
+                                        _user != null
+                                            ? _user!['username'] ?? 'Unknown User'
+                                            : 'Loading',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => SpotDetail(
+                                                spotItem: _spot ?? {},
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 26.0,
+                                          decoration: BoxDecoration(
+                                            color: Colors.black.withOpacity(0.25),
+                                            borderRadius: BorderRadius.circular(100),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10.0, vertical: 6.0),
+                                            child: Center(
+                                              child: Row(
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    'assets/image/icon/Location.svg',
+                                                    width: 8.0,
+                                                    height: 10.0,
+                                                  ),
+                                                  const SizedBox(width: 4.0),
+                                                  Text(
+                                                    _spot != null
+                                                        ? _spot!['translated_name']
+                                                    [currentLanguage] ??
+                                                        'No Info'
+                                                        : 'Loading',
+                                                    style: TextStyle(
+                                                      fontSize: 10.0,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Text(
+                                  _spot != null
+                                      ? _spot!['translated_short_description']
+                                  [currentLanguage] ??
+                                      'Unknown Description'
+                                      : 'Loading',
+                                  style: TextStyle(color: Colors.white, fontSize: 12.0),
+                                  softWrap: true,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        right: 24,
+                        bottom: 27,
+                        child: Column(
+                          children: [
+                            SvgPicture.asset('assets/image/icon/Like.svg'),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            SvgPicture.asset(
+                              'assets/image/icon/Save.svg',
+                              color: context.appColors.mainWhite,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Icon(
+                              Icons.share,
+                              color: context.appColors.mainWhite,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            Icon(Icons.add, color: context.appColors.mainWhite)
+                          ],
+                        ),
+                      )
+          ]
                   ),
 
                   // Map view tab
@@ -165,160 +321,6 @@ class _FullVideoState extends State<FullVideo>
                       context, true); // Navigate back to the previous page
                 },
               ),
-
-              //bottom part
-              Positioned(
-                bottom: 0,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [context.appColors.mainBlack, Colors.transparent],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      stops: [0, 0.6],
-                    ),
-                  ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 20, left: 24, right: 80),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => UserInfo(
-                                  profileImageUrl: _user!['profile_img_link'],
-                                  username: _user!['username'],
-                                  followersCount: _user!['follower']?.length ??
-                                      "no followers",
-                                  followingCount: _user!['following']?.length ??
-                                      "no following",
-                                  userId: widget.videos[_currentVideoIndex]['user_id'],
-                                ),
-                              ),
-                            );
-                          },
-                          child: Row(
-                            children: [
-                              if (_user != null &&
-                                  _user!['profile_img_link'] != null)
-                                CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(_user!['profile_img_link']),
-                                  radius: 16.0,
-                                ),
-                              const SizedBox(width: 10.0),
-                              Text(
-                                _user != null
-                                    ? _user!['username'] ?? 'Unknown User'
-                                    : 'Loading',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Row(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SpotDetail(
-                                        spotItem: _spot ?? {},
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  height: 26.0,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.25),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0, vertical: 6.0),
-                                    child: Center(
-                                      child: Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                            'assets/image/icon/Location.svg',
-                                            width: 8.0,
-                                            height: 10.0,
-                                          ),
-                                          const SizedBox(width: 4.0),
-                                          Text(
-                                            _spot != null
-                                                ? _spot!['translated_name']
-                                                        [currentLanguage] ??
-                                                    'No Info'
-                                                : 'Loading',
-                                            style: TextStyle(
-                                              fontSize: 10.0,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(
-                          _spot != null
-                              ? _spot!['translated_short_description']
-                                      [currentLanguage] ??
-                                  'Unknown Description'
-                              : 'Loading',
-                          style: TextStyle(color: Colors.white, fontSize: 12.0),
-                          softWrap: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                right: 24,
-                bottom: 27,
-                child: Column(
-                  children: [
-                    SvgPicture.asset('assets/image/icon/Like.svg'),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SvgPicture.asset(
-                      'assets/image/icon/Save.svg',
-                      color: context.appColors.mainWhite,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Icon(
-                      Icons.share,
-                      color: context.appColors.mainWhite,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Icon(Icons.add, color: context.appColors.mainWhite)
-                  ],
-                ),
-              )
             ],
           ),
         ),
