@@ -203,7 +203,7 @@ class _MyPageFragmentState extends State<MyPageFragment>
 
                   //following
                   SizedBox(
-                    width: 108.0,
+                    width: 90.0,
                     height: 24.0,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -224,7 +224,7 @@ class _MyPageFragmentState extends State<MyPageFragment>
 
                   //followers
                   SizedBox(
-                    width: 108.0,
+                    width: 90.0,
                     height: 24.0,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
