@@ -1,6 +1,5 @@
 import 'package:planZ/common/common.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:planZ/screen/main/tab/browse/f_browse.dart';
 import 'package:planZ/screen/main/tab/feed/f_feed.dart';
 import 'package:planZ/screen/main/tab/mypage/f_mypage.dart';
@@ -8,17 +7,31 @@ import 'package:planZ/screen/main/tab/plan/f_plan.dart';
 import 'package:planZ/screen/main/tab/settings/f_settings.dart';
 
 enum TabItem {
-  feed("assets/image/icon/Feed.svg", 'Feed', FeedFragment()),
-  browse("assets/image/icon/Browse.svg", 'Browse', BrowseFragment()),
-  plan("assets/image/icon/Plan.svg", 'Plan', PlanFragment()),
-  mypage("assets/image/icon/Mypage.svg", 'My Page', MypageFragment()),
-  settings("assets/image/icon/Setting.svg", 'Settings', SettingsFragment());
+  feed("assets/image/icon/Feed.svg", 'Feed'),
+  browse("assets/image/icon/Browse.svg", 'Browse'),
+  plan("assets/image/icon/Plan.svg", 'Plan'),
+  mypage("assets/image/icon/Mypage.svg", 'My Page'),
+  settings("assets/image/icon/Setting.svg", 'Settings');
 
   final String iconPath;
   final String tabName;
-  final Widget firstPage;
 
-  const TabItem(this.iconPath, this.tabName, this.firstPage);
+  const TabItem(this.iconPath, this.tabName);
+
+  Widget firstPage(AbstractThemeColors themeColors) {
+    switch (this) {
+      case TabItem.feed:
+        return FeedFragment(themeColors: themeColors);
+      case TabItem.browse:
+        return BrowseFragment();
+      case TabItem.plan:
+        return PlanFragment();
+      case TabItem.mypage:
+        return MyPageFragment();
+      case TabItem.settings:
+        return SettingsFragment(themeColors: themeColors);
+    }
+  }
 
   BottomNavigationBarItem toNavigationBarItem(BuildContext context, {required bool isActivated}) {
     return BottomNavigationBarItem(

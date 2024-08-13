@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:planZ/common/widget/w_togglebar.dart';
 import 'package:planZ/screen/main/tab/feed/f_card_list.dart';
-import 'package:planZ/screen/main/tab/feed/f_card_list_detail.dart';
+import 'package:planZ/screen/main/tab/feed/f_journey.dart';
+import 'package:planZ/screen/main/tab/feed/f_spot_detail.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:planZ/common/widget/w_searchbar.dart';
+import 'package:planZ/app_state.dart';
+import 'package:planZ/common/theme/color/abs_theme_colors.dart';
 
 class FeedFragment extends StatefulWidget {
-  const FeedFragment({super.key});
+  final AbstractThemeColors themeColors;
+
+  const FeedFragment({Key? key, required this.themeColors}) : super(key: key);
 
   @override
   State<FeedFragment> createState() => _FeedFragmentState();
 }
 
 class _FeedFragmentState extends State<FeedFragment>
-    with SingleTickerProviderStateMixin {
-  List<String> labels = ['Discovery', 'Following'];
-  final List _posts = ['post1', 'post2', 'post3', 'post4', 'post5'];
+    with TickerProviderStateMixin {
+  List<String> labels = ['Discover', 'Following'];
 
   late PageController _pageController;
   late TabController _tabController;
@@ -35,93 +42,108 @@ class _FeedFragmentState extends State<FeedFragment>
     _pageController.jumpToPage(index);
   }
 
+  Future<List<Map<String, dynamic>>> _fetchData() async {
+    List<Map<String, dynamic>> combinedData = [];
+
+    QuerySnapshot spotQuerySnapshot =
+        await FirebaseFirestore.instance.collection('spot').limit(3).get();
+
+    for (var doc in spotQuerySnapshot.docs) {
+      var spotData = doc.data() as Map<String, dynamic>;
+      spotData['id'] = doc.id;
+
+      spotData['type'] = 'spot';
+      combinedData.add(spotData);
+    }
+
+    QuerySnapshot journeyQuerySnapshot =
+        await FirebaseFirestore.instance.collection('journey').get();
+
+    for (var doc in journeyQuerySnapshot.docs) {
+      var journeyData = doc.data() as Map<String, dynamic>;
+      journeyData['id'] = doc.id;
+
+      journeyData['type'] = 'journey';
+      combinedData.add(journeyData);
+    }
+
+    return combinedData;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Column(
-        children: [
-          //Search Bar
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            height: 64.0,
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: const BorderSide(width: 0.8),
-                ),
-                prefixIcon: const Icon(
-                  Icons.search,
-                  size: 20.0,
-                ),
-              ),
-            ),
+    String currentLanguage = AppLangState.instance.appLanguage;
+    print("Current language in FeedFragment: $currentLanguage");
+
+    return Column(
+      children: [
+        // Search Bar
+        SearchBarWidget(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 66, vertical: 22),
+          child: ToggleBarWidget(
+            labels: labels,
+            tabController: _tabController,
           ),
+        ),
+        Expanded(
+          child: PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: labels.map((label) {
+              return FutureBuilder<List<Map<String, dynamic>>>(
+                future: _fetchData(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No Data Found'));
+                  } else {
+                    var items = snapshot.data!;
 
-          Expanded(
-              child: Stack(
-            children: [
-              PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: labels.map((label) {
-                  return ListView.builder(
-                    itemCount: _posts.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  CardListDetail(title: _posts[index]),
-                            ),
-                          );
-                        },
-                        child: CardList(postTitle: _posts[index]),
-                      );
-                    },
-                  );
-                }).toList(),
-              ),
+                    return ListView.builder(
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        var item = items[index];
 
-              //Tab Bar
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 43.0, vertical: 10.0),
-                child: Container(
-                  height: 28.0,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[350],
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: TabBar(
-                    controller: _tabController,
-                    onTap: _onTabTapped,
-                    tabs: labels.map((label) {
-                      return SizedBox(
-                        width: 160.0,
-                        child: Tab(text: label),
-                      );
-                    }).toList(),
-                    indicator: BoxDecoration(
-                      color: Colors.grey[700],
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.black,
-                    labelStyle: const TextStyle(fontWeight: FontWeight.normal),
-                    unselectedLabelStyle:
-                        const TextStyle(fontWeight: FontWeight.normal),
-                  ),
-                ),
-              ),
-            ],
-          ))
-        ],
-      ),
+                        // Extract hashtags for the current language
+                        List<String> hashtags = [];
+                        if (item['translated_hashtags'] != null) {
+                          var translatedHashtags = item['translated_hashtags'];
+                          for (var i = 0; i < translatedHashtags.length; i++) {
+                            hashtags.add(translatedHashtags[i.toString()]
+                                [currentLanguage]);
+                          }
+                        }
+
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => item['type'] == 'spot'
+                                    ? SpotDetail(
+                                        spotItem: item,
+                                      )
+                                    : JourneyPage(
+                                  journeyItem: item,
+                                ),
+                              ),
+                            );
+                          },
+                          child: CardList(item: item, isSpot: item['type'] == 'spot')
+                        );
+                      },
+                    );
+                  }
+                },
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 }

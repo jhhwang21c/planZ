@@ -8,6 +8,7 @@ import 'common/theme/custom_theme.dart';
 class App extends StatefulWidget {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
+
   ///light, dark 테마가 준비되었고, 시스템 테마를 따라가게 하려면 해당 필드를 제거 하시면 됩니다.
   static const defaultTheme = CustomTheme.light;
   static bool isForeground = true;
@@ -19,6 +20,8 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> with Nav, WidgetsBindingObserver {
+  final AbstractThemeColors themeColors = const MyThemeColors();
+
   @override
   GlobalKey<NavigatorState> get navigatorKey => App.navigatorKey;
 
@@ -44,8 +47,13 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
           supportedLocales: context.supportedLocales,
           locale: context.locale,
           title: 'PlanZ', //"image finder?"
-          theme: context.themeType.themeData,
-          home: const MainScreen(),
+          theme: ThemeData(
+            colorSchemeSeed: Colors.white,
+            textTheme: Theme.of(context).textTheme.apply(
+            fontFamily: 'SFProDisplay',
+          ),
+          ),
+          home: MainScreen(themeColors: themeColors),
         );
       }),
     );
@@ -69,4 +77,24 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
     }
     super.didChangeAppLifecycleState(state);
   }
+}
+
+class MyThemeColors extends AbstractThemeColors {
+  const MyThemeColors();
+
+  @override
+  Color get selected => const Color(0xFFEAC50C);
+  Color get logoBright=> const Color(0xFFFDDC3A);
+  Color get logoPale => const Color(0xFFFFE877);
+  Color get iconBackground => const Color(0xFFFFFBF0);
+  Color get mainBlack => const Color(0xFF2A2A2A);
+  Color get blackFillHalfOp => const Color(0x802A2A2A);
+  Color get mainGray => const Color(0xFF5F6368);
+  Color get placeholder => const Color(0xFF6F6F6F);
+  Color get grayFillHalfOp => const Color(0x80ACACAC);
+  Color get grayFillQuartOp => const Color(0x64ACACAC);
+  Color get baseGray => const Color(0xFFE6E6E6);
+  Color get baseGrayPale => const Color(0x99E6E6E6);
+  Color get mainWhite => const Color(0xFFFAFAFA);
+
 }
