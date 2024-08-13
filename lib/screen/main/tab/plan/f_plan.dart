@@ -18,21 +18,21 @@ class PlanFragment extends StatefulWidget {
 
 class _PlanFragmentState extends State<PlanFragment> {
   bool isLongPressed = false;
+  int? selectedIndex;
 
-  //reorder method
-  void updateMyTiles (int oldIndex, int newIndex) {
+  // Reorder method
+  void updateMyTiles(int oldIndex, int newIndex) {
     setState(() {
-      //get the tile we are moving
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
       final tile = selectedSpots.removeAt(oldIndex);
-
-      //final tile index
       selectedSpots.insert(newIndex, tile);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    print (selectedSpots);
     return Scaffold(
       body: Stack(
         children: [
@@ -58,120 +58,107 @@ class _PlanFragmentState extends State<PlanFragment> {
                         topLeft: Radius.circular(22),
                         topRight: Radius.circular(22))),
                 child: SingleChildScrollView(
+                  controller: scrollController,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24),
                     child: Column(
                       children: [
-
                         Padding(
                           padding: const EdgeInsets.only(top: 49.0, bottom: 40),
                           child: Column(
                             children: [
                               Row(
                                 children: [
-                                  //display selected spots
                                   if (selectedSpots.isNotEmpty)
-                                    ...selectedSpots.asMap().entries.map((entry) {
-                                      int index = entry.key + 1;
-                                      var spot = entry.value;
+                                    Expanded(
+                                      child: Container(
+                                        height: 72,
+                                        child: ReorderableListView(
+                                          scrollDirection: Axis.horizontal,
+                                          onReorder: updateMyTiles,
+                                          children: selectedSpots.asMap().entries.map((entry) {
+                                            int index = entry.key;
+                                            var spot = entry.value;
 
-                                      return Padding(
-                                        padding: const EdgeInsets.only(right: 8.0),
-                                        //each spot
-                                        child: GestureDetector(
-                                          onLongPress: () {
-                                            setState(() {
-                                              isLongPressed = true;
-                                            });
-                                          },
-                                          onLongPressUp: () {
-                                            setState(() {
-                                              isLongPressed = false;
-                                            });
-                                          },
-                                          child: Container(
-                                            width: 72,
-                                            height: 72,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: NetworkImage(spot['imageUrl']!),
-                                                fit: BoxFit.cover,
-                                                colorFilter: ColorFilter.mode(
-                                                    isLongPressed
-                                                        ? context.appColors.placeholder.withOpacity(0.8)
-                                                        : context.appColors.mainBlack.withOpacity(0.8),
-                                                    BlendMode.darken
+                                            return Padding(
+                                              key: ValueKey(spot),
+                                              padding: const EdgeInsets.only(right: 8.0),
+                                              // child: GestureDetector(
+                                              //   onLongPress: () {
+                                              //     setState(() {
+                                              //       isLongPressed = true;
+                                              //       selectedIndex = index;
+                                              //     });
+                                              //   },
+                                              //   onLongPressUp: () {
+                                              //     setState(() {
+                                              //       isLongPressed = false;
+                                              //       selectedIndex = null;
+                                              //     });
+                                              //   },
+                                              // ),
+                                              child: Container(
+                                                width: 72,
+                                                height: 72,
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: NetworkImage(spot['imageUrl']!),
+                                                    fit: BoxFit.cover,
+                                                    colorFilter: ColorFilter.mode(
+                                                      selectedIndex == index
+                                                          ? context.appColors.placeholder.withOpacity(0.8)
+                                                          : context.appColors.mainBlack.withOpacity(0.8),
+                                                      BlendMode.darken,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            child: Stack(
-                                              children: [
-                                                Positioned(
-                                                  top: 8,
-                                                  left: 8,
-                                                  child: Text('$index',
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: context.appColors.mainWhite,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  bottom: 6,
-                                                  left: 8,
-                                                  right: 8, // Ensure the text stays within bounds
-                                                  child: Text(
-                                                    spot['spotName']!,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: context.appColors.mainWhite,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                            );
+                                          }).toList(),
                                         ),
-                                      );
-                                    }).toList(),
+                                      ),
+                                    ),
                                   if (selectedSpots.isNotEmpty)
-                                    isLongPressed ? Padding(
+                                    isLongPressed
+                                        ? Padding(
                                       padding: const EdgeInsets.only(left: 8.0),
                                       child: SvgPicture.asset(
                                         'assets/image/icon/planDelete.svg',
                                         width: 72,
                                         height: 72,
                                       ),
-                                    ) : Padding(
+                                    )
+                                        : Padding(
                                       padding: const EdgeInsets.only(left: 8.0),
                                       child: InkWell(
-                                          onTap: () async { Navigator.push(context,
-                                            MaterialPageRoute(
-                                              builder: (context) => const BrowseFragment(),
-                                            ),
-                                          );
+                                          onTap: () async {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => const BrowseFragment(),
+                                              ),
+                                            );
                                           },
-                                          child:SvgPicture.asset(
+                                          child: SvgPicture.asset(
                                             'assets/image/icon/planAdd.svg',
                                             width: 72,
                                             height: 72,
-                                          )
-                                      ),
+                                          )),
                                     ),
-
                                   if (selectedSpots.isEmpty)
                                     Expanded(
                                       child: Center(
                                         child: InkWell(
-                                          onTap: () async { Navigator.push(context,
-                                            MaterialPageRoute(
-                                              builder: (context) => const BrowseFragment(),
-                                            ),
-                                          );},
-                                          child: SvgPicture.asset('assets/image/icon/planAdd.svg',
+                                          onTap: () async {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => const BrowseFragment(),
+                                              ),
+                                            );
+                                          },
+                                          child: SvgPicture.asset(
+                                            'assets/image/icon/planAdd.svg',
                                             width: 72,
                                             height: 72,
                                           ),
@@ -188,16 +175,14 @@ class _PlanFragmentState extends State<PlanFragment> {
                                     width: 93,
                                     decoration: BoxDecoration(
                                         color: context.appColors.baseGray,
-                                        borderRadius: BorderRadius.circular(100)
-                                    ),
+                                        borderRadius: BorderRadius.circular(100)),
                                     child: Center(
                                       child: Text(
                                         'Confirm',
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 14,
-                                            color: context.appColors.mainBlack
-                                        ),
+                                            color: context.appColors.mainBlack),
                                       ),
                                     ),
                                   ),
@@ -205,14 +190,12 @@ class _PlanFragmentState extends State<PlanFragment> {
                             ],
                           ),
                         ),
-
                         const Divider(
                           height: 20,
                           thickness: 1,
                           color: Color(0xFFE1E4E8),
                         ),
-
-                        //My trips
+                        // My trips
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.0),
                           child: InkWell(
@@ -242,9 +225,7 @@ class _PlanFragmentState extends State<PlanFragment> {
                           thickness: 1,
                           color: Color(0xFFE1E4E8),
                         ),
-
-
-                        //my saves
+                        // My saves
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.0),
                           child: InkWell(
@@ -257,8 +238,7 @@ class _PlanFragmentState extends State<PlanFragment> {
                               );
 
                               if (result != null) {
-                                setState(() {
-                                });
+                                setState(() {});
                               }
                             },
                             child: const Row(
@@ -286,3 +266,34 @@ class _PlanFragmentState extends State<PlanFragment> {
     );
   }
 }
+
+// child: Stack(
+// children: [
+// Positioned(
+// top: 8,
+// left: 8,
+// child: Text(
+// '${index + 1}',
+// style: TextStyle(
+// fontSize: 10,
+// fontWeight: FontWeight.bold,
+// color: context.appColors.mainWhite,
+// ),
+// ),
+// ),
+// Positioned(
+// bottom: 6,
+// left: 8,
+// right: 8,
+// child: Text(
+// spot['spotName']!,
+// overflow: TextOverflow.ellipsis,
+// style: TextStyle(
+// fontSize: 10,
+// fontWeight: FontWeight.bold,
+// color: context.appColors.mainWhite,
+// ),
+// ),
+// ),
+// ],
+// ),

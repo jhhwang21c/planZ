@@ -88,22 +88,33 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                 // user info
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 25.0, top: 25.0, bottom: 18.0),
+                      left: 24.0, top: 30.0, bottom: 18.0),
                   child: Row(
                     children: [
                       // user profile
-                      SizedBox(
-                        width: 88.0,
-                        height: 88.0,
-                        child: CircleAvatar(
-                          backgroundColor: _user!['profile_img_link'] == null
-                              ? Colors.grey
-                              : null,
-                          backgroundImage: _user!['profile_img_link'] != null
-                              ? NetworkImage(_user!['profile_img_link'])
-                              : null,
-                          radius: 20.0,
+                      Stack(
+                        children: [SizedBox(
+                          width: 110.0,
+                          height: 110.0,
+                          child: CircleAvatar(
+                            backgroundColor: _user!['profile_img_link'] == null
+                                ? Colors.grey
+                                : null,
+                            backgroundImage: _user!['profile_img_link'] != null
+                                ? NetworkImage(_user!['profile_img_link'])
+                                : null,
+                            radius: 20.0,
+                          ),
                         ),
+                          Positioned(
+                              right: 8,
+                              bottom: 3,
+                              child: SvgPicture.asset(
+                                'assets/image/icon/Badge.svg',
+                                width: 20,
+                                height: 20,
+                              )),
+                  ]
                       ),
                       const SizedBox(
                         width: 25.0,
@@ -113,27 +124,25 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("@${_user!['username'] ?? 'Unknown'}"),
-                          SizedBox(
-                            height: 25.0,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text("Following"),
-                                Text(
-                                    "${_user!['following']?.length ?? " no following"}")
-                              ],
-                            ),
+                          Text("${_user!['username'] ?? 'Unknown'}  🇰🇷", style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w400,
                           ),
-                          SizedBox(
-                            height: 25.0,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text("Follower"),
-                                Text(
-                                    "${_user!['follower']?.length ?? " no followers"}")
-                              ],
+                          ),
+                          const SizedBox(height: 12,),
+                          Container(
+                            width: 62,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: context.appColors.mainBlack,
+                              borderRadius: BorderRadius.circular(100)
+                            ),
+                            child: Center(
+                              child: Text('Edit profile', style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 10,
+                                color: context.appColors.mainWhite
+                              ),),
                             ),
                           )
                         ],
@@ -148,7 +157,7 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                     child: Text(
                       'Settings',
                       style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ),
@@ -157,18 +166,17 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 25.0, top: 20),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Row(
-                          children: [
-                            Icon(Icons.schedule),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                'My Saved',
-                                style: TextStyle(fontSize: 16),
-                              ),
+                        Container(
+                          height: 40,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'My Saved',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                             ),
-                          ],
+                          ),
                         ),
                         const Divider(
                           height: 20,
@@ -177,20 +185,18 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                           endIndent: 25,
                           color: Colors.black26,
                         ),
-                        Row(
-                          children: [
-                            const Icon(Icons.language),
-                            GestureDetector(
-                              onTap: () => _showLanguagePicker(context),
-                              child: const Padding(
-                                padding: EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  'Language Preferences',
-                                  style: TextStyle(fontSize: 16),
-                                ),
+                        GestureDetector(
+                          onTap: () => _showLanguagePicker(context),
+                          child: Container(
+                            height: 40,
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Language Preferences',
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                               ),
                             ),
-                          ],
+                          ),
                         ),
                         const Divider(
                           height: 20,
@@ -199,20 +205,15 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                           endIndent: 25,
                           color: Colors.black26,
                         ),
-                        const Row(
-                          children: [
-                            Icon(
-                              Icons.local_parking,
-                              size: 20,
+                        Container(
+                          height: 40,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Display',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                'Display',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                         const Divider(
                           height: 20,
@@ -221,26 +222,37 @@ class _SettingsFragmentState extends State<SettingsFragment> {
                           endIndent: 25,
                           color: Colors.black26,
                         ),
-                        const Row(
-                          children: [
-                            Icon(
-                              Icons.contact_support_outlined,
-                              size: 20,
+                        Container(
+                          height: 40,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Privacy',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                'Privacy',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                ElevatedButton(onPressed: _logout, child: Text('Log Out'))
+                Padding(
+                  padding: const EdgeInsets.only(top: 283),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.black,
+                        backgroundColor: context.appColors.baseGray,
+                        // Text color
+                        minimumSize: const Size(0, 40),
+                        // Width and height
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.circular(100), // Rounded corners
+                        ), // Shadow elevation
+                      ),
+                      onPressed: _logout,
+                      child: Text('Logout', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),)),
+                )
               ],
     );
   }
