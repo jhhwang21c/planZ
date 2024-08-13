@@ -24,12 +24,11 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Map<String, dynamic>? _user;
   Map<String, List<String>> spotImages = {};
-  // Map<String,bool> isSpotAdded = {};
 
   Future<void> _fetchUserData(String userId) async {
     try {
       DocumentSnapshot userSnapshot =
-          await _firestore.collection('user').doc(userId).get();
+      await _firestore.collection('user').doc(userId).get();
       setState(() {
         _user = userSnapshot.data() as Map<String, dynamic>?;
         print('User data fetched: $_user');
@@ -61,7 +60,6 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
   Future<DocumentSnapshot> _fetchSpotData(String spotId) async {
     return await _firestore.collection('spot').doc(spotId).get();
   }
-
 
   void fetchImageLinks(String spotId) async {
     try {
@@ -113,157 +111,194 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24.0),
             child: ToggleBarWidget(
-                labels: labels,
-                tabController: _tabController,),
+              labels: labels,
+              tabController: _tabController,
+            ),
           ),
 
-          // Spots
+          // Spots and Journeys Tab View
           Expanded(
-            child: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: labels.map((label) {
-                if (label == 'Spots') {
-                  return savedSpots.isEmpty
-                      ? Center(child: Text('No Saved spots'))
-                      : ListView.builder(
-                          itemCount: savedSpots.length,
-                          itemBuilder: (context, index) {
-                            String spotId = savedSpots[index];
-                            if (!spotImages.containsKey(spotId)) {
-                              fetchImageLinks(spotId);
-                            }
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                // Spots Tab
+                savedSpots.isEmpty
+                    ? Center(child: Text('No Saved spots'))
+                    : ListView.builder(
+                  itemCount: savedSpots.length,
+                  itemBuilder: (context, index) {
+                    String spotId = savedSpots[index];
+                    if (!spotImages.containsKey(spotId)) {
+                      fetchImageLinks(spotId);
+                    }
 
-                            return FutureBuilder<DocumentSnapshot>(
-                                future: _fetchSpotData(spotId),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Center(
-                                        child: CircularProgressIndicator());
-                                  } else if (snapshot.hasError) {
-                                    return Center(
-                                        child: Text(
-                                            'Error fetching spot details'));
-                                  } else if (!snapshot.hasData ||
-                                      !snapshot.data!.exists) {
-                                    return Center(
-                                        child: Text('Spot not found'));
-                                  } else {
-                                    var spotData = snapshot.data!.data() as Map<String, dynamic>;
-                                    print(spotData);
+                    return FutureBuilder<DocumentSnapshot>(
+                        future: _fetchSpotData(spotId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                                child: Text(
+                                    'Error fetching spot details'));
+                          } else if (!snapshot.hasData ||
+                              !snapshot.data!.exists) {
+                            return Center(
+                                child: Text('Spot not found'));
+                          } else {
+                            var spotData = snapshot.data!.data()
+                            as Map<String, dynamic>;
+                            print(spotData);
 
-                                    String spotName = spotData['translated_name']?[currentLanguage] ?? 'No name';
-                                    String shortDescription = spotData['translated_short_description']?[currentLanguage] ?? 'No description';
-                                    List<String> images = spotImages[spotId] ?? [];
-                                    bool added = selectedSpots.any((spot) => spot['spotName'] == spotName);
+                            String spotName = spotData['translated_name']
+                            ?[currentLanguage] ??
+                                'No name';
+                            String shortDescription =
+                                spotData['translated_short_description']
+                                ?[currentLanguage] ??
+                                    'No description';
+                            List<String> images =
+                                spotImages[spotId] ?? [];
+                            bool added = selectedSpots.any(
+                                    (spot) => spot['spotName'] == spotName);
 
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 24.0),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  if (spotData != null) {
-                                                    Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            SpotDetail(spotItem: spotData),
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    ScaffoldMessenger.of(context).showSnackBar(
-                                                      SnackBar(content: Text('Spot details are not available.')),
-                                                    );
-                                                  }
-                                                },
-                                                child: Row(
-                                                  children: [
-                                                    Container(
-                                                      width: 60,
-                                                      height: 60,
-                                                      decoration: BoxDecoration(
-                                                        image: images.isNotEmpty
-                                                            ? DecorationImage(image: NetworkImage(images[0]), fit: BoxFit.cover)
-                                                            : DecorationImage(
-                                                                image: AssetImage('assets/image/fallbackImage.png'),
-                                                                fit: BoxFit.cover,
-                                                              ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 16),
-                                                    SizedBox(
-                                                      width: 213,
-                                                      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Text(
-                                                            spotName,
-                                                            style: TextStyle(
-                                                                fontWeight: FontWeight.w500,
-                                                                fontSize: 16,
-                                                                color: context.appColors.mainBlack),
-                                                          ),
-                                                          Text(
-                                                            overflow: TextOverflow.ellipsis,
-                                                            shortDescription,
-                                                            style: TextStyle(
-                                                                fontSize: 12,
-                                                                fontWeight: FontWeight.w500,
-                                                                color: context.appColors.placeholder,
-                                                                overflow: TextOverflow.ellipsis),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          if (spotData != null) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SpotDetail(
+                                                        spotItem:
+                                                        spotData),
+                                              ),
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                  content: Text(
+                                                      'Spot details are not available.')),
+                                            );
+                                          }
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 60,
+                                              height: 60,
+                                              decoration: BoxDecoration(
+                                                image: images.isNotEmpty
+                                                    ? DecorationImage(
+                                                    image: NetworkImage(
+                                                        images[0]),
+                                                    fit: BoxFit.cover)
+                                                    : DecorationImage(
+                                                  image: AssetImage(
+                                                      'assets/image/fallbackImage.png'),
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
-                                              IconButton(
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      if (added) {
-                                                        selectedSpots.removeWhere(
-                                                            (spot) => spot['spotName'] == spotName);
-                                                      } else {
-                                                        selectedSpots.add({
-                                                          'spotName': spotName,
-                                                          'imageUrl': images.isNotEmpty ? images[0] : '',
-                                                        });
-                                                      }
-                                                    });
-                                                  },
-                                                  icon: Icon(added ? Icons.check_circle_rounded : Icons.add))
-                                            ],
-                                          ),
-                                          const SizedBox(height: 12),
-                                        ],
+                                            ),
+                                            const SizedBox(width: 16),
+                                            SizedBox(
+                                              width: 213,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .start,
+                                                children: [
+                                                  Text(
+                                                    spotName,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                        FontWeight
+                                                            .w500,
+                                                        fontSize: 16,
+                                                        color: context
+                                                            .appColors
+                                                            .mainBlack),
+                                                  ),
+                                                  Text(
+                                                    overflow: TextOverflow
+                                                        .ellipsis,
+                                                    shortDescription,
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                        FontWeight
+                                                            .w500,
+                                                        color: context
+                                                            .appColors
+                                                            .placeholder,
+                                                        overflow:
+                                                        TextOverflow
+                                                            .ellipsis),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    );
-                                  }
-                                });
-                          },
-                        );
-                } else if (label == 'Journeys') {
-                  return savedJourneys.isEmpty
-                      ? Center(child: Text('No saved journeys'),)
-                      : ListView.builder(
-                          itemCount: savedJourneys.length,
-                          itemBuilder: (context, index) {
-                            String journeyId = savedJourneys[index];
-                            return CardListPlan(journeyId: journeyId,);
-                          },
-                        );
-                } else {
-                  return Center(child: Text('Invalid tab'));
-                }
-              }).toList(),
+                                      IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              if (added) {
+                                                selectedSpots.removeWhere(
+                                                        (spot) =>
+                                                    spot['spotName'] ==
+                                                        spotName);
+                                              } else {
+                                                selectedSpots.add({
+                                                  'spotName': spotName,
+                                                  'imageUrl': images
+                                                      .isNotEmpty
+                                                      ? images[0]
+                                                      : '',
+                                                });
+                                              }
+                                            });
+                                          },
+                                          icon: Icon(added
+                                              ? Icons
+                                              .check_circle_rounded
+                                              : Icons.add))
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+                                ],
+                              ),
+                            );
+                          }
+                        });
+                  },
+                ),
+                // Journeys Tab
+                savedJourneys.isEmpty
+                    ? Center(child: Text('No saved journeys'))
+                    : ListView.builder(
+                  itemCount: savedJourneys.length,
+                  itemBuilder: (context, index) {
+                    String journeyId = savedJourneys[index];
+                    return CardListPlan(journeyId: journeyId);
+                  },
+                ),
+              ],
             ),
-          )
+          ),
         ],
       ),
     );

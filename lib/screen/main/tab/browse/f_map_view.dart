@@ -160,8 +160,10 @@ class _MapViewState extends State<MapView> {
         hashtags.add(translatedHashtags[i.toString()]?[currentLanguage] ?? '');
       }
     }
+    print(imageLinks);
 
-    return Stack(children: [
+    return Stack(
+        children: [
       GoogleMap(
         initialCameraPosition: CameraPosition(
           target: widget.spotLocation != null
@@ -205,6 +207,7 @@ class _MapViewState extends State<MapView> {
           builder: (context, controller) {
             return Material(
               color: context.appColors.mainWhite,
+              shadowColor: context.appColors.placeholder,
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(14),
                 topLeft: Radius.circular(14),
