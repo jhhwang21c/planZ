@@ -109,9 +109,13 @@ class _ChatbotFragmentState extends State<ChatbotFragment> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-              height: 50.0, // Adjust the height as needed
+              constraints: BoxConstraints(
+                maxHeight: 150.0, // Maximum height of the text input box
+              ),
               child: TextField(
                 controller: _controller,
+                minLines: 1,
+                maxLines: null,
                 decoration: InputDecoration(
                   hintText: "What do you want to know?",
                   border: OutlineInputBorder(
