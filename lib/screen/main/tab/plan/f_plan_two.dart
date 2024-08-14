@@ -52,7 +52,7 @@ class _PlanFragmentState extends State<PlanFragment> {
               controller: _draggableScrollableController,
               maxChildSize: 0.7,
               initialChildSize: 0.4,
-              minChildSize: 0.4,
+              minChildSize: 0.1,
               builder: (context, controller) {
                 return Material(
                   color: context.appColors.mainWhite,
