@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:planZ/common/common.dart';
 import 'package:planZ/common/dart/extension/context_extension.dart';
 import 'package:planZ/common/widget/w_searchbar.dart';
-import 'package:planZ/screen/main/tab/browse/f_browse.dart';
 import 'package:planZ/screen/main/tab/browse/f_map_view.dart';
+import 'package:planZ/screen/main/tab/plan/f_plan_mapview.dart';
 import 'package:planZ/screen/main/tab/plan/f_saves.dart';
 import 'package:planZ/screen/main/tab/plan/f_trips.dart';
 import 'global.dart';
@@ -43,7 +43,10 @@ class _PlanFragmentState extends State<PlanFragment> {
     return Scaffold(
       body: Stack(
         children: [
-          const MapView(),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 200.0),
+            child: PlanMapView(locations: selectedLocations),
+          ),
           SearchBarWidget(),
           DraggableScrollableSheet(
               controller: _draggableScrollableController,
@@ -97,16 +100,7 @@ class _PlanFragmentState extends State<PlanFragment> {
                                     child: Container(
                                       width: 72,
                                       height: 72,
-                                      child: InkWell(
-                                          onTap: () async {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => const BrowseFragment(),
-                                              ),
-                                            );
-                                          },
-                                          child: SvgPicture.asset('assets/image/icon/planAdd.svg')),
+                                      child: SvgPicture.asset('assets/image/icon/planAdd.svg'),
                                     ),
                                   );
                                 } else {
@@ -134,7 +128,7 @@ class _PlanFragmentState extends State<PlanFragment> {
                                             top: 8,
                                             left: 8,
                                             child: Text(
-                                              '$index',
+                                              '${index + 1}',
                                               style: TextStyle(
                                                 fontSize: 10,
                                                 fontWeight: FontWeight.bold,
@@ -191,20 +185,10 @@ class _PlanFragmentState extends State<PlanFragment> {
                         if (selectedSpots.isEmpty)
                           Expanded(
                             child: Center(
-                              child: InkWell(
-                                onTap: () async {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const BrowseFragment(),
-                                    ),
-                                  );
-                                },
-                                child: SvgPicture.asset(
-                                  'assets/image/icon/planAdd.svg',
-                                  width: 72,
-                                  height: 72,
-                                ),
+                              child: SvgPicture.asset(
+                                'assets/image/icon/planAdd.svg',
+                                width: 72,
+                                height: 72,
                               ),
                             ),
                           ),
@@ -252,8 +236,13 @@ class _PlanFragmentState extends State<PlanFragment> {
                                 ),
                               );
 
-                              if (result != null) {
+                              // if (result != null) {
+                              //   setState(() {
+                              //   });
+                              // }
+                              if (result != null && result is List<Map<String, dynamic>>) {
                                 setState(() {
+                                  selectedLocations = result; // Update selectedLocations with the result from MySaves
                                 });
                               }
                             },

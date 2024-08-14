@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:planZ/screen/main/tab/browse/f_browse.dart';
 import 'package:planZ/screen/main/tab/feed/f_feed.dart';
 import 'package:planZ/screen/main/tab/mypage/f_mypage.dart';
-import 'package:planZ/screen/main/tab/plan/f_plan.dart';
 import 'package:planZ/screen/main/tab/plan/f_plan_two.dart';
 import 'package:planZ/screen/main/tab/settings/f_settings.dart';
 

@@ -86,7 +86,7 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
     String currentLanguage = AppLangState.instance.appLanguage;
     List<dynamic> savedSpots = _user?['saved_spots'] ?? [];
     List<dynamic> savedJourneys = _user?['saved_journey'] ?? [];
-    print('selected spots are: $selectedSpots');
+    // print('selected spots are: $selectedSpots');
 
     return Scaffold(
       body: Column(
@@ -100,7 +100,8 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                   IconButton(
                     icon: Icon(Icons.arrow_back),
                     onPressed: () {
-                      Navigator.pop(context, true); // Navigate back to the previous page
+                      // Navigator.pop(context, true);
+                      Navigator.pop(context, selectedLocations);
                     },
                   ),
                 ],
@@ -150,7 +151,8 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                           } else {
                             var spotData = snapshot.data!.data()
                             as Map<String, dynamic>;
-                            print(spotData);
+                            // print(spotData);
+                            // print('????');
 
                             String spotName = spotData['translated_name']
                             ?[currentLanguage] ??
@@ -202,8 +204,7 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                                               decoration: BoxDecoration(
                                                 image: images.isNotEmpty
                                                     ? DecorationImage(
-                                                    image: NetworkImage(
-                                                        images[0]),
+                                                    image: NetworkImage(images[0]),
                                                     fit: BoxFit.cover)
                                                     : DecorationImage(
                                                   image: AssetImage(
@@ -257,17 +258,16 @@ class _MySavesState extends State<MySaves> with SingleTickerProviderStateMixin {
                                           onPressed: () {
                                             setState(() {
                                               if (added) {
-                                                selectedSpots.removeWhere(
-                                                        (spot) =>
-                                                    spot['spotName'] ==
-                                                        spotName);
+                                                selectedSpots.removeWhere((spot) => spot['spotName'] == spotName);
+                                                selectedLocations.removeWhere((location) => location['spotName'] == spotName);
                                               } else {
                                                 selectedSpots.add({
                                                   'spotName': spotName,
-                                                  'imageUrl': images
-                                                      .isNotEmpty
-                                                      ? images[0]
-                                                      : '',
+                                                  'imageUrl': images.isNotEmpty ? images[0] : '',
+                                                });
+                                                selectedLocations.add({
+                                                  'spotName': spotName,
+                                                  'location': spotData['location'], // Assuming location is stored in the spotData
                                                 });
                                               }
                                             });
