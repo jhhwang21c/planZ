@@ -34,7 +34,7 @@ class _MapViewState extends State<MapView> {
       _fetchCurrentLocation();
     }
     fetchVideoLinks();
-    fetchImageLinks();
+    // fetchImageLinks();
 
     _draggableScrollableController.addListener(() {
       setState(() {
@@ -73,27 +73,28 @@ class _MapViewState extends State<MapView> {
     }
   }
 
-  void fetchImageLinks() async {
-    try {
-      if (widget.spot?['id'] != null) {
-        QuerySnapshot imageSnapshot = await FirebaseFirestore.instance
-            .collection('spot')
-            .doc(widget.spot?['id'])
-            .collection('image')
-            .get();
+  // void fetchImageLinks() async {
+  //   try {
+  //     if (widget.spot?['id'] != null) {
+  //       QuerySnapshot imageSnapshot = await FirebaseFirestore.instance
+  //           .collection('spot')
+  //           .doc(widget.spot?['id'])
+  //           .collection('image')
+  //           .get();
+  //
+  //       List<String> links = imageSnapshot.docs
+  //           .map((doc) => doc['image_link'] as String? ?? '')
+  //           .toList();
+  //
+  //       setState(() {
+  //         imageLinks = links;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching image links: $e');
+  //   }
+  // }
 
-        List<String> links = imageSnapshot.docs
-            .map((doc) => doc['image_link'] as String? ?? '')
-            .toList();
-
-        setState(() {
-          imageLinks = links;
-        });
-      }
-    } catch (e) {
-      print('Error fetching image links: $e');
-    }
-  }
 
   @override
   void dispose() {
@@ -152,6 +153,7 @@ class _MapViewState extends State<MapView> {
     String contact = widget.spot?['contact']?.toString() ?? 'No Contact';
     String hours = widget.spot?['translated_hours']?[currentLanguage]?.toString() ?? 'hours unavailable';
     String parking = widget.spot?['parking'] == true ? 'Parking Available' : 'Parking unavailable';
+    String image = widget.spot?['image_link']?? '';
 
     List<String> hashtags = [];
     if (widget.spot?['translated_hashtags'] != null) {
@@ -160,7 +162,6 @@ class _MapViewState extends State<MapView> {
         hashtags.add(translatedHashtags[i.toString()]?[currentLanguage] ?? '');
       }
     }
-    print(imageLinks);
 
     return Stack(
         children: [
@@ -390,104 +391,118 @@ class _MapViewState extends State<MapView> {
                                           Icon(Icons.add)
                                         ],
                                       ),
+                                      const SizedBox(height: 20,),
                                       if (_sheetSize > 0.4)
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 20.0),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Expanded(
-                                                child: ElevatedButton(
-                                                  onPressed: () {},
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    foregroundColor:
-                                                        Colors.black,
-                                                    backgroundColor: context
-                                                        .appColors.baseGray,
-                                                    // Text color
-                                                    minimumSize:
-                                                        const Size(0, 40),
-                                                    // Width and height
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100), // Rounded corners
-                                                    ), // Shadow elevation
-                                                  ),
-                                                  child: const Text(
-                                                    "Reserve",
-                                                    style: TextStyle(
-                                                      fontSize: 14.0,
-                                                    ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Expanded(
+                                              child: ElevatedButton(
+                                                onPressed: () {},
+                                                style:
+                                                    ElevatedButton.styleFrom(
+                                                  foregroundColor:
+                                                      Colors.black,
+                                                  backgroundColor: context
+                                                      .appColors.baseGray,
+                                                  // Text color
+                                                  minimumSize:
+                                                      const Size(0, 40),
+                                                  // Width and height
+                                                  shape:
+                                                      RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100), // Rounded corners
+                                                  ), // Shadow elevation
+                                                ),
+                                                child: const Text(
+                                                  "Reserve",
+                                                  style: TextStyle(
+                                                    fontSize: 14.0,
                                                   ),
                                                 ),
                                               ),
-                                              const SizedBox(
-                                                width: 24,
-                                              ),
-                                              Expanded(
-                                                child: ElevatedButton(
-                                                  onPressed: () {},
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    foregroundColor:
-                                                        Colors.black,
-                                                    backgroundColor: context
-                                                        .appColors.baseGray,
-                                                    // Text color
-                                                    minimumSize:
-                                                        const Size(0, 40),
-                                                    // Width and height
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100), // Rounded corners
-                                                    ), // Shadow elevation
-                                                  ),
-                                                  child: const Text(
-                                                    "View on Map",
-                                                    style: TextStyle(
-                                                      fontSize: 14.0,
-                                                    ),
+                                            ),
+                                            const SizedBox(
+                                              width: 24,
+                                            ),
+                                            Expanded(
+                                              child: ElevatedButton(
+                                                onPressed: () {},
+                                                style:
+                                                    ElevatedButton.styleFrom(
+                                                  foregroundColor:
+                                                      Colors.black,
+                                                  backgroundColor: context
+                                                      .appColors.baseGray,
+                                                  // Text color
+                                                  minimumSize:
+                                                      const Size(0, 40),
+                                                  // Width and height
+                                                  shape:
+                                                      RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100), // Rounded corners
+                                                  ), // Shadow elevation
+                                                ),
+                                                child: const Text(
+                                                  "View on Map",
+                                                  style: TextStyle(
+                                                    fontSize: 14.0,
                                                   ),
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
+
+                                      const SizedBox(height: 20,),
 
                                       // pictures & videos
                                       Padding(
                                         padding: const EdgeInsets.only(bottom: 20.0),
                                         child: SizedBox(
                                           height: 270.0,
-                                          child: imageLinks.isEmpty && videoLinks.isEmpty
+                                          child: image.isEmpty && videoLinks.isEmpty
                                               ? const Center(
                                             child: Text("No images or videos available"),
                                           )
                                               : ListView(
                                             scrollDirection: Axis.horizontal,
                                             children: [
-                                              if (imageLinks.isNotEmpty)
-                                                ...imageLinks.map((imageLink) => Row(
-                                                  children: [
-                                                    AspectRatio(
-                                                      aspectRatio: 9 / 16,
-                                                      child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(4.0), // Adjust the radius as needed
-                                                        child: Image.network(
-                                                          imageLink,
-                                                          fit: BoxFit.cover,
+                                              // if (image.isNotEmpty)
+                                              //   ...imageLinks.map((imageLink) => Row(
+                                              //     children: [
+                                              //       AspectRatio(
+                                              //         aspectRatio: 9 / 16,
+                                              //         child: ClipRRect(
+                                              //           borderRadius: BorderRadius.circular(4.0), // Adjust the radius as needed
+                                              //           child: Image.network(
+                                              //             imageLink,
+                                              //             fit: BoxFit.cover,
+                                              //           ),
+                                              //         ),
+                                              //       ),
+                                              //       const SizedBox(width: 24),
+                                              //     ],
+                                              //   )),
+                                              if (image.isNotEmpty)
+                                                Row(
+                                                      children: [
+                                                        AspectRatio(
+                                                          aspectRatio: 9 / 16,
+                                                          child: ClipRRect(
+                                                            borderRadius: BorderRadius.circular(4.0), // Adjust the radius as needed
+                                                            child: Image.network(image,
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ),
                                                         ),
-                                                      ),
+                                                        const SizedBox(width: 24),
+                                                      ],
                                                     ),
-                                                    const SizedBox(width: 24),
-                                                  ],
-                                                )),
                                               if (videoLinks.isNotEmpty)
                                                 ..._videoControllers.map((controller) => Row(
                                                   children: [
