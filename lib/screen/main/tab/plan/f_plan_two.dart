@@ -44,7 +44,7 @@ class _PlanFragmentState extends State<PlanFragment> {
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 200.0),
+            padding: const EdgeInsets.only(bottom: 250.0),
             child: PlanMapView(locations: selectedLocations),
           ),
           SearchBarWidget(),
