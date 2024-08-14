@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:planZ/common/common.dart';
 import 'package:planZ/common/widget/w_floating_menu.dart';
-import 'package:planZ/screen/main/tab/browse/f_fullvideo_two.dart';
+import 'package:planZ/screen/main/tab/browse/f_fullvideo.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 

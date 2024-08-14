@@ -31,6 +31,7 @@ class _FullVideoState extends State<FullVideo>
   Map<String, dynamic>? _spot;
   GeoPoint? _spotLocation;
   String currentLanguage = AppLangState.instance.appLanguage;
+  bool _isSheetExpanded = false;
 
   @override
   void initState() {
@@ -105,6 +106,12 @@ class _FullVideoState extends State<FullVideo>
     _videoPageController.dispose();
     _videoPlayerController.dispose();
     super.dispose();
+  }
+
+  void _handleSheetSizeChange(double size) {
+    setState(() {
+      _isSheetExpanded = size > 0.8;
+    });
   }
 
   @override
@@ -299,13 +306,14 @@ class _FullVideoState extends State<FullVideo>
                   // Map view tab
                   Center(
                     child: _spotLocation != null
-                        ? MapView(spotLocation: _spotLocation!)
+                        ? MapView(spotLocation: _spotLocation!, spot: _spot, onSheetSizeChange: _handleSheetSizeChange,)
                         : Text('No location available'),
                   ),
                 ],
               ),
 
               // Tab bar
+              if (!_isSheetExpanded)
               Padding(
                 padding: const EdgeInsets.only(top: 28.0),
                 child: ToggleBarWidget(

@@ -91,6 +91,7 @@ class _SpotDetailState extends State<SpotDetail> {
   Widget build(BuildContext context) {
     String currentLanguage = AppLangState.instance.appLanguage;
     String spotName =  widget.spotItem?['translated_name']?[currentLanguage]  ?? 'No Info';
+    String area =  widget.spotItem?['translated_area']?[currentLanguage]  ?? 'No Area';
     String address = widget.spotItem?['translated_address']?[currentLanguage] ?? 'No Address';
     String contact = widget.spotItem?['contact'] ?? 'No Contact';
     String hours = widget.spotItem?['translated_hours']?[currentLanguage] ??'hours unavailable';
@@ -129,7 +130,7 @@ class _SpotDetailState extends State<SpotDetail> {
                         spotName,
                         style: const TextStyle(
                           fontSize: 24,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -141,91 +142,139 @@ class _SpotDetailState extends State<SpotDetail> {
                   ],
                 )),
 
-            Container(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: hashtags.isNotEmpty
-                      ? Wrap(
-                    spacing: 12.0,
-                    children: hashtags.map((hashtag) {
-                      return Container(
-                        height: 20,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 1.0,
-                              color: context.appColors.mainGray),
-                          color: Colors.transparent,
-                          borderRadius:
-                          BorderRadius.circular(100),
-                        ),
-                        child: Text(
-                          '# $hashtag',
-                          style: const TextStyle(
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.w500,
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0, right: 8),
+                  child: Container(
+                    height: 20,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          width: 1.0,
+                          color: context.appColors.mainGray),
+                      color: Colors.transparent,
+                      borderRadius:
+                      BorderRadius.circular(100),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset('assets/image/icon/Location.svg',
+                            width: 8,
+                            height: 10,
                             color: Colors.black,
                           ),
-                        ),
-                      );
-                    }).toList(),
-                  )
-                      : const Text(
-                    'Loading hashtags...',
-                    style: TextStyle(
-                        fontSize: 10.0, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(top: 2.0),
-              child: Row(
-                children: [
-                  SvgPicture.asset(
-                    'assets/image/icon/Car.svg',
-                    width: 12.0,
-                    height: 12.0,
-                  ),
-                  const SizedBox(
-                    width: 4.0,
-                  ),
-                  const Text(
-                    "4 min",
-                    style: TextStyle(fontSize: 13),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: SvgPicture.asset(
-                      'assets/image/icon/Transit.svg',
-                      width: 14.0,
-                      height: 14.0,
+                          const SizedBox(
+                            width: 4,
+                          ),
+                          Text(area, style: const TextStyle(fontSize: 10.0, fontWeight: FontWeight.w500, color: Colors.black,
+                          ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    width: 4.0,
+                ),
+
+
+                Container(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 12.0),
+                      child: hashtags.isNotEmpty
+                          ? Wrap(
+                        spacing: 12.0,
+                        children: hashtags.map((hashtag) {
+                          return Container(
+                            height: 20,
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 1.0,
+                                  color: context.appColors.mainGray),
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '# $hashtag',
+                                style: const TextStyle(
+                                  fontSize: 10.0,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      )
+                          : const Text(
+                        'Loading hashtags...',
+                        style: TextStyle(
+                            fontSize: 10.0,
+                            color: Colors.white),
+                      ),
+                    ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(right: 8.0),
-                    child: Text("4 min"),
-                  ),
-                  SvgPicture.asset(
-                    'assets/image/icon/Walk.svg',
-                    width: 14.0,
-                    height: 14.0,
-                  ),
-                  const SizedBox(
-                    width: 4.0,
-                  ),
-                  const Text("15 min"),
-                ],
-              ),
+                ),
+              ],
             ),
 
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/image/icon/Car.svg',
+                        width: 12.0,
+                        height: 12.0,
+                      ),
+                      const SizedBox(
+                        width: 4.0,
+                      ),
+                      const Text(
+                        "4 min",
+                        style:
+                        TextStyle(fontSize: 13),
+                      ),
+                      Padding(
+                        padding:
+                        const EdgeInsets.only(
+                            left: 8.0),
+                        child: SvgPicture.asset(
+                          'assets/image/icon/Transit.svg',
+                          width: 14.0,
+                          height: 14.0,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 4.0,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(
+                            right: 8.0),
+                        child: Text("4 min"),
+                      ),
+                      SvgPicture.asset(
+                        'assets/image/icon/Walk.svg',
+                        width: 14.0,
+                        height: 14.0,
+                      ),
+                      const SizedBox(
+                        width: 4.0,
+                      ),
+                      const Text("15 min"),
+                    ],
+                  ),
+                ),
+                Icon(Icons.add)
+              ],
+            ),
+            
             //buttons
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
@@ -238,7 +287,7 @@ class _SpotDetailState extends State<SpotDetail> {
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.black,
-                          backgroundColor: Colors.grey,
+                          backgroundColor: context.appColors.baseGray,
                           // Text color
                           minimumSize: const Size(0, 40),
                           // Width and height
@@ -263,7 +312,7 @@ class _SpotDetailState extends State<SpotDetail> {
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.black,
-                          backgroundColor: Colors.grey,
+                          backgroundColor: context.appColors.baseGray,
                           // Text color
                           minimumSize: const Size(0, 40),
                           // Width and height
@@ -336,100 +385,8 @@ class _SpotDetailState extends State<SpotDetail> {
               child: Column(
                 children: [
                   SizedBox(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey.shade200,
-                            // Color of the border
-                            width: 1.0, // Width of the border
-                          ),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/image/icon/Clock.svg',
-                              width: 14.0,
-                              height: 14.0,
-                            ),
-                            const SizedBox(
-                              width: 8.0,
-                            ),
-                            Expanded(child: Text(hours)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40.0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey.shade200,
-                            // Color of the border
-                            width: 1.0, // Width of the border
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/image/icon/Address.svg',
-                            width: 14.0,
-                            height: 14.0,
-                          ),
-                          const SizedBox(
-                            width: 8.0,
-                          ),
-                          Expanded(child: Text(address)),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40.0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey.shade200,
-                            // Color of the border
-                            width: 1.0, // Width of the border
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/image/icon/Parking.svg',
-                            width: 14.0,
-                            height: 14.0,
-                          ),
-                          const SizedBox(
-                            width: 8.0,
-                          ),
-                          Text(parking),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40.0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.grey.shade200,
-                            // Color of the border
-                            width: 1.0, // Width of the border
-                          ),
-                        ),
-                      ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
                       child: Row(
                         children: [
                           SvgPicture.asset(
@@ -440,9 +397,78 @@ class _SpotDetailState extends State<SpotDetail> {
                           const SizedBox(
                             width: 8.0,
                           ),
-                          Text("Contact: (+82) ${contact}"),
+                          Expanded(child: Text(hours)),
                         ],
                       ),
+                    ),
+                  ),
+                  const Divider(
+                    height: 20,
+                    thickness: 1,
+                    indent: 0,
+                    endIndent: 25,
+                    color: Color(0xFFE1E4E8),
+                  ),
+                  SizedBox(
+                    height: 40.0,
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/image/icon/Address.svg',
+                          width: 14.0,
+                          height: 14.0,
+                        ),
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        Expanded(child: Text(address)),
+                      ],
+                    ),
+                  ),
+                  const Divider(
+                    height: 20,
+                    thickness: 1,
+                    indent: 0,
+                    endIndent: 25,
+                    color: Color(0xFFE1E4E8),
+                  ),
+                  SizedBox(
+                    height: 40.0,
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/image/icon/Parking.svg',
+                          width: 14.0,
+                          height: 14.0,
+                        ),
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        Text(parking),
+                      ],
+                    ),
+                  ),
+                  const Divider(
+                    height: 20,
+                    thickness: 1,
+                    indent: 0,
+                    endIndent: 25,
+                    color: Color(0xFFE1E4E8),
+                  ),
+                  SizedBox(
+                    height: 40.0,
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/image/icon/Clock.svg',
+                          width: 14.0,
+                          height: 14.0,
+                        ),
+                        const SizedBox(
+                          width: 8.0,
+                        ),
+                        Text("Contact: (+82) ${contact}"),
+                      ],
                     ),
                   ),
                 ],
