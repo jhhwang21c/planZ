@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 
 class ApiService {
   final Dio _dio = Dio();
-  final String apiKey = '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';
+  final String apiKey = '...';
 
 
   Future<String> sendMessageGPT(List<Map<String, String>> history, {required String message}) async {
