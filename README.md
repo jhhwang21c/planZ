@@ -41,6 +41,7 @@ PlanZ initially focuses on international travelers visiting South Korea and dome
 - Dart/Flutter SDK installed
 - Firebase project set up (Firestore, Authentication, Storage)
 - Android Studio or any compatible IDE for Flutter projects
+- Your own ChatGPT API key
 
 ### Steps
 1. Clone the repository:
